@@ -682,7 +682,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
             <thead>
               <tr style={{background:C.blue}}>
                 <th style={{padding:"8px 10px",textAlign:"left"}}>
-                  <div style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.75)"}}>날짜 / 코스</div>
+                  <div style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.75)"}}>항목</div>
                 </th>
                 {sorted.map(s=>{
                   const Char=CHARS[s.id];
@@ -705,36 +705,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
                 ))}
               </tr>
             </thead>
-            <tbody>
-              {yRounds.map((r,ri)=>{
-                const course=courses.find(c=>c.id===r.courseId);
-                return (
-                  <tr key={r.id} style={{background:ri%2===0?"#fff":C.bg}}>
-                    <td style={{padding:"8px 10px",borderBottom:`1px solid ${C.border}`}}>
-                      <div style={{fontSize:10,color:C.faint,lineHeight:1.3}}>{r.date.slice(5).replace("-",".")}</div>
-                      <div style={{fontSize:12,fontWeight:700,color:C.blue,lineHeight:1.3,
-                        whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{course?.name??"-"}</div>
-                    </td>
-                    {sorted.map(p=>{
-                      const sc=r.scores.find(s=>s.pid===p.id);
-                      const hcp=handicaps[year]?.[p.id];
-                      const isBest=sc&&sc.score===p.best;
-                      const isBelow=sc&&hcp&&sc.score<hcp;
-                      return (
-                        <td key={p.id} style={{textAlign:"center",fontFamily:"monospace",
-                          fontWeight:800,fontSize:15,padding:"8px 4px",
-                          borderBottom:`1px solid ${C.border}`,
-                          background:isBelow?C.yellow:"transparent",
-                          color:isBest?C.blue:C.text}}>
-                          {sc?sc.score:"-"}
-                          {sc?.birdies>0&&<span style={{fontSize:8,marginLeft:1}}>🦋</span>}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
+            <tbody/>
             <tfoot>
               {[
                 {l:"평균",    k:"avgScore",f:v=>v??"-",       bg:"#f8faff",c:C.blue},
