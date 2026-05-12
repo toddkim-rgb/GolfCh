@@ -4,6 +4,22 @@
 
 ---
 
+## PC에서 이어서 작업하기
+
+```bash
+git clone <repo-url>          # 또는 이미 clone 돼 있으면:
+git fetch origin
+git checkout claude/create-handoff-file-HrKq1
+git pull origin claude/create-handoff-file-HrKq1
+
+npm install
+npm run dev
+```
+
+> 브라우저: http://localhost:5173/
+
+---
+
 ## 현재 버전 상태
 
 | 항목 | 상태 |
@@ -15,6 +31,7 @@
 | `.env` 파일 | ⚠️ 미완료 (`.env.example` 참고하여 작성 필요) |
 | PC·모바일 동시 접속 | ✅ `--host` 옵션 적용 |
 | 일정 등록 폼 개선 | ✅ 코스명 텍스트 입력 + 난이도 별점 추가 |
+| 시즌 스코어보드 | ✅ 라운드 행 제거, 주요 통계만 표시 |
 
 ---
 
@@ -135,6 +152,19 @@ VITE_SUPABASE_ANON_KEY=eyJ...
 ### 관리자 인증
 - 아이디: `admin` / 비밀번호: `golf2025`
 
+### 시즌 스코어보드 표시 항목
+
+| 행 | 내용 |
+|----|------|
+| 핸디 | 해당 연도 핸디캡 |
+| 평균 | 평균 타수 |
+| 버디 | 총 버디 수 |
+| 핸디차이 | 평균 - 핸디 |
+| 핸디미만 | 핸디 미만 라운드 횟수 |
+| 최저 | 베스트 스코어 |
+
+> 라운드별 행은 제거됨 — 상세 라운드는 "라운드" 탭에서 확인
+
 ### 일정 등록 폼 필드
 
 | 필드 | 타입 | 필수 |
@@ -153,7 +183,7 @@ VITE_SUPABASE_ANON_KEY=eyJ...
 |----------|-----------|------|
 | `App` | ~1443 | 루트: 상태 관리, 탭 라우팅 |
 | `useStored` | ~384 | Supabase/localStorage 읽기·쓰기·실시간 구독 훅 |
-| `SeasonView` | ~630 | 시즌 순위표 + 라운드 캘린더 |
+| `SeasonView` | ~630 | 시즌 순위표 + 스코어보드 (통계만) |
 | `RoundsView` | ~825 | 라운드 목록, 관리자 수정·삭제 |
 | `RoundEditModal` | ~752 | 라운드 수정 모달 |
 | `AwardsView` | ~945 | 연도별 시상 내역 |
@@ -182,14 +212,13 @@ Claude Code 웹 세션 시작 시 자동으로:
 
 | 커밋 | 내용 |
 |------|------|
+| `7468132` | 시즌 스코어보드: 라운드 행 제거, 주요 통계만 표시 |
 | `a4e04fc` | settings.local.json: hooks 디렉토리 생성 권한 추가 |
 | `e215655` | SessionStart 훅 추가: npm install + Vite dev 서버 자동 실행 |
 | `426ca37` | Supabase 미설정 시 localStorage 폴백 처리 |
 | `d3280d8` | 일정 등록 폼: 코스명 텍스트 입력 전환 + 난이도 별점 추가 |
 | `8e26331` | .gitignore에 .env 추가 (Supabase 키 노출 방지) |
-| `0ba9996` | handoff.md 버전 정리 |
 | `3d54880` | Supabase 실시간 DB 연동: localStorage → Supabase 교체 |
-| `6d2ba75` | handoff.md 업데이트: PC·모바일 동시 사용 방법 추가 |
 | `5e7631a` | vite --host 옵션 추가 (모바일 접속 지원) |
 | `6e15850` | handoff.md 최초 작성 |
 | `c327dbe` | 관리 뷰 골프장 검색 삭제, 엑셀 263개 골프장 데이터 반영 |
