@@ -1,28 +1,43 @@
 import { createClient } from '@supabase/supabase-js'
 
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-)
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+export const isConfigured = !!(SUPABASE_URL && SUPABASE_KEY)
+
+export const supabase = isConfigured
+  ? createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null
 
 export async function loadData(key) {
-  const { data, error } = await supabase
-    .from('app_data')
-    .select('value')
-    .eq('key', key)
-    .maybeSingle()
-  if (error) console.error('[supabase] loadData:', error.message)
-  return data?.value ?? null
+  if (!isConfigured) return null
+  try {
+    const { data, error } = await supabase
+      .from('app_data')
+      .select('value')
+      .eq('key', key)
+      .maybeSingle()
+    if (error) throw error
+    return data?.value ?? null
+  } catch (e) {
+    console.error('[supabase] loadData:', e.message)
+    return null
+  }
 }
 
 export async function saveData(key, value) {
-  const { error } = await supabase
-    .from('app_data')
-    .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' })
-  if (error) console.error('[supabase] saveData:', error.message)
+  if (!isConfigured) return
+  try {
+    const { error } = await supabase
+      .from('app_data')
+      .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' })
+    if (error) throw error
+  } catch (e) {
+    console.error('[supabase] saveData:', e.message)
+  }
 }
 
 export function subscribeData(key, callback) {
+  if (!isConfigured) return null
   return supabase
     .channel(`realtime_${key}`)
     .on(

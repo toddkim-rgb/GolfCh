@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { loadData, saveData, subscribeData, supabase } from "./supabase";
+import { loadData, saveData, subscribeData, supabase, isConfigured } from "./supabase";
 
 // ─── Seed Data ────────────────────────────────────────────────────────────────
 const INIT_PLAYERS = [
@@ -380,18 +380,27 @@ const champScore = s => (s.hcpDiff??999)*2 - (s.birdies??0);
 
 // ─── Storage Hook ─────────────────────────────────────────────────────────────
 function useStored(key, init) {
-  const [val, setVal] = useState(init);
-  const [ready, setReady] = useState(false);
+  const [val, setVal] = useState(() => {
+    try { const r = localStorage.getItem(key); if (r) return JSON.parse(r); } catch(e) {}
+    return init;
+  });
+  const [ready, setReady] = useState(!isConfigured);
   const activeRef = useRef(true);
 
   useEffect(() => {
+    if (!isConfigured) return;
     activeRef.current = true;
-    loadData(key).then(remote => {
-      if (!activeRef.current) return;
-      if (remote !== null) setVal(remote);
-      else saveData(key, init);
-      setReady(true);
-    });
+    loadData(key)
+      .then(remote => {
+        if (!activeRef.current) return;
+        if (remote !== null) setVal(remote);
+        else saveData(key, init);
+        setReady(true);
+      })
+      .catch(() => {
+        if (!activeRef.current) return;
+        setReady(true);
+      });
 
     const channel = subscribeData(key, newVal => {
       if (activeRef.current) setVal(newVal);
@@ -399,14 +408,15 @@ function useStored(key, init) {
 
     return () => {
       activeRef.current = false;
-      supabase.removeChannel(channel);
+      if (channel) supabase.removeChannel(channel);
     };
   }, [key]);
 
   const setter = useCallback((newValOrFn) => {
     setVal(prev => {
       const next = typeof newValOrFn === 'function' ? newValOrFn(prev) : newValOrFn;
-      saveData(key, next);
+      if (isConfigured) saveData(key, next);
+      else { try { localStorage.setItem(key, JSON.stringify(next)); } catch(e) {} }
       return next;
     });
   }, [key]);
