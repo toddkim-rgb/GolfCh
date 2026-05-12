@@ -8,14 +8,277 @@ const INIT_PLAYERS = [
   { id:"p4", name:"천성민", gender:"M" },
 ];
 const INIT_COURSES = [
-  { id:"c1", name:"노스팜",      region:"경기", difficulty:3 },
-  { id:"c2", name:"티클라우드",  region:"경기", difficulty:3 },
-  { id:"c3", name:"베르힐 영종", region:"인천", difficulty:4 },
-  { id:"c4", name:"센추리21",    region:"경기", difficulty:3 },
-  { id:"c5", name:"세일",        region:"경기", difficulty:3 },
-  { id:"c6", name:"드림파크",    region:"서울", difficulty:4 },
-  { id:"c7", name:"자유로",      region:"경기", difficulty:3 },
-  { id:"c8", name:"인천그랜드",  region:"인천", difficulty:4 },
+  { id:"c1", name:"노스팜",      region:"경기 여주시", difficulty:3 },
+  { id:"c2", name:"티클라우드",  region:"경기 용인시", difficulty:3 },
+  { id:"c3", name:"베르힐 영종", region:"인천 중구",   difficulty:4 },
+  { id:"c4", name:"센추리21",    region:"경기 이천시", difficulty:3 },
+  { id:"c5", name:"세일",        region:"경기 양주시", difficulty:3 },
+  { id:"c6", name:"드림파크",    region:"서울 강서구", difficulty:4 },
+  { id:"c7", name:"자유로",      region:"경기 고양시", difficulty:3 },
+  { id:"c8", name:"인천그랜드",  region:"인천 서구",   difficulty:4 },
+  { id:"ec001", name:"360도", region:"경기 여주시", difficulty:3 },
+  { id:"ec002", name:"JNJ", region:"전남 장흥군", difficulty:3 },
+  { id:"ec003", name:"가덕", region:"부산 강서구", difficulty:3 },
+  { id:"ec004", name:"가야", region:"경남 김해시", difficulty:3 },
+  { id:"ec005", name:"가평베네스트", region:"경기 가평군", difficulty:3 },
+  { id:"ec006", name:"강남300", region:"경기 광주시", difficulty:3 },
+  { id:"ec007", name:"거제뷰", region:"경남 거제시", difficulty:3 },
+  { id:"ec008", name:"경주신라", region:"경북 경주시", difficulty:3 },
+  { id:"ec009", name:"고령유니밸리", region:"경북 고령군", difficulty:3 },
+  { id:"ec010", name:"고성", region:"경남 고성군", difficulty:3 },
+  { id:"ec011", name:"고창", region:"전북 고창군", difficulty:3 },
+  { id:"ec012", name:"곤지암", region:"경기 광주시", difficulty:3 },
+  { id:"ec013", name:"골드", region:"경기 용인시", difficulty:3 },
+  { id:"ec014", name:"골드레이크", region:"전남 나주시", difficulty:3 },
+  { id:"ec015", name:"골드베이", region:"충남 태안군", difficulty:3 },
+  { id:"ec016", name:"광릉", region:"경기 남양주시", difficulty:3 },
+  { id:"ec017", name:"광주", region:"전남 곡성군", difficulty:3 },
+  { id:"ec018", name:"구미", region:"경북 구미시", difficulty:3 },
+  { id:"ec019", name:"군산", region:"전북 군산시", difficulty:3 },
+  { id:"ec020", name:"군위", region:"경북 군위군", difficulty:3 },
+  { id:"ec021", name:"그랜드", region:"충북 청주시", difficulty:3 },
+  { id:"ec022", name:"그린힐", region:"경기 광주시", difficulty:3 },
+  { id:"ec023", name:"금강", region:"경기 여주시", difficulty:3 },
+  { id:"ec024", name:"기흥", region:"경기 화성시", difficulty:3 },
+  { id:"ec025", name:"김제", region:"전북 김제시", difficulty:3 },
+  { id:"ec026", name:"나인브릿지", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec027", name:"남부", region:"경기 용인시", difficulty:3 },
+  { id:"ec028", name:"남서울", region:"경기 성남시", difficulty:3 },
+  { id:"ec029", name:"남촌", region:"경기 광주시", difficulty:3 },
+  { id:"ec030", name:"남춘천", region:"강원 춘천시", difficulty:3 },
+  { id:"ec031", name:"내장산", region:"전북 정읍시", difficulty:3 },
+  { id:"ec032", name:"노벨", region:"경남 고성군", difficulty:3 },
+  { id:"ec033", name:"뉴서울", region:"경기 광주시", difficulty:3 },
+  { id:"ec034", name:"뉴스프링빌", region:"경기 이천시", difficulty:3 },
+  { id:"ec035", name:"뉴코리아", region:"경기 고양시", difficulty:3 },
+  { id:"ec036", name:"다이아몬드", region:"경남 양산시", difficulty:3 },
+  { id:"ec037", name:"담양레이나", region:"전남 담양군", difficulty:3 },
+  { id:"ec038", name:"대구", region:"경북 경산시", difficulty:3 },
+  { id:"ec039", name:"대영베이스", region:"충북 충주시", difficulty:3 },
+  { id:"ec040", name:"대영힐스", region:"충북 충주시", difficulty:3 },
+  { id:"ec041", name:"더리얼", region:"강원 원주시", difficulty:3 },
+  { id:"ec042", name:"더스타휴", region:"경기 양평군", difficulty:3 },
+  { id:"ec043", name:"더클래식", region:"제주 제주시", difficulty:3 },
+  { id:"ec044", name:"더포그레이스", region:"제주 제주시", difficulty:3 },
+  { id:"ec045", name:"더플레이어스", region:"강원 춘천시", difficulty:3 },
+  { id:"ec046", name:"더헤븐", region:"경기 안산시", difficulty:3 },
+  { id:"ec047", name:"데니스", region:"경기 파주시", difficulty:3 },
+  { id:"ec048", name:"델피노", region:"강원 고성군", difficulty:3 },
+  { id:"ec049", name:"동래베네스트", region:"부산 금정구", difficulty:3 },
+  { id:"ec050", name:"동부산", region:"경남 양산시", difficulty:3 },
+  { id:"ec051", name:"동서울", region:"경기 성남시", difficulty:3 },
+  { id:"ec052", name:"동촌", region:"충북 충주시", difficulty:3 },
+  { id:"ec053", name:"드비치", region:"경남 거제시", difficulty:3 },
+  { id:"ec054", name:"떼제베", region:"충북 청주시", difficulty:3 },
+  { id:"ec055", name:"라데나", region:"강원 춘천시", difficulty:3 },
+  { id:"ec056", name:"라비돌", region:"경기 화성시", difficulty:3 },
+  { id:"ec057", name:"라비에벨", region:"강원 춘천시", difficulty:3 },
+  { id:"ec058", name:"라싸", region:"경기 포천시", difficulty:3 },
+  { id:"ec059", name:"라온", region:"제주 제주시", difficulty:3 },
+  { id:"ec060", name:"락가든", region:"경기 포천시", difficulty:3 },
+  { id:"ec061", name:"레이크사이드", region:"경기 용인시", difficulty:3 },
+  { id:"ec062", name:"레이크우드", region:"경기 양주시", difficulty:3 },
+  { id:"ec063", name:"레이크힐스 제주", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec064", name:"레인보우힐스", region:"충북 음성군", difficulty:3 },
+  { id:"ec065", name:"렉스필드", region:"경기 여주시", difficulty:3 },
+  { id:"ec066", name:"로드힐스", region:"강원 춘천시", difficulty:3 },
+  { id:"ec067", name:"로얄포레", region:"충북 충주시", difficulty:3 },
+  { id:"ec068", name:"롯데스카이힐 제주", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec069", name:"리베라", region:"경기 화성시", difficulty:3 },
+  { id:"ec070", name:"마론뉴데이", region:"충남 천안시", difficulty:3 },
+  { id:"ec071", name:"마에스트로", region:"경기 안성시", difficulty:3 },
+  { id:"ec072", name:"마우나오션", region:"경북 경주시", difficulty:3 },
+  { id:"ec073", name:"마이다스밸리", region:"경기 가평군", difficulty:3 },
+  { id:"ec074", name:"메이플비치", region:"강원 강릉시", difficulty:3 },
+  { id:"ec075", name:"몽베르", region:"경기 포천시", difficulty:3 },
+  { id:"ec076", name:"무주덕유산", region:"전북 무주군", difficulty:3 },
+  { id:"ec077", name:"무주안성", region:"전북 안성면", difficulty:3 },
+  { id:"ec078", name:"발리오스", region:"경기 화성시", difficulty:3 },
+  { id:"ec079", name:"버드우드", region:"충남 천안시", difficulty:3 },
+  { id:"ec080", name:"베어즈베스트 청라", region:"인천 서구", difficulty:3 },
+  { id:"ec081", name:"베어크리크", region:"경기 포천시", difficulty:3 },
+  { id:"ec082", name:"베어크리크 춘천", region:"강원 춘천시", difficulty:3 },
+  { id:"ec083", name:"베어크리크포천", region:"경기 포천시", difficulty:3 },
+  { id:"ec084", name:"베어포트", region:"전북 익산시", difficulty:3 },
+  { id:"ec085", name:"베이사이드", region:"부산 기장군", difficulty:3 },
+  { id:"ec086", name:"벨라스톤", region:"강원 횡성군", difficulty:3 },
+  { id:"ec087", name:"보라", region:"울산 울주군", difficulty:3 },
+  { id:"ec088", name:"보성", region:"전남 보성군", difficulty:3 },
+  { id:"ec089", name:"부영", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec090", name:"블랙밸리", region:"강원 삼척시", difficulty:3 },
+  { id:"ec091", name:"블랙스톤 제주", region:"제주 제주시", difficulty:3 },
+  { id:"ec092", name:"블루원 디아너스", region:"경북 경주시", difficulty:3 },
+  { id:"ec093", name:"블루원 상주", region:"경북 상주시", difficulty:3 },
+  { id:"ec094", name:"블루원 용인", region:"경기 용인시", difficulty:3 },
+  { id:"ec095", name:"블루헤런", region:"경기 여주시", difficulty:3 },
+  { id:"ec096", name:"비발디파크", region:"강원 홍천군", difficulty:3 },
+  { id:"ec097", name:"비에이비스타", region:"경기 이천시", difficulty:3 },
+  { id:"ec098", name:"빅토리아", region:"경기 여주시", difficulty:3 },
+  { id:"ec099", name:"사이프러스", region:"제주 제주시", difficulty:3 },
+  { id:"ec100", name:"상떼힐", region:"전북 익산시", difficulty:3 },
+  { id:"ec101", name:"샌드파인", region:"강원 강릉시", difficulty:3 },
+  { id:"ec102", name:"샤인데일", region:"강원 홍천군", difficulty:3 },
+  { id:"ec103", name:"샤인빌", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec104", name:"샴발라", region:"경기 포천시", difficulty:3 },
+  { id:"ec105", name:"서경타니", region:"경남 진주시", difficulty:3 },
+  { id:"ec106", name:"서라벌", region:"경북 경주시", difficulty:3 },
+  { id:"ec107", name:"서서울", region:"경기 파주시", difficulty:3 },
+  { id:"ec108", name:"서원밸리", region:"경기 파주시", difficulty:3 },
+  { id:"ec109", name:"서원힐스", region:"경기 파주시", difficulty:3 },
+  { id:"ec110", name:"석정힐", region:"전북 고창군", difficulty:3 },
+  { id:"ec111", name:"설악썬밸리", region:"강원 고성군", difficulty:3 },
+  { id:"ec112", name:"세라지오", region:"경기 여주시", difficulty:3 },
+  { id:"ec113", name:"세이지우드 홍천", region:"강원 홍천군", difficulty:3 },
+  { id:"ec114", name:"세인트포", region:"제주 제주시", difficulty:3 },
+  { id:"ec115", name:"세종에머슨", region:"세종 전의면", difficulty:3 },
+  { id:"ec116", name:"세종필드", region:"세종시", difficulty:3 },
+  { id:"ec117", name:"센추리21", region:"강원 원주시", difficulty:3 },
+  { id:"ec118", name:"솔라고", region:"충남 태안군", difficulty:3 },
+  { id:"ec119", name:"솔모로", region:"경기 여주시", difficulty:3 },
+  { id:"ec120", name:"솔트베이", region:"경기 시흥시", difficulty:3 },
+  { id:"ec121", name:"송추", region:"경기 양주시", difficulty:3 },
+  { id:"ec122", name:"수원", region:"경기 용인시", difficulty:3 },
+  { id:"ec123", name:"순천", region:"전남 순천시", difficulty:3 },
+  { id:"ec124", name:"스마트쿠", region:"경기 용인시", difficulty:3 },
+  { id:"ec125", name:"스카이72", region:"인천 중구", difficulty:3 },
+  { id:"ec126", name:"스카이밸리", region:"경기 여주시", difficulty:3 },
+  { id:"ec127", name:"스카이뷰", region:"경남 함양군", difficulty:3 },
+  { id:"ec128", name:"스카이힐 제주", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec129", name:"스톤게이트", region:"부산 기장군", difficulty:3 },
+  { id:"ec130", name:"스톤비치", region:"충남 태안군", difficulty:3 },
+  { id:"ec131", name:"스프링베일", region:"강원 춘천시", difficulty:3 },
+  { id:"ec132", name:"승주", region:"전남 순천시", difficulty:3 },
+  { id:"ec133", name:"시그너스", region:"충북 충주시", difficulty:3 },
+  { id:"ec134", name:"신안", region:"경기 안성시", difficulty:3 },
+  { id:"ec135", name:"신원월드", region:"경기 용인시", difficulty:3 },
+  { id:"ec136", name:"실크리버", region:"충북 청주시", difficulty:3 },
+  { id:"ec137", name:"써미트", region:"전북 진안군", difficulty:3 },
+  { id:"ec138", name:"썬밸리", region:"충북 음성군", difficulty:3 },
+  { id:"ec139", name:"아난티클럽서울", region:"경기 가평군", difficulty:3 },
+  { id:"ec140", name:"아덴힐", region:"제주 제주시", difficulty:3 },
+  { id:"ec141", name:"아라미르", region:"경남 창원시", difficulty:3 },
+  { id:"ec142", name:"아름다운", region:"충남 아산시", difficulty:3 },
+  { id:"ec143", name:"아리솔", region:"충북 보은군", difficulty:3 },
+  { id:"ec144", name:"아리지", region:"경기 여주시", difficulty:3 },
+  { id:"ec145", name:"아시아나", region:"경기 용인시", difficulty:3 },
+  { id:"ec146", name:"아시아드", region:"부산 기장군", difficulty:3 },
+  { id:"ec147", name:"안성", region:"경기 안성시", difficulty:3 },
+  { id:"ec148", name:"안양CC", region:"경기 군포시", difficulty:3 },
+  { id:"ec149", name:"알펜시아", region:"강원 평창군", difficulty:3 },
+  { id:"ec150", name:"양산", region:"경남 양산시", difficulty:3 },
+  { id:"ec151", name:"양주", region:"경기 양주시", difficulty:3 },
+  { id:"ec152", name:"양평TPC", region:"경기 양평군", difficulty:3 },
+  { id:"ec153", name:"어등산", region:"광주 광산구", difficulty:3 },
+  { id:"ec154", name:"에덴블루", region:"경기 안성시", difficulty:3 },
+  { id:"ec155", name:"에딘버러", region:"충남 금산군", difficulty:3 },
+  { id:"ec156", name:"에머슨", region:"충북 진천군", difficulty:3 },
+  { id:"ec157", name:"에버리스", region:"제주 제주시", difficulty:3 },
+  { id:"ec158", name:"에이원", region:"경남 양산시", difficulty:3 },
+  { id:"ec159", name:"에이치원", region:"충북 이천시", difficulty:3 },
+  { id:"ec160", name:"엘리시안 강촌", region:"강원 춘천시", difficulty:3 },
+  { id:"ec161", name:"엘리시안 제주", region:"제주 제주시", difficulty:3 },
+  { id:"ec162", name:"여수경도", region:"전남 여수시", difficulty:3 },
+  { id:"ec163", name:"여주", region:"경기 여주시", difficulty:3 },
+  { id:"ec164", name:"여주신라", region:"경기 여주시", difficulty:3 },
+  { id:"ec165", name:"여주포레스트", region:"경기 여주시", difficulty:3 },
+  { id:"ec166", name:"영광", region:"전남 영광군", difficulty:3 },
+  { id:"ec167", name:"영암", region:"전남 영암군", difficulty:3 },
+  { id:"ec168", name:"오너스", region:"강원 춘천시", difficulty:3 },
+  { id:"ec169", name:"오라", region:"제주 제주시", difficulty:3 },
+  { id:"ec170", name:"오렌지듄스", region:"인천 연수구", difficulty:3 },
+  { id:"ec171", name:"오션뷰", region:"경북 영덕군", difficulty:3 },
+  { id:"ec172", name:"오션힐스영덕", region:"경북 영덕군", difficulty:3 },
+  { id:"ec173", name:"오션힐스청도", region:"경북 청도군", difficulty:3 },
+  { id:"ec174", name:"오션힐스포항", region:"경북 포항시", difficulty:3 },
+  { id:"ec175", name:"오크밸리", region:"강원 원주시", difficulty:3 },
+  { id:"ec176", name:"오크힐스", region:"강원 원주시", difficulty:3 },
+  { id:"ec177", name:"옥스필드", region:"강원 횡성군", difficulty:3 },
+  { id:"ec178", name:"올데이", region:"충북 충주시", difficulty:3 },
+  { id:"ec179", name:"용원", region:"경남 창원시", difficulty:3 },
+  { id:"ec180", name:"용평", region:"강원 평창군", difficulty:3 },
+  { id:"ec181", name:"우리들", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec182", name:"우정힐스", region:"충남 천안시", difficulty:3 },
+  { id:"ec183", name:"울산", region:"울산 울주군", difficulty:3 },
+  { id:"ec184", name:"웰리힐리", region:"강원 횡성군", difficulty:3 },
+  { id:"ec185", name:"웰링턴", region:"경기 이천시", difficulty:3 },
+  { id:"ec186", name:"윈체스트", region:"경기 안성시", difficulty:3 },
+  { id:"ec187", name:"이븐데일", region:"충북 청주시", difficulty:3 },
+  { id:"ec188", name:"이스트밸리", region:"경기 광주시", difficulty:3 },
+  { id:"ec189", name:"이포", region:"경기 여주시", difficulty:3 },
+  { id:"ec190", name:"익산", region:"전북 익산시", difficulty:3 },
+  { id:"ec191", name:"인천국제", region:"인천 서구", difficulty:3 },
+  { id:"ec192", name:"인터불고", region:"경북 경산시", difficulty:3 },
+  { id:"ec193", name:"인터불고 원주", region:"강원 원주시", difficulty:3 },
+  { id:"ec194", name:"일동레이크", region:"경기 포천시", difficulty:3 },
+  { id:"ec195", name:"임페리얼팰리스", region:"충북 충주시", difficulty:3 },
+  { id:"ec196", name:"자유CC", region:"경기 여주시", difficulty:3 },
+  { id:"ec197", name:"장수", region:"전북 장수군", difficulty:3 },
+  { id:"ec198", name:"잭니클라우드", region:"인천 연수구", difficulty:3 },
+  { id:"ec199", name:"전주", region:"전북 완주군", difficulty:3 },
+  { id:"ec200", name:"정산", region:"경남 김해시", difficulty:3 },
+  { id:"ec201", name:"제일", region:"경기 안산시", difficulty:3 },
+  { id:"ec202", name:"제주CC", region:"제주 제주시", difficulty:3 },
+  { id:"ec203", name:"젠스필드", region:"충북 음성군", difficulty:3 },
+  { id:"ec204", name:"중원", region:"충북 충주시", difficulty:3 },
+  { id:"ec205", name:"지산", region:"경기 용인시", difficulty:3 },
+  { id:"ec206", name:"진양밸리", region:"충북 음성군", difficulty:3 },
+  { id:"ec207", name:"진주", region:"경남 진주시", difficulty:3 },
+  { id:"ec208", name:"진천밸리", region:"충북 진천군", difficulty:3 },
+  { id:"ec209", name:"참밸리", region:"경기 포천시", difficulty:3 },
+  { id:"ec210", name:"창원", region:"경남 창원시", difficulty:3 },
+  { id:"ec211", name:"처인", region:"경기 용인시", difficulty:3 },
+  { id:"ec212", name:"천안상록", region:"충남 천안시", difficulty:3 },
+  { id:"ec213", name:"청주", region:"충북 청주시", difficulty:3 },
+  { id:"ec214", name:"캐슬렉스", region:"경기 하남시", difficulty:3 },
+  { id:"ec215", name:"캐슬렉스 제주", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec216", name:"캐슬파인", region:"경기 여주시", difficulty:3 },
+  { id:"ec217", name:"코리아", region:"경기 용인시", difficulty:3 },
+  { id:"ec218", name:"코스카", region:"충북 음성군", difficulty:3 },
+  { id:"ec219", name:"크라운", region:"제주 제주시", difficulty:3 },
+  { id:"ec220", name:"클럽디보은", region:"충북 보은군", difficulty:3 },
+  { id:"ec221", name:"클럽디속리산", region:"충북 보은군", difficulty:3 },
+  { id:"ec222", name:"킹즈락", region:"충북 제천시", difficulty:3 },
+  { id:"ec223", name:"타이거CC", region:"경기 파주시", difficulty:3 },
+  { id:"ec224", name:"태광", region:"경기 용인시", difficulty:3 },
+  { id:"ec225", name:"태인", region:"전북 정읍시", difficulty:3 },
+  { id:"ec226", name:"테디밸리", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec227", name:"통도파인이스트", region:"경남 양산시", difficulty:3 },
+  { id:"ec228", name:"트리니티", region:"경기 여주시", difficulty:3 },
+  { id:"ec229", name:"티클라우드", region:"경기 동두천시", difficulty:3 },
+  { id:"ec230", name:"파가니카", region:"강원 춘천시", difficulty:3 },
+  { id:"ec231", name:"파미르", region:"경북 칠곡군", difficulty:3 },
+  { id:"ec232", name:"파인리즈", region:"강원 고성군", difficulty:3 },
+  { id:"ec233", name:"파인밸리", region:"강원 삼척시", difficulty:3 },
+  { id:"ec234", name:"파인비치", region:"전남 해남군", difficulty:3 },
+  { id:"ec235", name:"파인스톤", region:"충남 당진시", difficulty:3 },
+  { id:"ec236", name:"파인크리크", region:"경기 안성시", difficulty:3 },
+  { id:"ec237", name:"팔공", region:"대구 동구", difficulty:3 },
+  { id:"ec238", name:"페럼클럽", region:"경기 여주시", difficulty:3 },
+  { id:"ec239", name:"포라이즌", region:"전남 순천시", difficulty:3 },
+  { id:"ec240", name:"포천", region:"경기 포천시", difficulty:3 },
+  { id:"ec241", name:"포천아도니스", region:"경기 포천시", difficulty:3 },
+  { id:"ec242", name:"포천힐스", region:"경기 포천시", difficulty:3 },
+  { id:"ec243", name:"푸른솔GC", region:"경기 포천시", difficulty:3 },
+  { id:"ec244", name:"프리스틴밸리", region:"경기 가평군", difficulty:3 },
+  { id:"ec245", name:"프린세스", region:"충남 공주시", difficulty:3 },
+  { id:"ec246", name:"플라자 용인", region:"경기 용인시", difficulty:3 },
+  { id:"ec247", name:"플라자 제주", region:"제주 제주시", difficulty:3 },
+  { id:"ec248", name:"핀크스", region:"제주 서귀포시", difficulty:3 },
+  { id:"ec249", name:"필로스", region:"경기 포천시", difficulty:3 },
+  { id:"ec250", name:"하이스트", region:"경남 강서구", difficulty:3 },
+  { id:"ec251", name:"한성", region:"경기 용인시", difficulty:3 },
+  { id:"ec252", name:"한양", region:"경기 고양시", difficulty:3 },
+  { id:"ec253", name:"함평엘리체", region:"전남 함평군", difficulty:3 },
+  { id:"ec254", name:"해비치 제주", region:"제주 제주시", difficulty:3 },
+  { id:"ec255", name:"해슬리나인브릿지", region:"경기 여주시", difficulty:3 },
+  { id:"ec256", name:"해운대", region:"부산 기장군", difficulty:3 },
+  { id:"ec257", name:"해운대비치", region:"부산 기장군", difficulty:3 },
+  { id:"ec258", name:"현대더링스", region:"충남 태안군", difficulty:3 },
+  { id:"ec259", name:"화산", region:"경기 용인시", difficulty:3 },
+  { id:"ec260", name:"휘닉스스프링스", region:"경기 이천시", difficulty:3 },
+  { id:"ec261", name:"휘닉스파크", region:"강원 평창군", difficulty:3 },
+  { id:"ec262", name:"히든밸리", region:"충북 진천군", difficulty:3 },
+  { id:"ec263", name:"힐데스하임", region:"충북 제천시", difficulty:3 }
 ];
 const INIT_HANDICAPS = {
   2025:{ p1:93, p2:90, p3:93, p4:97 },
@@ -867,69 +1130,16 @@ function CourseManager({courses,setCourses,onSaved}) {
   const [editId,setEditId]=useState(null);
   const [editData,setEditData]=useState({});
   const [nm,setNm]=useState(""); const [rg,setRg]=useState(""); const [df,setDf]=useState(3);
-  const [query,setQuery]=useState(""); const [searching,setSearching]=useState(false);
-  const [results,setResults]=useState([]); const [searchErr,setSearchErr]=useState("");
   const filtered=(courses||[]).filter(c=>c.name.includes(listSearch)||c.region.includes(listSearch)||listSearch==="");
   const startEdit=c=>{setEditId(c.id);setEditData({name:c.name,region:c.region,difficulty:c.difficulty});};
   const saveEdit=()=>{setCourses(cs=>cs.map(c=>c.id===editId?{...c,...editData}:c));setEditId(null);if(onSaved)onSaved();};
-  const searchCourse=async()=>{
-    if(!query.trim())return;
-    setSearching(true);setResults([]);setSearchErr("");
-    try {
-      const res=await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          model:"claude-sonnet-4-20250514",max_tokens:800,
-          tools:[{type:"web_search_20250305",name:"web_search"}],
-          system:"You are a Korean golf course expert. Search for the golf course info and respond ONLY with valid JSON (no explanation): {\"name\":\"골프장명\",\"region\":\"시/도\",\"difficulty\":3,\"memo\":\"홀수 특징\"}. difficulty is 1-5. If not found: {\"error\":\"not_found\"}",
-          messages:[{role:"user",content:`"${query}" 골프장 정보를 검색해서 JSON으로만 반환하세요.`}]
-        })
-      });
-      const data=await res.json();
-      const textBlock=data.content?.find(b=>b.type==="text");
-      if(!textBlock)throw new Error("no text");
-      const jsonStr=textBlock.text.match(/\{[\s\S]*\}/)?.[0];
-      if(!jsonStr)throw new Error("no json");
-      const parsed=JSON.parse(jsonStr);
-      if(parsed.error){setSearchErr(`"${query}" 정보를 찾을 수 없습니다.`);}
-      else{setResults([parsed]);setNm(parsed.name||"");setRg(parsed.region||"");setDf(parsed.difficulty||3);}
-    } catch(e){setSearchErr("검색 오류. 직접 입력해주세요.");console.error(e);}
-    setSearching(false);
-  };
   return (
     <div>
-      <Card style={{padding:14,marginBottom:14,background:"#f0f4ff",border:`1.5px solid ${C.blue}22`}}>
-        <div style={{fontSize:12,fontWeight:700,color:C.blue,marginBottom:10}}>🌐 인터넷에서 골프장 검색</div>
-        <div style={{display:"flex",gap:8,marginBottom:8}}>
-          <input value={query} onChange={e=>setQuery(e.target.value)}
-            onKeyDown={e=>e.key==="Enter"&&searchCourse()}
-            placeholder="골프장명 입력 (예: 이스트밸리)"
-            style={{flex:1,background:C.surface,border:`1.5px solid ${C.border}`,borderRadius:10,
-              padding:"10px 14px",color:C.text,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
-          <Btn onClick={searchCourse} color={C.blue} small>{searching?"검색 중…":"🔍 검색"}</Btn>
-        </div>
-        {searching&&<div style={{textAlign:"center",padding:"10px 0",color:C.muted,fontSize:13}}>골프장 정보를 검색하고 있습니다…</div>}
-        {searchErr&&<div style={{fontSize:12,color:C.red,padding:"8px 12px",background:"#fff5f5",borderRadius:8}}>{searchErr}</div>}
-        {results.length>0&&(
-          <div style={{padding:"10px 12px",background:"#e8f5e9",borderRadius:10,border:"1px solid #a5d6a7"}}>
-            <div style={{fontSize:11,fontWeight:700,color:C.green,marginBottom:4}}>✅ 자동 입력 완료 — 아래에서 확인 후 추가</div>
-            {results.map((r,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <div>
-                  <div style={{fontWeight:700,fontSize:13,color:C.text}}>{r.name}</div>
-                  <div style={{fontSize:12,color:C.muted}}>{r.region} {r.memo&&`· ${r.memo}`}</div>
-                </div>
-                <Stars n={r.difficulty??3} sz={14}/>
-              </div>
-            ))}
-          </div>
-        )}
-      </Card>
       <Card style={{padding:14,background:C.bg,marginBottom:14}}>
         <div style={{fontSize:12,fontWeight:700,color:C.blue,marginBottom:10}}>+ 골프장 추가</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
           <FInput value={nm} onChange={e=>setNm(e.target.value)} placeholder="골프장명"/>
-          <FInput value={rg} onChange={e=>setRg(e.target.value)} placeholder="지역"/>
+          <FInput value={rg} onChange={e=>setRg(e.target.value)} placeholder="지역 (예: 경기 여주시)"/>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{fontSize:12,color:C.muted}}>난이도:</span>
@@ -942,7 +1152,7 @@ function CourseManager({courses,setCourses,onSaved}) {
         <Btn onClick={()=>{
           if(!nm.trim()||!rg.trim())return;
           setCourses(cs=>[...cs,{id:uid(),name:nm.trim(),region:rg.trim(),difficulty:df}]);
-          setNm("");setRg("");setDf(3);setResults([]);setQuery("");
+          setNm("");setRg("");setDf(3);
           if(onSaved)onSaved();
         }} color={C.purple} full small>추가</Btn>
       </Card>
