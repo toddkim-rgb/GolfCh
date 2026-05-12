@@ -290,8 +290,65 @@ function YearTabs({year,years,onChange}) {
   );
 }
 
+// ─── ScheduleNotice ───────────────────────────────────────────────────────────
+function ScheduleNotice({schedules,courses}) {
+  const today=new Date().toISOString().slice(0,10);
+  const dayNames=["일","월","화","수","목","금","토"];
+  const upcoming=[...(schedules||[])]
+    .filter(s=>s.date>=today)
+    .sort((a,b)=>a.date.localeCompare(b.date))
+    .slice(0,3);
+  if(!upcoming.length) return null;
+  const isToday=s=>s.date===today;
+  const daysLeft=s=>{
+    const diff=Math.round((new Date(s.date+"T12:00")-new Date(today+"T12:00"))/(1000*60*60*24));
+    return diff===0?"오늘":diff===1?"내일":`${diff}일 후`;
+  };
+  return (
+    <Card style={{overflow:"hidden",padding:0,marginBottom:16,border:`1.5px solid ${C.blue}30`}}>
+      <div style={{padding:"10px 14px 8px",background:`linear-gradient(90deg,${C.blue}18,${C.purple}10)`,
+        borderBottom:`1px solid ${C.blue}20`,display:"flex",alignItems:"center",gap:6}}>
+        <span style={{fontSize:15}}>📅</span>
+        <span style={{fontWeight:800,fontSize:13,color:C.blue}}>예정된 라운딩</span>
+        <span style={{marginLeft:"auto",fontSize:11,fontWeight:700,color:C.purple,
+          background:`${C.purple}15`,padding:"2px 8px",borderRadius:10}}>{upcoming.length}건</span>
+      </div>
+      {upcoming.map((s,i)=>{
+        const course=(courses||[]).find(c=>c.id===s.courseId);
+        const dObj=new Date(s.date+"T12:00");
+        const today_=isToday(s);
+        return (
+          <div key={s.id} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 14px",
+            borderTop:i>0?`1px solid ${C.border}`:"none",
+            background:today_?`${C.blue}08`:"#fff"}}>
+            <div style={{flexShrink:0,textAlign:"center",width:40,
+              background:today_?C.blue:C.bg,borderRadius:10,padding:"5px 4px",
+              border:`1.5px solid ${today_?C.blue:C.border}`}}>
+              <div style={{fontSize:10,fontWeight:700,color:today_?"#fff":C.muted}}>{s.date.slice(5,7)}/{s.date.slice(8,10)}</div>
+              <div style={{fontSize:11,fontWeight:800,color:today_?"#fff":C.faint}}>{dayNames[dObj.getDay()]}</div>
+            </div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontWeight:800,fontSize:13,color:C.text,
+                whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.clubName}</div>
+              <div style={{display:"flex",alignItems:"center",gap:6,marginTop:2}}>
+                <span style={{fontSize:12,fontWeight:700,color:C.blue}}>🕐 {s.teeTime}</span>
+                {course&&<span style={{fontSize:11,color:C.muted}}>{course.name}</span>}
+              </div>
+            </div>
+            <div style={{flexShrink:0,fontWeight:800,fontSize:12,padding:"4px 10px",borderRadius:20,
+              background:today_?C.blue:`${C.gold}20`,color:today_?"#fff":C.gold,
+              border:`1.5px solid ${today_?C.blue:C.gold}40`}}>
+              {daysLeft(s)}
+            </div>
+          </div>
+        );
+      })}
+    </Card>
+  );
+}
+
 // ─── SeasonView ───────────────────────────────────────────────────────────────
-function SeasonView({players,rounds,handicaps,courses,year,onYearChange}) {
+function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedules}) {
   const years = [...new Set(Object.keys(handicaps).map(Number))].sort((a,b)=>b-a);
   const yRounds = (rounds||[]).filter(r=>r.date.startsWith(year)).sort((a,b)=>a.date.localeCompare(b.date));
   const stats = computeStats(players, yRounds, handicaps, year);
@@ -302,6 +359,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange}) {
   });
   return (
     <div>
+      <ScheduleNotice schedules={schedules} courses={courses}/>
       <div style={{display:"flex",gap:8,marginBottom:20}}>
         {years.map(y=>(
           <button key={y} onClick={()=>onYearChange(y)} style={{padding:"8px 22px",borderRadius:30,
@@ -1270,7 +1328,7 @@ export default function App() {
       </header>
 
       <div style={{maxWidth:480,margin:"0 auto",padding:"12px 12px 0"}}>
-        {tab==="season"&&<SeasonView players={players} rounds={rounds} handicaps={handicaps} courses={courses} year={year} onYearChange={setYear}/>}
+        {tab==="season"&&<SeasonView players={players} rounds={rounds} handicaps={handicaps} courses={courses} year={year} onYearChange={setYear} schedules={schedules}/>}
         {tab==="rounds"&&<RoundsView allRounds={rounds} courses={courses} players={players} handicaps={handicaps} isAdmin={isAdmin} setRounds={setRounds}/>}
         {tab==="awards"&&<AwardsView players={players} allRounds={rounds} handicaps={handicaps}/>}
         {tab==="admin"&&(
