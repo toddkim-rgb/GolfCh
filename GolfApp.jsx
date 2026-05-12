@@ -419,12 +419,96 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange}) {
   );
 }
 
+// ─── RoundEditModal ───────────────────────────────────────────────────────────
+function RoundEditModal({round,players,courses,onSave,onClose}) {
+  const yr=round.date.slice(0,4);
+  const [date,    setDate]    = useState(round.date);
+  const [courseId,setCourseId]= useState(round.courseId);
+  const [weather, setWeather] = useState(round.weather);
+  const [memo,    setMemo]    = useState(round.memo||"");
+  const [scores,  setScores]  = useState(
+    (players||[]).map(p=>{
+      const ex=round.scores.find(s=>s.pid===p.id);
+      return ex?{...ex}:{pid:p.id,score:"",birdies:0};
+    })
+  );
+  const upd=(i,f,v)=>{const n=[...scores];n[i]={...n[i],[f]:f==="birdies"?Number(v):v};setScores(n);};
+  const save=()=>{
+    if(!courseId||scores.some(s=>!s.score)){alert("모든 항목을 입력해주세요.");return;}
+    onSave({...round,courseId,date,weather,memo,scores:scores.map(s=>({...s,score:Number(s.score)}))});
+  };
+  return (
+    <Modal title="✏️ 라운드 수정" onClose={onClose}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:4}}>
+        <FInput label="📅 날짜" type="date" value={date} onChange={e=>setDate(e.target.value)}/>
+        <FSel label="☁️ 날씨" value={weather} onChange={e=>setWeather(e.target.value)}
+          options={Object.entries(WEATHER_MAP).map(([k,v])=>({v:k,l:v}))}/>
+      </div>
+      <FSel label="⛳ 골프장" value={courseId} onChange={e=>setCourseId(e.target.value)}
+        options={(courses||[]).map(c=>({v:c.id,l:`${c.name} (${c.region})`}))}/>
+      <Card style={{overflow:"hidden",padding:0,marginBottom:12}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 72px",gap:8,padding:"10px 12px",
+          background:C.blue,fontSize:11,fontWeight:700,color:"#fff"}}>
+          <span>플레이어</span><span>총점</span><span style={{textAlign:"center"}}>버디</span>
+        </div>
+        {scores.map((s,i)=>{
+          const p=(players||[]).find(pl=>pl.id===s.pid);
+          const Char=p?CHARS[p.id]:null;
+          const acc=p?ACCENTS[p.id]:C.blue;
+          return (
+            <div key={s.pid} style={{display:"grid",gridTemplateColumns:"1fr 1fr 72px",gap:8,
+              padding:"10px 12px",alignItems:"center",borderTop:`1px solid ${C.border}`,
+              background:i%2===0?"#fff":C.bg}}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <div style={{width:30,height:30,borderRadius:"50%",overflow:"hidden",
+                  border:`2px solid ${acc}`,flexShrink:0,background:C.bg}}>
+                  {Char&&<Char/>}
+                </div>
+                <div style={{fontSize:12,fontWeight:700,color:C.text}}>{p?.name}</div>
+              </div>
+              <input type="number" placeholder="타수" value={s.score} min={60} max={150}
+                onChange={e=>upd(i,"score",e.target.value)}
+                style={{background:"#fff",border:`1.5px solid ${C.border}`,borderRadius:8,
+                  padding:"8px",color:C.text,fontWeight:800,fontSize:16,fontFamily:"monospace",
+                  textAlign:"center",outline:"none",width:"100%",boxSizing:"border-box"}}/>
+              <div style={{display:"flex",alignItems:"center",gap:4,justifyContent:"center"}}>
+                <button onClick={()=>upd(i,"birdies",Math.max(0,s.birdies-1))}
+                  style={{width:22,height:22,borderRadius:6,border:`1px solid ${C.border}`,
+                    background:C.surface,color:C.text,cursor:"pointer",fontSize:14,fontWeight:700,lineHeight:1}}>−</button>
+                <span style={{fontFamily:"monospace",fontWeight:800,color:C.red,minWidth:16,textAlign:"center"}}>{s.birdies}</span>
+                <button onClick={()=>upd(i,"birdies",s.birdies+1)}
+                  style={{width:22,height:22,borderRadius:6,border:`1px solid ${C.border}`,
+                    background:C.surface,color:C.text,cursor:"pointer",fontSize:14,fontWeight:700,lineHeight:1}}>+</button>
+              </div>
+            </div>
+          );
+        })}
+      </Card>
+      <FInput label="📝 메모" value={memo} onChange={e=>setMemo(e.target.value)} placeholder="특이사항 (선택)"/>
+      <div style={{display:"flex",gap:8}}>
+        <Btn onClick={save} color={C.blue} full>💾 수정 저장</Btn>
+        <Btn onClick={onClose} color={C.muted} outline>취소</Btn>
+      </div>
+    </Modal>
+  );
+}
+
 // ─── RoundsView ───────────────────────────────────────────────────────────────
-function RoundsView({allRounds,courses,players,handicaps}) {
+function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
   const years=[...new Set(Object.keys(handicaps).map(Number))].sort((a,b)=>b-a);
   const [year,setYear]=useState(years[0]??new Date().getFullYear());
   const [exp,setExp]=useState(null);
+  const [editRound,setEditRound]=useState(null);
   const sorted=[...(allRounds||[])].filter(r=>r.date.startsWith(year)).sort((a,b)=>b.date.localeCompare(a.date));
+  const handleDelete=(id)=>{
+    if(!window.confirm("이 라운드 기록을 삭제하시겠습니까?"))return;
+    setRounds(rs=>rs.filter(r=>r.id!==id));
+    setExp(null);
+  };
+  const handleSaveEdit=(updated)=>{
+    setRounds(rs=>rs.map(r=>r.id===updated.id?updated:r));
+    setEditRound(null);
+  };
   return (
     <div>
       <YearTabs year={year} years={years} onChange={y=>{setYear(y);setExp(null);}}/>
@@ -498,6 +582,20 @@ function RoundsView({allRounds,courses,players,handicaps}) {
                   {r.memo&&<div style={{marginTop:10,fontSize:12,color:C.muted}}>📝 {r.memo}</div>}
                 </div>
               )}
+              {isAdmin&&(
+                <div style={{display:"flex",gap:6,padding:"7px 12px",borderTop:`1px solid ${C.border}`,background:"#f8faff"}}>
+                  <button onClick={e=>{e.stopPropagation();setEditRound(r);}}
+                    style={{flex:1,background:"none",border:`1.5px solid ${C.blue}`,borderRadius:10,
+                      padding:"6px 0",color:C.blue,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                    ✏️ 수정
+                  </button>
+                  <button onClick={e=>{e.stopPropagation();handleDelete(r.id);}}
+                    style={{flex:1,background:"none",border:`1.5px solid ${C.red}`,borderRadius:10,
+                      padding:"6px 0",color:C.red,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                    🗑 삭제
+                  </button>
+                </div>
+              )}
               <div onClick={()=>setExp(isOpen?null:r.id)}
                 style={{textAlign:"center",padding:"6px",borderTop:`1px solid ${C.border}`,
                   cursor:"pointer",fontSize:11,color:C.faint,background:C.bg}}>
@@ -507,6 +605,10 @@ function RoundsView({allRounds,courses,players,handicaps}) {
           );
         })}
       </div>
+      {editRound&&(
+        <RoundEditModal round={editRound} players={players} courses={courses}
+          onSave={handleSaveEdit} onClose={()=>setEditRound(null)}/>
+      )}
     </div>
   );
 }
@@ -1178,7 +1280,7 @@ export default function App() {
 
       <div style={{maxWidth:480,margin:"0 auto",padding:"12px 12px 0"}}>
         {tab==="season"&&<SeasonView players={players} rounds={rounds} handicaps={handicaps} courses={courses} year={year} onYearChange={setYear}/>}
-        {tab==="rounds"&&<RoundsView allRounds={rounds} courses={courses} players={players} handicaps={handicaps}/>}
+        {tab==="rounds"&&<RoundsView allRounds={rounds} courses={courses} players={players} handicaps={handicaps} isAdmin={isAdmin} setRounds={setRounds}/>}
         {tab==="awards"&&<AwardsView players={players} allRounds={rounds} handicaps={handicaps}/>}
         {tab==="admin"&&(
           !isAdmin?(
