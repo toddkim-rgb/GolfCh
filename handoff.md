@@ -107,6 +107,8 @@ champScore = hcpDiff * 2 - birdies
 
 | 커밋 | 내용 |
 |------|------|
+| `5e7631a` | dev 서버에 `--host` 옵션 추가 (로컬 네트워크 모바일 접속 지원) |
+| `6e15850` | handoff.md 최초 작성 |
 | `c327dbe` | 관리 뷰 인터넷 골프장 검색 삭제, 엑셀 263개 골프장 데이터 반영 |
 | `1b7e09d` | 초기 화면에 예정된 라운딩 알림 카드 추가 |
 | `df89589` | 메인 App.jsx에 라운드 수정/삭제 기능 반영 |
@@ -127,5 +129,19 @@ champScore = hcpDiff * 2 - birdies
 
 ```bash
 npm install
-npm run dev   # http://localhost:5173
+npm run dev
 ```
+
+`--host` 옵션이 적용되어 있어 실행 시 두 가지 주소가 출력됩니다.
+
+```
+  ➜  Local:   http://localhost:5173/        ← PC 브라우저
+  ➜  Network: http://192.168.x.x:5173/     ← 같은 Wi-Fi의 핸드폰 브라우저
+```
+
+**PC·모바일 동시 사용 방법**
+- 소스 분리·브랜치 불필요, 단일 빌드로 PC 브라우저·모바일 브라우저 모두 동작
+- 개발 중: PC와 핸드폰이 같은 Wi-Fi에 있으면 Network 주소로 폰에서 바로 접속
+- 배포 시: `npm run build` 후 Vercel / GitHub Pages 등 무료 호스팅에 올리면 인터넷 어디서나 접속 가능
+
+> 주의: `localStorage`는 기기별로 독립 저장됨. 기기 간 데이터 공유가 필요하면 Firebase / Supabase 연동 필요.
