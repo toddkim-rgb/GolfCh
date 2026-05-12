@@ -5,7 +5,7 @@
 **골술년 챌린지보드**는 소규모 골프 모임(4인)의 라운드 기록, 시즌 순위, 어워즈를 관리하는 모바일 최적화 React 앱입니다.
 
 - **기술 스택**: React 18 + Vite 5, 순수 인라인 스타일 (CSS 프레임워크 없음)
-- **데이터 저장**: `localStorage` (서버 없음, 100% 클라이언트 사이드)
+- **데이터 저장**: Supabase (PostgreSQL + 실시간 동기화, 모든 기기 공유)
 - **빌드**: `npm run dev` (개발), `npm run build` (프로덕션)
 
 ---
@@ -42,15 +42,15 @@ GolfCh/
 
 ---
 
-## 데이터 모델 (localStorage 키)
+## 데이터 모델
 
-| 키 | 타입 | 설명 |
-|----|------|------|
-| `golfPlayers` | `Player[]` | 선수 목록 (id, name, gender) |
-| `golfCourses` | `Course[]` | 골프장 목록 (id, name, region, difficulty) |
-| `golfRounds` | `Round[]` | 라운드 기록 (date, courseId, weather, memo, scores[]) |
-| `golfHandicaps` | `{[year]: {[pid]: number}}` | 연도별 선수 핸디캡 |
-| `golfSchedules` | `Schedule[]` | 예정 라운드 일정 |
+| 키 (app_data.key) | 타입 | 설명 |
+|-------------------|------|------|
+| `gcb_players` | `Player[]` | 선수 목록 (id, name, gender) |
+| `gcb_courses` | `Course[]` | 골프장 목록 (id, name, region, difficulty) |
+| `gcb_rounds` | `Round[]` | 라운드 기록 (date, courseId, weather, memo, scores[]) |
+| `gcb_handicaps` | `{[year]: {[pid]: number}}` | 연도별 선수 핸디캡 |
+| `gcb_schedules` | `Schedule[]` | 예정 라운드 일정 |
 
 ```ts
 type Score = { pid: string; score: number; birdies: number }
@@ -118,16 +118,72 @@ champScore = hcpDiff * 2 - birdies
 
 ## 알려진 제약사항 / TODO
 
-- 데이터가 브라우저 localStorage에만 저장되므로 기기 간 공유 불가
-- 멀티 기기 동기화가 필요하면 Firebase / Supabase 연동 고려
+- Supabase 프로젝트 설정 필요 (`.env` 파일에 URL·키 입력)
 - `App.jsx`가 단일 파일(~1600줄)이므로 기능 추가 시 컴포넌트 분리 권장
 - 골프장 데이터(ec001~) 난이도가 모두 `3`으로 일괄 설정됨, 실제 난이도 반영 필요
+
+---
+
+## DB 설정 (Supabase)
+
+데이터는 Supabase에 저장되며 모든 기기가 실시간으로 동기화됩니다.
+
+### 1. Supabase 프로젝트 생성
+1. [supabase.com](https://supabase.com) → New Project 생성
+2. Project Settings → API → `URL`과 `anon public` 키 복사
+
+### 2. 테이블 생성
+Supabase 대시보드 → SQL Editor에서 실행:
+
+```sql
+create table app_data (
+  key        text primary key,
+  value      jsonb not null,
+  updated_at timestamptz default now()
+);
+
+-- 실시간 업데이트 활성화
+alter table app_data replica identity full;
+
+-- 인증 없이 읽기/쓰기 허용 (소규모 내부 앱용)
+alter table app_data enable row level security;
+create policy "allow all" on app_data for all using (true) with check (true);
+```
+
+### 3. 환경변수 설정
+```bash
+cp .env.example .env
+# .env 파일에 실제 URL과 키 입력
+```
+
+```
+VITE_SUPABASE_URL=https://xxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJ...
+```
+
+### 데이터 구조
+
+`app_data` 테이블의 `key` 컬럼별 저장 내용:
+
+| key | 내용 |
+|-----|------|
+| `gcb_players` | 선수 배열 |
+| `gcb_courses` | 골프장 배열 |
+| `gcb_rounds` | 라운드 배열 (scores 포함) |
+| `gcb_handicaps` | 연도별 핸디캡 객체 |
+| `gcb_schedules` | 일정 배열 |
+
+### 동기화 방식
+- 앱 시작 시 Supabase에서 최신 데이터 로드
+- 데이터 변경 시 즉시 Supabase에 upsert
+- 다른 기기의 변경사항은 Supabase Realtime으로 자동 수신 → 새로고침 없이 반영
 
 ---
 
 ## 개발 시작하기
 
 ```bash
+cp .env.example .env   # Supabase URL·키 입력 후
 npm install
 npm run dev
 ```
@@ -144,4 +200,4 @@ npm run dev
 - 개발 중: PC와 핸드폰이 같은 Wi-Fi에 있으면 Network 주소로 폰에서 바로 접속
 - 배포 시: `npm run build` 후 Vercel / GitHub Pages 등 무료 호스팅에 올리면 인터넷 어디서나 접속 가능
 
-> 주의: `localStorage`는 기기별로 독립 저장됨. 기기 간 데이터 공유가 필요하면 Firebase / Supabase 연동 필요.
+> 주의: `.env` 파일의 Supabase URL·키가 없으면 데이터 로드 실패. 배포 전 환경변수 설정 필수.

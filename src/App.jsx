@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { loadData, saveData, subscribeData, supabase } from "./supabase";
 
 // ─── Seed Data ────────────────────────────────────────────────────────────────
 const INIT_PLAYERS = [
@@ -379,17 +380,38 @@ const champScore = s => (s.hcpDiff??999)*2 - (s.birdies??0);
 
 // ─── Storage Hook ─────────────────────────────────────────────────────────────
 function useStored(key, init) {
-  const [val, setVal] = useState(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw !== null) return JSON.parse(raw);
-    } catch (e) { /* fall through to init */ }
-    return init;
-  });
+  const [val, setVal] = useState(init);
+  const [ready, setReady] = useState(false);
+  const activeRef = useRef(true);
+
   useEffect(() => {
-    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* quota/serialize */ }
-  }, [key, val]);
-  return [val, setVal, true];
+    activeRef.current = true;
+    loadData(key).then(remote => {
+      if (!activeRef.current) return;
+      if (remote !== null) setVal(remote);
+      else saveData(key, init);
+      setReady(true);
+    });
+
+    const channel = subscribeData(key, newVal => {
+      if (activeRef.current) setVal(newVal);
+    });
+
+    return () => {
+      activeRef.current = false;
+      supabase.removeChannel(channel);
+    };
+  }, [key]);
+
+  const setter = useCallback((newValOrFn) => {
+    setVal(prev => {
+      const next = typeof newValOrFn === 'function' ? newValOrFn(prev) : newValOrFn;
+      saveData(key, next);
+      return next;
+    });
+  }, [key]);
+
+  return [val, setter, ready];
 }
 
 // ─── UI Atoms ─────────────────────────────────────────────────────────────────
