@@ -1308,14 +1308,14 @@ function HandicapManager({players,handicaps,setHandicaps,year,onSaved}) {
 // ─── Admin: Schedule Manager ──────────────────────────────────────────────────
 function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
   const today=new Date().toISOString().slice(0,10);
-  const [form,setForm]=useState({date:"",teeTime:"",courseId:"",clubName:""});
+  const [form,setForm]=useState({date:"",teeTime:"",courseName:"",clubName:"",difficulty:0});
   const [editId,setEditId]=useState(null);
   const [editForm,setEditForm]=useState({});
   const upd=(k,v)=>setForm(f=>({...f,[k]:v}));
   const add=()=>{
     if(!form.date||!form.teeTime||!form.clubName){alert("날짜, 시간, 클럽명을 입력해주세요.");return;}
     setSchedules(ss=>[...ss,{id:uid(),...form}]);
-    setForm({date:"",teeTime:"",courseId:"",clubName:""});
+    setForm({date:"",teeTime:"",courseName:"",clubName:"",difficulty:0});
     if(onSaved)onSaved("📅 일정 등록");
   };
   const remove=id=>setSchedules(ss=>ss.filter(s=>s.id!==id));
@@ -1338,9 +1338,18 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
               <FInput value={editForm.date} onChange={e=>setEditForm(f=>({...f,date:e.target.value}))} type="date" style={{marginBottom:0}}/>
               <FInput value={editForm.teeTime} onChange={e=>setEditForm(f=>({...f,teeTime:e.target.value}))} type="time" style={{marginBottom:0}}/>
             </div>
-            <FInput value={editForm.clubName} onChange={e=>setEditForm(f=>({...f,clubName:e.target.value}))} placeholder="골프클럽명"/>
-            <FSel value={editForm.courseId||""} onChange={e=>setEditForm(f=>({...f,courseId:e.target.value}))}
-              options={[{v:"",l:"코스 선택 (선택사항)"},...(courses||[]).map(c=>({v:c.id,l:c.name}))]}/>
+            <FInput value={editForm.clubName||""} onChange={e=>setEditForm(f=>({...f,clubName:e.target.value}))} placeholder="골프클럽명"/>
+            <FInput value={editForm.courseName||""} onChange={e=>setEditForm(f=>({...f,courseName:e.target.value}))} placeholder="코스명 (선택)"/>
+            <div style={{marginBottom:8}}>
+              <div style={{fontSize:11,fontWeight:600,color:C.muted,marginBottom:4}}>⭐ 난이도 (선택)</div>
+              <div style={{display:"flex",gap:2}}>
+                {[1,2,3,4,5].map(n=>(
+                  <button key={n} onClick={()=>setEditForm(f=>({...f,difficulty:f.difficulty===n?0:n}))}
+                    style={{background:"none",border:"none",cursor:"pointer",fontSize:24,lineHeight:1,
+                      color:n<=(editForm.difficulty||0)?C.gold:"#d1d5db",padding:"2px 3px"}}>★</button>
+                ))}
+              </div>
+            </div>
             <div style={{display:"flex",gap:8}}>
               <Btn onClick={saveEdit} color={C.blue} small>저장</Btn>
               <Btn onClick={()=>setEditId(null)} color={C.muted} outline small>취소</Btn>
@@ -1357,7 +1366,8 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
               <div style={{fontWeight:800,fontSize:14,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.clubName}</div>
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:3,flexWrap:"wrap"}}>
                 <span style={{fontSize:13,fontWeight:700,color:C.blue}}>🕐 {s.teeTime}</span>
-                {course&&<Chip color={C.purple}>{course.name}</Chip>}
+                {(s.courseName||course)&&<Chip color={C.purple}>{s.courseName||course?.name}</Chip>}
+                {s.difficulty>0&&<span style={{fontSize:12,color:C.gold,letterSpacing:-1}}>{"★".repeat(s.difficulty)}{"☆".repeat(5-s.difficulty)}</span>}
               </div>
             </div>
             <div style={{display:"flex",gap:5,flexShrink:0}}>
@@ -1380,8 +1390,17 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
           <FInput label="🕐 티오프" type="time" value={form.teeTime} onChange={e=>upd("teeTime",e.target.value)}/>
         </div>
         <FInput label="🏌️ 골프클럽명" value={form.clubName} onChange={e=>upd("clubName",e.target.value)} placeholder="예: 파인리조트 골프클럽"/>
-        <FSel label="⛳ 코스 연결 (선택)" value={form.courseId} onChange={e=>upd("courseId",e.target.value)}
-          options={[{v:"",l:"선택 안 함"},...(courses||[]).map(c=>({v:c.id,l:c.name}))]}/>
+        <FInput label="⛳ 코스명 (선택)" value={form.courseName} onChange={e=>upd("courseName",e.target.value)} placeholder="예: 동코스 / 레이크코스"/>
+        <div style={{marginBottom:10}}>
+          <div style={{fontSize:11,fontWeight:600,color:C.muted,marginBottom:5}}>⭐ 난이도 (선택)</div>
+          <div style={{display:"flex",gap:2}}>
+            {[1,2,3,4,5].map(n=>(
+              <button key={n} onClick={()=>upd("difficulty",form.difficulty===n?0:n)}
+                style={{background:"none",border:"none",cursor:"pointer",fontSize:26,lineHeight:1,
+                  color:n<=form.difficulty?C.gold:"#d1d5db",padding:"2px 3px"}}>★</button>
+            ))}
+          </div>
+        </div>
         <Btn onClick={add} color={C.blue} full>등록</Btn>
       </Card>
       {upcoming.length>0&&(
