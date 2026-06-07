@@ -1638,7 +1638,14 @@ export default function App() {
               </div>
               {aTab==="schedule"&&<ScheduleManager schedules={schedules} setSchedules={setSchedules} courses={courses} onSaved={saved}/>}
               {aTab==="input"   &&<AdminRoundForm players={players} courses={courses} handicaps={handicaps} year={year}
-                initSched={autoSched} onSave={r=>{setRounds(rs=>[...rs,r]);saved();setAutoSched(null);}}/>}
+                initSched={autoSched} onSave={r=>{
+                  setRounds(rs=>[...rs,r]);
+                  // 같은 날짜의 예정 일정은 라운드 기록 완료로 간주하여 즉시 제거(예정 목록에서 사라짐)
+                  setSchedules(ss=>(ss||[]).filter(s=>s.date!==r.date));
+                  setTodayAlert(a=>(a&&a.date===r.date)?null:a);
+                  saved("✅ 라운드 저장 완료 · 일정 업데이트됨");
+                  setAutoSched(null);
+                }}/>}
               {aTab==="courses" &&<CourseManager courses={courses} setCourses={setCourses} onSaved={saved}/>}
               {aTab==="players" &&<PlayerManager players={players} setPlayers={setPlayers} onSaved={saved}/>}
               {aTab==="handicap"&&<HandicapManager players={players} handicaps={handicaps} setHandicaps={setHandicaps} year={year} onSaved={saved}/>}
