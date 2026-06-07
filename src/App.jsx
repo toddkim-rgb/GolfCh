@@ -934,7 +934,7 @@ function PhotoPicker({photos,setPhotos,roundId,label}) {
           {uploading?"⏳":"＋"}
         </button>
       </div>
-      <input ref={inputRef} type="file" accept="image/*" multiple capture="environment"
+      <input ref={inputRef} type="file" accept="image/*" multiple
         style={{display:"none"}} onChange={handleFiles}/>
       {viewer&&(
         <div onClick={()=>setViewer(null)} style={{position:"fixed",inset:0,zIndex:200,
