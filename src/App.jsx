@@ -318,6 +318,26 @@ const C = {
 const WEATHER_MAP = { SUNNY:"☀️ 맑음", CLOUDY:"⛅ 흐림", RAINY:"🌧️ 비", WINDY:"💨 바람" };
 const uid = () => Math.random().toString(36).slice(2,9);
 
+// ─── Round Photos (Supabase Storage) ─────────────────────────────────────────
+const ROUND_PHOTOS_BUCKET = "round-photos";
+async function uploadRoundPhoto(file, roundId) {
+  const ext = (file.name.split(".").pop()||"jpg").toLowerCase();
+  const path = `${roundId}/${Date.now()}-${uid()}.${ext}`;
+  const { error } = await supabase.storage.from(ROUND_PHOTOS_BUCKET).upload(path, file, { cacheControl:"3600", upsert:false });
+  if (error) throw error;
+  const { data } = supabase.storage.from(ROUND_PHOTOS_BUCKET).getPublicUrl(path);
+  return data?.publicUrl;
+}
+function removeRoundPhoto(url) {
+  try {
+    const marker = `/${ROUND_PHOTOS_BUCKET}/`;
+    const idx = url.indexOf(marker);
+    if (idx===-1) return;
+    const path = decodeURIComponent(url.slice(idx+marker.length));
+    supabase.storage.from(ROUND_PHOTOS_BUCKET).remove([path]);
+  } catch {}
+}
+
 // ─── Character Images ────────────────────────────────────────────────────────
 const CHAR_IMGS = {
   p1: "data:image/webp;base64,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",
@@ -867,12 +887,74 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
   );
 }
 
+// ─── PhotoPicker (라운드 사진 등록) ────────────────────────────────────────────
+function PhotoPicker({photos,setPhotos,roundId,label}) {
+  const [uploading,setUploading]=useState(false);
+  const inputRef=useRef(null);
+  const [viewer,setViewer]=useState(null);
+  const handleFiles=async(e)=>{
+    const files=[...(e.target.files||[])];
+    if(!files.length)return;
+    setUploading(true);
+    for(const f of files){
+      try{
+        const url=await uploadRoundPhoto(f,roundId);
+        if(url)setPhotos(ps=>[...(ps||[]),url]);
+      }catch(err){
+        alert("📷 사진 업로드 실패: "+(err?.message||"알 수 없는 오류"));
+      }
+    }
+    setUploading(false);
+    if(inputRef.current)inputRef.current.value="";
+  };
+  const remove=(url)=>{
+    if(!window.confirm("이 사진을 삭제하시겠습니까?"))return;
+    setPhotos(ps=>(ps||[]).filter(p=>p!==url));
+    removeRoundPhoto(url);
+  };
+  return (
+    <div style={{marginBottom:14}}>
+      <div style={{fontSize:12,fontWeight:700,color:C.muted,marginBottom:6}}>{label||"📷 라운드 사진"}</div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+        {(photos||[]).map((url,i)=>(
+          <div key={i} style={{position:"relative",width:72,height:72,borderRadius:10,overflow:"hidden",
+            border:`1.5px solid ${C.border}`,flexShrink:0}}>
+            <img src={url} onClick={()=>setViewer(url)} alt="round"
+              style={{width:"100%",height:"100%",objectFit:"cover",cursor:"pointer",display:"block"}}/>
+            <button onClick={()=>remove(url)}
+              style={{position:"absolute",top:2,right:2,width:20,height:20,borderRadius:"50%",
+                border:"none",background:"rgba(15,23,42,0.6)",color:"#fff",fontSize:11,
+                cursor:"pointer",lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+          </div>
+        ))}
+        <button onClick={()=>inputRef.current?.click()} disabled={uploading}
+          style={{width:72,height:72,borderRadius:10,border:`1.5px dashed ${C.border}`,background:C.bg,
+            color:C.faint,fontSize:22,cursor:uploading?"default":"pointer",display:"flex",
+            alignItems:"center",justifyContent:"center",flexShrink:0,fontFamily:"inherit"}}>
+          {uploading?"⏳":"＋"}
+        </button>
+      </div>
+      <input ref={inputRef} type="file" accept="image/*" multiple capture="environment"
+        style={{display:"none"}} onChange={handleFiles}/>
+      {viewer&&(
+        <div onClick={()=>setViewer(null)} style={{position:"fixed",inset:0,zIndex:200,
+          background:"rgba(15,23,42,0.85)",display:"flex",alignItems:"center",justifyContent:"center",
+          padding:20,cursor:"zoom-out"}}>
+          <img src={viewer} alt="round-full" style={{maxWidth:"100%",maxHeight:"100%",borderRadius:12,
+            boxShadow:"0 20px 60px rgba(0,0,0,0.5)"}}/>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── RoundEditModal ───────────────────────────────────────────────────────────
 function RoundEditModal({round,players,courses,onSave,onClose}) {
   const [date,    setDate]    = useState(round.date);
   const [courseId,setCourseId]= useState(round.courseId);
   const [weather, setWeather] = useState(round.weather);
   const [memo,    setMemo]    = useState(round.memo||"");
+  const [photos,  setPhotos]  = useState(round.photos||[]);
   const [scores,  setScores]  = useState(
     (players||[]).map(p=>{
       const ex=round.scores.find(s=>s.pid===p.id);
@@ -883,7 +965,7 @@ function RoundEditModal({round,players,courses,onSave,onClose}) {
   const save=()=>{
     if(!courseId){alert("⛳ 골프장을 검색해서 목록에서 선택해주세요. (DB에 없는 골프장은 관리 > 골프장 메뉴에서 먼저 추가해야 합니다)");return;}
     if(scores.some(s=>!s.score)){alert("모든 플레이어의 점수를 입력해주세요.");return;}
-    onSave({...round,courseId,date,weather,memo,scores:scores.map(s=>({...s,score:Number(s.score)}))});
+    onSave({...round,courseId,date,weather,memo,photos,scores:scores.map(s=>({...s,score:Number(s.score)}))});
   };
   return (
     <Modal title="✏️ 라운드 수정" onClose={onClose}>
@@ -932,6 +1014,7 @@ function RoundEditModal({round,players,courses,onSave,onClose}) {
         })}
       </Card>
       <FInput label="📝 메모" value={memo} onChange={e=>setMemo(e.target.value)} placeholder="특이사항 (선택)"/>
+      <PhotoPicker photos={photos} setPhotos={setPhotos} roundId={round.id}/>
       <div style={{display:"flex",gap:8}}>
         <Btn onClick={save} color={C.blue} full>💾 수정 저장</Btn>
         <Btn onClick={onClose} color={C.muted} outline>취소</Btn>
@@ -946,6 +1029,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
   const [year,setYear]=useState(years[0]??new Date().getFullYear());
   const [exp,setExp]=useState(null);
   const [editRound,setEditRound]=useState(null);
+  const [lightbox,setLightbox]=useState(null);
   const sorted=[...(allRounds||[])].filter(r=>r.date.startsWith(year)).sort((a,b)=>b.date.localeCompare(a.date));
   const handleDelete=(id)=>{
     if(!window.confirm("이 라운드 기록을 삭제하시겠습니까?"))return;
@@ -1027,6 +1111,18 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                     })}
                   </div>
                   {r.memo&&<div style={{marginTop:10,fontSize:12,color:C.muted}}>📝 {r.memo}</div>}
+                  {r.photos?.length>0&&(
+                    <div style={{marginTop:10}}>
+                      <div style={{fontSize:11,fontWeight:700,color:C.faint,marginBottom:6}}>📷 라운드 사진</div>
+                      <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                        {r.photos.map((url,pi)=>(
+                          <img key={pi} src={url} alt="round" onClick={e=>{e.stopPropagation();setLightbox(url);}}
+                            style={{width:64,height:64,objectFit:"cover",borderRadius:8,cursor:"zoom-in",
+                              border:`1px solid ${C.border}`,flexShrink:0}}/>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
               {isAdmin&&(
@@ -1055,6 +1151,14 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
       {editRound&&(
         <RoundEditModal round={editRound} players={players} courses={courses}
           onSave={handleSaveEdit} onClose={()=>setEditRound(null)}/>
+      )}
+      {lightbox&&(
+        <div onClick={()=>setLightbox(null)} style={{position:"fixed",inset:0,zIndex:200,
+          background:"rgba(15,23,42,0.85)",display:"flex",alignItems:"center",justifyContent:"center",
+          padding:20,cursor:"zoom-out"}}>
+          <img src={lightbox} alt="round-full" style={{maxWidth:"100%",maxHeight:"100%",borderRadius:12,
+            boxShadow:"0 20px 60px rgba(0,0,0,0.5)"}}/>
+        </div>
       )}
     </div>
   );
@@ -1193,14 +1297,18 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
   const [courseId,setCourseId]= useState(initSched?.courseId||(courses[0]?.id??""));
   const [weather, setWeather] = useState("SUNNY");
   const [memo,    setMemo]    = useState(initSched?`[${initSched.clubName}]`:"");
+  const [photos,  setPhotos]  = useState([]);
+  const [draftId, setDraftId] = useState(()=>uid());
   const [scores,  setScores]  = useState((players||[]).map(p=>({pid:p.id,score:"",birdies:0})));
   const upd=(i,f,v)=>{const n=[...scores];n[i]={...n[i],[f]:f==="birdies"?Number(v):v};setScores(n);};
   const save=()=>{
     if(!courseId){alert("⛳ 골프장을 검색해서 목록에서 선택해주세요. (DB에 없는 골프장은 관리 > 골프장 메뉴에서 먼저 추가해야 합니다)");return;}
     if(scores.some(s=>!s.score)){alert("모든 플레이어의 점수를 입력해주세요.");return;}
-    onSave({id:uid(),courseId,date,weather,memo,scores:scores.map(s=>({...s,score:Number(s.score)}))});
+    onSave({id:draftId,courseId,date,weather,memo,photos,scores:scores.map(s=>({...s,score:Number(s.score)}))});
     setScores((players||[]).map(p=>({pid:p.id,score:"",birdies:0})));
     setMemo("");
+    setPhotos([]);
+    setDraftId(uid());
   };
   return (
     <div>
@@ -1254,6 +1362,7 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
         })}
       </Card>
       <FInput label="📝 메모" value={memo} onChange={e=>setMemo(e.target.value)} placeholder="특이사항 (선택)"/>
+      <PhotoPicker photos={photos} setPhotos={setPhotos} roundId={draftId}/>
       <Btn onClick={save} color={C.blue} full>💾 라운드 저장</Btn>
     </div>
   );
