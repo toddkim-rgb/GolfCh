@@ -434,6 +434,82 @@ const FSel = ({label,options,...p}) => (
     </select>
   </div>
 );
+// 한글 자모 분해(초성/중성/종성) — 유사어(부분 자모) 검색 지원
+const CHO=["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+const JUNG=["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"];
+const JONG=["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+function decompose(str){
+  let out="";
+  for(const ch of str){
+    const code=ch.charCodeAt(0)-0xAC00;
+    if(code>=0&&code<=11171){
+      const cho=Math.floor(code/588), jung=Math.floor((code%588)/28), jong=code%28;
+      out+=CHO[cho]+JUNG[jung]+JONG[jong];
+    } else out+=ch;
+  }
+  return out;
+}
+function fuzzyKor(target,query){
+  if(!query) return true;
+  const t=target.toLowerCase(), q=query.toLowerCase();
+  if(t.includes(q)) return true;
+  // 자모 분해 후 부분 문자열/부분 시퀀스 매칭 (초성 검색, 유사어 검색 지원)
+  const dt=decompose(t), dq=decompose(q);
+  if(dt.includes(dq)) return true;
+  let qi=0;
+  for(let i=0;i<dt.length&&qi<dq.length;i++) if(dt[i]===dq[qi]) qi++;
+  return qi===dq.length;
+}
+// ─── CourseSearchInput: DB 골프장 리스트 검색 + 유사어(초성/자모) 검색 ─────────
+function CourseSearchInput({label,courses,value,onChange,placeholder,nullable}) {
+  const list=courses||[];
+  const selected=list.find(c=>c.id===value);
+  const [query,setQuery]=useState(selected?selected.name:"");
+  const [open,setOpen]=useState(false);
+  useEffect(()=>{
+    const c=list.find(c=>c.id===value);
+    setQuery(c?c.name:"");
+  },[value]);
+  const filtered=(query.trim()
+    ? list.filter(c=>fuzzyKor(c.name,query)||fuzzyKor(c.region,query))
+    : list
+  ).slice(0,30);
+  const pick=c=>{ setQuery(c?c.name:""); onChange(c?c.id:""); setOpen(false); };
+  return (
+    <div style={{marginBottom:12,position:"relative"}}>
+      {label&&<div style={{fontSize:12,fontWeight:600,color:C.muted,marginBottom:4}}>{label}</div>}
+      <input value={query}
+        onChange={e=>{setQuery(e.target.value);setOpen(true);if(!e.target.value)onChange("");}}
+        onFocus={()=>setOpen(true)}
+        onBlur={()=>setTimeout(()=>setOpen(false),150)}
+        placeholder={placeholder||"골프장 이름/지역 검색 (예: 노스, ㄴㅅ, 영종)"}
+        style={{width:"100%",background:C.bg,border:`1.5px solid ${C.border}`,
+          borderRadius:10,padding:"10px 14px",color:C.text,fontSize:14,outline:"none",
+          boxSizing:"border-box",fontFamily:"inherit"}}/>
+      {open&&(
+        <div style={{position:"absolute",top:"100%",left:0,right:0,zIndex:999,marginTop:4,
+          background:"#fff",border:`1.5px solid ${C.border}`,borderRadius:10,
+          boxShadow:"0 8px 24px rgba(0,0,0,0.12)",maxHeight:240,overflowY:"auto"}}>
+          {nullable&&(
+            <div onMouseDown={()=>pick(null)}
+              style={{padding:"10px 14px",cursor:"pointer",borderBottom:`1px solid ${C.border}`,
+                fontSize:13,color:C.muted,fontStyle:"italic"}}>선택 안 함</div>
+          )}
+          {filtered.length>0?filtered.map(c=>(
+            <div key={c.id} onMouseDown={()=>pick(c)}
+              style={{padding:"10px 14px",cursor:"pointer",borderBottom:`1px solid ${C.border}`,
+                fontSize:13,color:C.text,background:c.id===value?"#eef4ff":"#fff"}}>
+              <span style={{fontWeight:700}}>{c.name}</span>
+              <span style={{color:C.muted,fontSize:11,marginLeft:6}}>{c.region}</span>
+            </div>
+          )):(
+            <div style={{padding:"12px 14px",fontSize:12,color:C.faint}}>검색 결과가 없습니다.</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 function Modal({title,onClose,children}) {
   return (
     <div style={{position:"fixed",inset:0,zIndex:100,display:"flex",alignItems:"center",
@@ -756,8 +832,7 @@ function RoundEditModal({round,players,courses,onSave,onClose}) {
         <FSel label="☁️ 날씨" value={weather} onChange={e=>setWeather(e.target.value)}
           options={Object.entries(WEATHER_MAP).map(([k,v])=>({v:k,l:v}))}/>
       </div>
-      <FSel label="⛳ 골프장" value={courseId} onChange={e=>setCourseId(e.target.value)}
-        options={(courses||[]).map(c=>({v:c.id,l:`${c.name} (${c.region})`}))}/>
+      <CourseSearchInput label="⛳ 골프장" courses={courses} value={courseId} onChange={setCourseId}/>
       <Card style={{overflow:"hidden",padding:0,marginBottom:12}}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 72px",gap:8,padding:"10px 12px",
           background:C.blue,fontSize:11,fontWeight:700,color:"#fff"}}>
@@ -1073,8 +1148,7 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
         <FSel label="☁️ 날씨" value={weather} onChange={e=>setWeather(e.target.value)}
           options={Object.entries(WEATHER_MAP).map(([k,v])=>({v:k,l:v}))}/>
       </div>
-      <FSel label="⛳ 골프장" value={courseId} onChange={e=>setCourseId(e.target.value)}
-        options={(courses||[]).map(c=>({v:c.id,l:`${c.name} (${c.region})`}))}/>
+      <CourseSearchInput label="⛳ 골프장" courses={courses} value={courseId} onChange={setCourseId}/>
       <Card style={{overflow:"hidden",padding:0,marginBottom:12}}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 72px",gap:8,padding:"10px 12px",
           background:C.blue,fontSize:11,fontWeight:700,color:"#fff"}}>
@@ -1317,8 +1391,9 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
               <FInput value={editForm.teeTime} onChange={e=>setEditForm(f=>({...f,teeTime:e.target.value}))} type="time" style={{marginBottom:0}}/>
             </div>
             <FInput value={editForm.clubName} onChange={e=>setEditForm(f=>({...f,clubName:e.target.value}))} placeholder="골프클럽명"/>
-            <FSel value={editForm.courseId||""} onChange={e=>setEditForm(f=>({...f,courseId:e.target.value}))}
-              options={[{v:"",l:"코스 선택 (선택사항)"},...(courses||[]).map(c=>({v:c.id,l:c.name}))]}/>
+            <CourseSearchInput courses={courses} value={editForm.courseId||""} nullable
+              placeholder="코스 검색 (선택사항)"
+              onChange={v=>setEditForm(f=>({...f,courseId:v}))}/>
             <div style={{display:"flex",gap:8}}>
               <Btn onClick={saveEdit} color={C.blue} small>저장</Btn>
               <Btn onClick={()=>setEditId(null)} color={C.muted} outline small>취소</Btn>
@@ -1358,8 +1433,9 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
           <FInput label="🕐 티오프" type="time" value={form.teeTime} onChange={e=>upd("teeTime",e.target.value)}/>
         </div>
         <FInput label="🏌️ 골프클럽명" value={form.clubName} onChange={e=>upd("clubName",e.target.value)} placeholder="예: 파인리조트 골프클럽"/>
-        <FSel label="⛳ 코스 연결 (선택)" value={form.courseId} onChange={e=>upd("courseId",e.target.value)}
-          options={[{v:"",l:"선택 안 함"},...(courses||[]).map(c=>({v:c.id,l:c.name}))]}/>
+        <CourseSearchInput label="⛳ 코스 연결 (선택)" courses={courses} value={form.courseId} nullable
+          placeholder="코스 검색 (선택 안 해도 됨)"
+          onChange={v=>upd("courseId",v)}/>
         <Btn onClick={add} color={C.blue} full>등록</Btn>
       </Card>
       {upcoming.length>0&&(
