@@ -594,14 +594,15 @@ function Modal({title,onClose,children}) {
     <div style={{position:"fixed",inset:0,zIndex:100,display:"flex",alignItems:"center",
       justifyContent:"center",background:"rgba(15,23,42,0.45)"}}>
       <div style={{background:C.surface,borderRadius:20,width:"100%",maxWidth:420,margin:"0 16px",
+        maxHeight:"90vh",display:"flex",flexDirection:"column",overflow:"hidden",
         boxShadow:"0 20px 60px rgba(0,0,0,0.15)"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",
-          padding:"18px 20px",borderBottom:`1px solid ${C.border}`}}>
+          padding:"18px 20px",borderBottom:`1px solid ${C.border}`,flexShrink:0}}>
           <span style={{fontWeight:800,fontSize:16,color:C.text}}>{title}</span>
           <button onClick={onClose} style={{background:"none",border:"none",
             color:C.faint,fontSize:20,cursor:"pointer",lineHeight:1}}>✕</button>
         </div>
-        <div style={{padding:20}}>{children}</div>
+        <div style={{padding:20,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>{children}</div>
       </div>
     </div>
   );
