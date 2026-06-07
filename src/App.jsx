@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { supabase, APP_DATA_TABLE } from "./supabaseClient";
 
 // ─── Seed Data ────────────────────────────────────────────────────────────────
 const INIT_PLAYERS = [
@@ -379,18 +380,75 @@ function computeAwards(stats) {
 const champScore = s => (s.hcpDiff??999)*2 - (s.birdies??0);
 
 // ─── Storage Hook ─────────────────────────────────────────────────────────────
+// 클라우드 DB(Supabase) 동기화 훅 — 모든 기기에서 동일한 데이터를 실시간으로 공유
+// app_data 테이블(key text PK, value jsonb)에 저장하고, 변경 시 다른 기기로 실시간 전파
+// localStorage는 오프라인 폴백 캐시로만 사용 (최초 1회 클라우드에 데이터 없으면 기존 로컬 데이터를 자동 이전)
 function useStored(key, init) {
-  const [val, setVal] = useState(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw !== null) return JSON.parse(raw);
-    } catch (e) { /* fall through to init */ }
-    return init;
-  });
+  const [val, setVal] = useState(init);
+  const [ready, setReady] = useState(false);
+  const lastSynced = useRef(null); // 마지막으로 동기화(송신/수신)된 값의 직렬화 문자열 — 에코/중복 방지
+
   useEffect(() => {
-    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* quota/serialize */ }
-  }, [key, val]);
-  return [val, setVal, true];
+    let active = true;
+    setReady(false);
+    (async () => {
+      let seed = init;
+      try {
+        const { data, error } = await supabase.from(APP_DATA_TABLE).select("value").eq("key", key).maybeSingle();
+        if (!active) return;
+        if (!error && data && data.value !== undefined && data.value !== null) {
+          seed = data.value;
+        } else {
+          // 클라우드에 데이터가 없으면 기존 로컬 저장값을 1회 이전(마이그레이션)
+          try {
+            const raw = localStorage.getItem(key);
+            if (raw !== null) seed = JSON.parse(raw);
+          } catch (e) { /* ignore parse error */ }
+          await supabase.from(APP_DATA_TABLE).upsert({ key, value: seed, updated_at: new Date().toISOString() });
+        }
+      } catch (e) {
+        // 네트워크 오류 등 — 로컬 캐시로 폴백
+        try {
+          const raw = localStorage.getItem(key);
+          if (raw !== null) seed = JSON.parse(raw);
+        } catch (e2) { /* ignore */ }
+      }
+      if (!active) return;
+      lastSynced.current = JSON.stringify(seed);
+      setVal(seed);
+      setReady(true);
+    })();
+    return () => { active = false; };
+  }, [key]);
+
+  // 다른 기기에서의 변경을 실시간으로 수신
+  useEffect(() => {
+    const channel = supabase
+      .channel(`app_data_${key}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: APP_DATA_TABLE, filter: `key=eq.${key}` }, (payload) => {
+        const incoming = payload.new && payload.new.value;
+        if (incoming === undefined || incoming === null) return;
+        const incomingStr = JSON.stringify(incoming);
+        if (incomingStr === lastSynced.current) return; // 내가 보낸 변경의 에코 → 무시
+        lastSynced.current = incomingStr;
+        setVal(incoming);
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [key]);
+
+  // 로컬 변경을 클라우드로 전송 + 오프라인 폴백 캐시 갱신
+  useEffect(() => {
+    if (!ready) return;
+    const str = JSON.stringify(val);
+    if (str === lastSynced.current) return; // 이미 동기화된 값(초기 로드/원격 수신 echo) → 재전송 불필요
+    lastSynced.current = str;
+    supabase.from(APP_DATA_TABLE).upsert({ key, value: val, updated_at: new Date().toISOString() })
+      .then(({ error }) => { if (error) console.error(`[${key}] 클라우드 저장 실패:`, error.message); });
+    try { localStorage.setItem(key, str); } catch (e) { /* quota/serialize */ }
+  }, [val, ready, key]);
+
+  return [val, setVal, ready];
 }
 
 // ─── UI Atoms ─────────────────────────────────────────────────────────────────
