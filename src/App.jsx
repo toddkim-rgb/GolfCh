@@ -278,7 +278,8 @@ const INIT_COURSES = [
   { id:"ec260", name:"휘닉스스프링스", region:"경기 이천시", difficulty:3 },
   { id:"ec261", name:"휘닉스파크", region:"강원 평창군", difficulty:3 },
   { id:"ec262", name:"히든밸리", region:"충북 진천군", difficulty:3 },
-  { id:"ec263", name:"힐데스하임", region:"충북 제천시", difficulty:3 }
+  { id:"ec263", name:"힐데스하임", region:"충북 제천시", difficulty:3 },
+  { id:"ec264", name:"센테리움cc", region:"충청", difficulty:3 }
 ];
 const INIT_HANDICAPS = {
   2025:{ p1:93, p2:90, p3:93, p4:97 },
@@ -822,7 +823,8 @@ function RoundEditModal({round,players,courses,onSave,onClose}) {
   );
   const upd=(i,f,v)=>{const n=[...scores];n[i]={...n[i],[f]:f==="birdies"?Number(v):v};setScores(n);};
   const save=()=>{
-    if(!courseId||scores.some(s=>!s.score)){alert("모든 항목을 입력해주세요.");return;}
+    if(!courseId){alert("⛳ 골프장을 검색해서 목록에서 선택해주세요. (DB에 없는 골프장은 관리 > 골프장 메뉴에서 먼저 추가해야 합니다)");return;}
+    if(scores.some(s=>!s.score)){alert("모든 플레이어의 점수를 입력해주세요.");return;}
     onSave({...round,courseId,date,weather,memo,scores:scores.map(s=>({...s,score:Number(s.score)}))});
   };
   return (
@@ -1136,7 +1138,8 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
   const [scores,  setScores]  = useState((players||[]).map(p=>({pid:p.id,score:"",birdies:0})));
   const upd=(i,f,v)=>{const n=[...scores];n[i]={...n[i],[f]:f==="birdies"?Number(v):v};setScores(n);};
   const save=()=>{
-    if(!courseId||scores.some(s=>!s.score)){alert("모든 항목을 입력해주세요.");return;}
+    if(!courseId){alert("⛳ 골프장을 검색해서 목록에서 선택해주세요. (DB에 없는 골프장은 관리 > 골프장 메뉴에서 먼저 추가해야 합니다)");return;}
+    if(scores.some(s=>!s.score)){alert("모든 플레이어의 점수를 입력해주세요.");return;}
     onSave({id:uid(),courseId,date,weather,memo,scores:scores.map(s=>({...s,score:Number(s.score)}))});
     setScores((players||[]).map(p=>({pid:p.id,score:"",birdies:0})));
     setMemo("");
