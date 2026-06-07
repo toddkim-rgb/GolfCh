@@ -855,7 +855,7 @@ function RoundEditModal({round,players,courses,onSave,onClose}) {
                 </div>
                 <div style={{fontSize:12,fontWeight:700,color:C.text}}>{p?.name}</div>
               </div>
-              <input type="number" placeholder="타수" value={s.score} min={60} max={150}
+              <input type="number" placeholder="타수" value={s.score} min={60} max={180}
                 onChange={e=>upd(i,"score",e.target.value)}
                 style={{background:"#fff",border:`1.5px solid ${C.border}`,borderRadius:8,
                   padding:"8px",color:C.text,fontWeight:800,fontSize:16,fontFamily:"monospace",
@@ -1177,7 +1177,7 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
                   {hcp&&<div style={{fontSize:10,color:C.faint}}>핸디 {hcp}</div>}
                 </div>
               </div>
-              <input type="number" placeholder="타수" value={s.score} min={60} max={150}
+              <input type="number" placeholder="타수" value={s.score} min={60} max={180}
                 onChange={e=>upd(i,"score",e.target.value)}
                 style={{background:isBelow?C.yellow:"#fff",border:`1.5px solid ${isBelow?C.gold:C.border}`,
                   borderRadius:8,padding:"8px",color:C.text,fontWeight:800,fontSize:16,
