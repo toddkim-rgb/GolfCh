@@ -1162,11 +1162,11 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
           const Char=p?CHARS[p.id]:null;
           const acc=p?ACCENTS[p.id]:C.blue;
           const hcp=handicaps[year]?.[s.pid];
-          const isBelow=s.score&&hcp&&Number(s.score)<hcp;
+          const filled=s.score!==""&&s.score!==null&&s.score!==undefined;
           return (
             <div key={s.pid} style={{display:"grid",gridTemplateColumns:"1fr 1fr 72px",gap:8,
               padding:"10px 12px",alignItems:"center",borderTop:`1px solid ${C.border}`,
-              background:isBelow?C.yellowBg:(i%2===0?"#fff":C.bg)}}>
+              background:filled?C.yellowBg:(i%2===0?"#fff":C.bg)}}>
               <div style={{display:"flex",alignItems:"center",gap:8}}>
                 <div style={{width:30,height:30,borderRadius:"50%",overflow:"hidden",
                   border:`2px solid ${acc}`,flexShrink:0,background:C.bg}}>
@@ -1179,7 +1179,7 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
               </div>
               <input type="number" placeholder="타수" value={s.score} min={60} max={180}
                 onChange={e=>upd(i,"score",e.target.value)}
-                style={{background:isBelow?C.yellow:"#fff",border:`1.5px solid ${isBelow?C.gold:C.border}`,
+                style={{background:filled?C.yellow:"#fff",border:`1.5px solid ${filled?C.gold:C.border}`,
                   borderRadius:8,padding:"8px",color:C.text,fontWeight:800,fontSize:16,
                   fontFamily:"monospace",textAlign:"center",outline:"none",width:"100%",boxSizing:"border-box"}}/>
               <div style={{display:"flex",alignItems:"center",gap:4,justifyContent:"center"}}>
