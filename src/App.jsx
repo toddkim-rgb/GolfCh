@@ -746,8 +746,10 @@ function ScheduleNotice({schedules,courses}) {
         const dObj=new Date(s.date+"T12:00");
         const today_=isToday(s);
         return (
-          <div key={s.id} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 14px",
+          <div key={s.id} onClick={course?.website?(e=>openCourseSite(course,e)):undefined}
+            style={{display:"flex",alignItems:"center",gap:12,padding:"11px 14px",
             borderTop:i>0?`1px solid ${C.border}`:"none",
+            cursor:course?.website?"pointer":"default",
             background:today_?`${C.blue}08`:"#fff"}}>
             <div style={{flexShrink:0,textAlign:"center",width:40,
               background:today_?C.blue:C.bg,borderRadius:10,padding:"5px 4px",
