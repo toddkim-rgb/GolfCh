@@ -317,6 +317,15 @@ const C = {
 };
 const WEATHER_MAP = { SUNNY:"☀️ 맑음", CLOUDY:"⛅ 흐림", RAINY:"🌧️ 비", WINDY:"💨 바람" };
 const uid = () => Math.random().toString(36).slice(2,9);
+// 골프장 홈페이지를 새 브라우저 탭에서 열기 (클릭 이벤트 버블링 방지 포함)
+const openCourseSite = (course, e) => {
+  if (e) e.stopPropagation();
+  if (!course?.website) return;
+  let url = course.website.trim();
+  if (!url) return;
+  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+  window.open(url, "_blank", "noopener,noreferrer");
+};
 
 // ─── Round Photos (Supabase Storage) ─────────────────────────────────────────
 const ROUND_PHOTOS_BUCKET = "round-photos";
@@ -751,7 +760,14 @@ function ScheduleNotice({schedules,courses}) {
                 whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.clubName}</div>
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:2}}>
                 <span style={{fontSize:12,fontWeight:700,color:C.blue}}>🕐 {s.teeTime}</span>
-                {course&&<span style={{fontSize:11,color:C.muted}}>{course.name}</span>}
+                {course&&(
+                  <span onClick={course.website?(e=>openCourseSite(course,e)):undefined}
+                    style={{fontSize:11,color:course.website?C.blue:C.muted,
+                      cursor:course.website?"pointer":"default",
+                      textDecoration:course.website?"underline":"none"}}>
+                    {course.name}{course.website&&<span style={{fontSize:11,marginLeft:3}}>🔗</span>}
+                  </span>
+                )}
               </div>
             </div>
             <div style={{flexShrink:0,fontWeight:800,fontSize:12,padding:"4px 10px",borderRadius:20,
@@ -836,8 +852,13 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
                   <tr key={r.id} style={{background:ri%2===0?"#fff":C.bg}}>
                     <td style={{padding:"8px 10px",borderBottom:`1px solid ${C.border}`}}>
                       <div style={{fontSize:10,color:C.faint,lineHeight:1.3}}>{r.date.slice(5).replace("-",".")}</div>
-                      <div style={{fontSize:12,fontWeight:700,color:C.blue,lineHeight:1.3,
-                        whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{course?.name??"-"}</div>
+                      <div onClick={course?.website?(e=>openCourseSite(course,e)):undefined}
+                        style={{fontSize:12,fontWeight:700,color:C.blue,lineHeight:1.3,
+                          whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
+                          cursor:course?.website?"pointer":"default",
+                          textDecoration:course?.website?"underline":"none"}}>
+                        {course?.name??"-"}{course?.website&&<span style={{fontSize:10,marginLeft:3}}>🔗</span>}
+                      </div>
                     </td>
                     {sorted.map(p=>{
                       const sc=r.scores.find(s=>s.pid===p.id);
@@ -1061,8 +1082,13 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                   padding:"14px 16px",cursor:"pointer",gap:12}}>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:11,color:C.faint,marginBottom:2}}>{r.date.replace(/-/g,".")}</div>
-                  <div style={{fontWeight:800,fontSize:16,color:C.text,
-                    whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{course?.name??"-"}</div>
+                  <div onClick={course?.website?(e=>openCourseSite(course,e)):undefined}
+                    style={{fontWeight:800,fontSize:16,color:course?.website?C.blue:C.text,
+                      whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
+                      cursor:course?.website?"pointer":"default",
+                      textDecoration:course?.website?"underline":"none"}}>
+                    {course?.name??"-"}{course?.website&&<span style={{fontSize:12,marginLeft:4}}>🔗</span>}
+                  </div>
                   <div style={{display:"flex",gap:6,marginTop:4,alignItems:"center"}}>
                     <Stars n={course?.difficulty??3} sz={11}/>
                     <span style={{fontSize:11,color:C.muted}}>{WEATHER_MAP[r.weather]}</span>
@@ -1374,10 +1400,10 @@ function CourseManager({courses,setCourses,onSaved}) {
   const [listSearch,setListSearch]=useState("");
   const [editId,setEditId]=useState(null);
   const [editData,setEditData]=useState({});
-  const [nm,setNm]=useState(""); const [rg,setRg]=useState(""); const [df,setDf]=useState(3);
+  const [nm,setNm]=useState(""); const [rg,setRg]=useState(""); const [df,setDf]=useState(3); const [ws,setWs]=useState("");
   const filtered=(courses||[]).filter(c=>c.name.includes(listSearch)||c.region.includes(listSearch)||listSearch==="");
-  const startEdit=c=>{setEditId(c.id);setEditData({name:c.name,region:c.region,difficulty:c.difficulty});};
-  const saveEdit=()=>{setCourses(cs=>cs.map(c=>c.id===editId?{...c,...editData}:c));setEditId(null);if(onSaved)onSaved();};
+  const startEdit=c=>{setEditId(c.id);setEditData({name:c.name,region:c.region,difficulty:c.difficulty,website:c.website||""});};
+  const saveEdit=()=>{setCourses(cs=>cs.map(c=>c.id===editId?{...c,...editData,website:editData.website?.trim()||""}:c));setEditId(null);if(onSaved)onSaved();};
   return (
     <div>
       <Card style={{padding:14,background:C.bg,marginBottom:14}}>
@@ -1386,6 +1412,7 @@ function CourseManager({courses,setCourses,onSaved}) {
           <FInput value={nm} onChange={e=>setNm(e.target.value)} placeholder="골프장명"/>
           <FInput value={rg} onChange={e=>setRg(e.target.value)} placeholder="지역 (예: 경기 여주시)"/>
         </div>
+        <FInput value={ws} onChange={e=>setWs(e.target.value)} placeholder="🔗 홈페이지 주소 (예: https://www.example.com)"/>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{fontSize:12,color:C.muted}}>난이도:</span>
           {[1,2,3,4,5].map(n=>(
@@ -1396,8 +1423,8 @@ function CourseManager({courses,setCourses,onSaved}) {
         </div>
         <Btn onClick={()=>{
           if(!nm.trim()||!rg.trim())return;
-          setCourses(cs=>[...cs,{id:uid(),name:nm.trim(),region:rg.trim(),difficulty:df}]);
-          setNm("");setRg("");setDf(3);
+          setCourses(cs=>[...cs,{id:uid(),name:nm.trim(),region:rg.trim(),difficulty:df,website:ws.trim()}]);
+          setNm("");setRg("");setDf(3);setWs("");
           if(onSaved)onSaved();
         }} color={C.purple} full small>추가</Btn>
       </Card>
@@ -1418,6 +1445,7 @@ function CourseManager({courses,setCourses,onSaved}) {
               <div>
                 <FInput value={editData.name} onChange={e=>setEditData(d=>({...d,name:e.target.value}))} placeholder="골프장명"/>
                 <FInput value={editData.region} onChange={e=>setEditData(d=>({...d,region:e.target.value}))} placeholder="지역"/>
+                <FInput value={editData.website} onChange={e=>setEditData(d=>({...d,website:e.target.value}))} placeholder="🔗 홈페이지 주소 (예: https://www.example.com)"/>
                 <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
                   <span style={{fontSize:12,color:C.muted}}>난이도:</span>
                   {[1,2,3,4,5].map(n=>(
@@ -1434,7 +1462,12 @@ function CourseManager({courses,setCourses,onSaved}) {
             ):(
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                 <div>
-                  <div style={{fontWeight:700,fontSize:14,color:C.text}}>{c.name}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:5}}>
+                    <span onClick={c.website?(e=>openCourseSite(c,e)):undefined}
+                      style={{fontWeight:700,fontSize:14,color:c.website?C.blue:C.text,
+                        cursor:c.website?"pointer":"default",textDecoration:c.website?"underline":"none"}}>{c.name}</span>
+                    {c.website&&<span style={{fontSize:11}}>🔗</span>}
+                  </div>
                   <div style={{display:"flex",alignItems:"center",gap:8,marginTop:4}}>
                     <Chip color={C.muted}>{c.region}</Chip>
                     <Stars n={c.difficulty} sz={13}/>
@@ -1581,7 +1614,12 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
               <div style={{fontWeight:800,fontSize:14,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.clubName}</div>
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:3,flexWrap:"wrap"}}>
                 <span style={{fontSize:13,fontWeight:700,color:C.blue}}>🕐 {s.teeTime}</span>
-                {course&&<Chip color={C.purple}>{course.name}</Chip>}
+                {course&&(
+                  <span onClick={course.website?(e=>openCourseSite(course,e)):undefined}
+                    style={{cursor:course.website?"pointer":"default"}}>
+                    <Chip color={C.purple}>{course.name}{course.website&&" 🔗"}</Chip>
+                  </span>
+                )}
               </div>
             </div>
             <div style={{display:"flex",gap:5,flexShrink:0}}>
