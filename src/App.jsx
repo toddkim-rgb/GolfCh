@@ -1571,7 +1571,8 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
   const [editForm,setEditForm]=useState({});
   const upd=(k,v)=>setForm(f=>({...f,[k]:v}));
   const add=()=>{
-    if(!form.date||!form.teeTime||!form.clubName){alert("날짜, 시간, 클럽명을 입력해주세요.");return;}
+    if(!form.date||!form.teeTime){alert("날짜와 시간을 입력해주세요.");return;}
+    if(!form.courseId||!form.clubName){alert("⛳ 골프장을 검색해서 목록에서 선택해주세요. (DB에 없는 골프장은 관리 > 골프장 메뉴에서 먼저 추가해야 합니다)");return;}
     setSchedules(ss=>[...ss,{id:uid(),...form}]);
     setForm({date:"",teeTime:"",courseId:"",clubName:""});
     if(onSaved)onSaved("📅 일정 등록");
@@ -1596,10 +1597,27 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
               <FInput value={editForm.date} onChange={e=>setEditForm(f=>({...f,date:e.target.value}))} type="date" style={{marginBottom:0}}/>
               <FInput value={editForm.teeTime} onChange={e=>setEditForm(f=>({...f,teeTime:e.target.value}))} type="time" style={{marginBottom:0}}/>
             </div>
-            <FInput value={editForm.clubName} onChange={e=>setEditForm(f=>({...f,clubName:e.target.value}))} placeholder="골프클럽명"/>
-            <CourseSearchInput courses={courses} value={editForm.courseId||""} nullable
-              placeholder="코스 검색 (선택사항)"
-              onChange={v=>setEditForm(f=>({...f,courseId:v}))}/>
+            <CourseSearchInput label="🏌️ 골프클럽 선택 (등록된 골프장 DB)" courses={courses} value={editForm.courseId||""}
+              placeholder="골프장을 검색해서 선택해주세요"
+              onChange={v=>{
+                const c=(courses||[]).find(x=>x.id===v);
+                setEditForm(f=>({...f,courseId:v,clubName:c?c.name:f.clubName}));
+              }}/>
+            {editForm.courseId&&(()=>{
+              const sc=(courses||[]).find(x=>x.id===editForm.courseId);
+              if(!sc)return null;
+              return (
+                <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",margin:"-6px 0 14px",fontSize:12}}>
+                  <span style={{color:C.green,fontWeight:700}}>✅ {sc.name}</span>
+                  {sc.website?(
+                    <span onClick={e=>openCourseSite(sc,e)}
+                      style={{color:C.blue,textDecoration:"underline",cursor:"pointer",fontWeight:600}}>🔗 홈페이지 바로가기</span>
+                  ):(
+                    <span style={{color:C.faint}}>홈페이지 미등록</span>
+                  )}
+                </div>
+              );
+            })()}
             <div style={{display:"flex",gap:8}}>
               <Btn onClick={saveEdit} color={C.blue} small>저장</Btn>
               <Btn onClick={()=>setEditId(null)} color={C.muted} outline small>취소</Btn>
@@ -1643,10 +1661,27 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
           <FInput label="📅 날짜" type="date" value={form.date} onChange={e=>upd("date",e.target.value)}/>
           <FInput label="🕐 티오프" type="time" value={form.teeTime} onChange={e=>upd("teeTime",e.target.value)}/>
         </div>
-        <FInput label="🏌️ 골프클럽명" value={form.clubName} onChange={e=>upd("clubName",e.target.value)} placeholder="예: 파인리조트 골프클럽"/>
-        <CourseSearchInput label="⛳ 코스 연결 (선택)" courses={courses} value={form.courseId} nullable
-          placeholder="코스 검색 (선택 안 해도 됨)"
-          onChange={v=>upd("courseId",v)}/>
+        <CourseSearchInput label="🏌️ 골프클럽 선택 (등록된 골프장 DB)" courses={courses} value={form.courseId}
+          placeholder="골프장을 검색해서 선택해주세요"
+          onChange={v=>{
+            const c=(courses||[]).find(x=>x.id===v);
+            setForm(f=>({...f,courseId:v,clubName:c?c.name:""}));
+          }}/>
+        {form.courseId&&(()=>{
+          const sc=(courses||[]).find(x=>x.id===form.courseId);
+          if(!sc)return null;
+          return (
+            <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",margin:"-6px 0 14px",fontSize:12}}>
+              <span style={{color:C.green,fontWeight:700}}>✅ {sc.name}</span>
+              {sc.website?(
+                <span onClick={e=>openCourseSite(sc,e)}
+                  style={{color:C.blue,textDecoration:"underline",cursor:"pointer",fontWeight:600}}>🔗 홈페이지 바로가기</span>
+              ):(
+                <span style={{color:C.faint}}>홈페이지 미등록 (관리 &gt; 골프장에서 추가 가능)</span>
+              )}
+            </div>
+          );
+        })()}
         <Btn onClick={add} color={C.blue} full>등록</Btn>
       </Card>
       {upcoming.length>0&&(
