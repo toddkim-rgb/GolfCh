@@ -422,25 +422,35 @@ function useStored(key, init) {
     setReady(false);
     (async () => {
       let seed = init;
+      let cloudRowMissing = false;
       try {
         const { data, error } = await supabase.from(APP_DATA_TABLE).select("value").eq("key", key).maybeSingle();
         if (!active) return;
-        if (!error && data && data.value !== undefined && data.value !== null) {
+        if (error) throw error;
+        if (data && data.value !== undefined && data.value !== null) {
           seed = data.value;
         } else {
-          // 클라우드에 데이터가 없으면 기존 로컬 저장값을 1회 이전(마이그레이션)
-          try {
-            const raw = localStorage.getItem(key);
-            if (raw !== null) seed = JSON.parse(raw);
-          } catch (e) { /* ignore parse error */ }
-          await supabase.from(APP_DATA_TABLE).upsert({ key, value: seed, updated_at: new Date().toISOString() });
+          cloudRowMissing = true; // select 자체는 성공했고, 정말로 해당 key 행이 없는 경우
         }
       } catch (e) {
-        // 네트워크 오류 등 — 로컬 캐시로 폴백
+        // 네트워크/일시적 오류 등 — 클라우드 상태를 알 수 없으므로 절대 덮어쓰지 않고 로컬 캐시로만 폴백
         try {
           const raw = localStorage.getItem(key);
           if (raw !== null) seed = JSON.parse(raw);
         } catch (e2) { /* ignore */ }
+        if (!active) return;
+        lastSynced.current = JSON.stringify(seed);
+        setVal(seed);
+        setReady(true);
+        return;
+      }
+      if (cloudRowMissing) {
+        // 클라우드에 진짜로 데이터가 없을 때만(최초 1회) 기존 로컬 저장값을 이전(마이그레이션)
+        try {
+          const raw = localStorage.getItem(key);
+          if (raw !== null) seed = JSON.parse(raw);
+        } catch (e) { /* ignore parse error */ }
+        await supabase.from(APP_DATA_TABLE).upsert({ key, value: seed, updated_at: new Date().toISOString() });
       }
       if (!active) return;
       lastSynced.current = JSON.stringify(seed);
