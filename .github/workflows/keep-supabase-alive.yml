@@ -1,0 +1,25 @@
+name: Keep Supabase Alive
+
+# Supabase 무료 플랜은 일정 기간 요청이 없으면 프로젝트를 자동으로 일시 정지시킴.
+# 5일 주기로 가벼운 조회 요청을 보내 프로젝트가 잠들지 않도록 유지한다.
+on:
+  schedule:
+    - cron: "0 3 */5 * *" # UTC 03:00 = KST 12:00, 매월 1,6,11,16,21,26,31일
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          status=$(curl -s -o /tmp/body.json -w "%{http_code}" \
+            "https://ehkwflvymrazsiqwmmhs.supabase.co/rest/v1/app_data?select=key&limit=1" \
+            -H "apikey: sb_publishable_kGfcBJHpl_TDmCYWUkMPxA_TVvQYeZG" \
+            -H "Authorization: Bearer sb_publishable_kGfcBJHpl_TDmCYWUkMPxA_TVvQYeZG")
+          echo "HTTP status: $status"
+          cat /tmp/body.json
+          if [ "$status" -ge 400 ]; then
+            echo "Supabase ping failed"
+            exit 1
+          fi
