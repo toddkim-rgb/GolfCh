@@ -308,13 +308,17 @@ const INIT_ROUNDS = [
 ];
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
+// "Fairway" 팔레트 — 페어웨이 그린을 브랜드 컬러로, 따뜻한 오프화이트 배경 + 라임 포인트
 const C = {
-  bg:"#f0f4ff", surface:"#ffffff", border:"#e2e8f0",
-  text:"#1e293b", muted:"#64748b", faint:"#94a3b8",
-  blue:"#3b5bdb", purple:"#7048e8", cyan:"#0891b2",
-  pink:"#e91e8c", green:"#059669", gold:"#d97706",
-  red:"#dc2626", yellow:"#fef08a", yellowBg:"#fefce8",
+  bg:"#f2f5ef", surface:"#ffffff", border:"#e4eae0",
+  text:"#14211a", muted:"#5a6b60", faint:"#98a69d",
+  brand:"#0f7a55", brandDark:"#093f2d", brandSoft:"#e5f3ec", lime:"#c4f04d",
+  blue:"#3a6fe0", purple:"#7556e8", cyan:"#0e90a8",
+  pink:"#e8508f", green:"#1fa56b", gold:"#e09b00",
+  red:"#e5484d", yellow:"#ffefb0", yellowBg:"#fffaea",
 };
+const FONT = "'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif";
+const SHADOW = { sm:"0 1px 2px rgba(20,33,26,0.04),0 2px 8px rgba(20,33,26,0.04)", md:"0 2px 4px rgba(20,33,26,0.04),0 8px 24px rgba(20,33,26,0.08)", lg:"0 12px 40px rgba(9,63,45,0.28)" };
 const WEATHER_MAP = { SUNNY:"☀️ 맑음", CLOUDY:"⛅ 흐림", RAINY:"🌧️ 비", WINDY:"💨 바람" };
 const uid = () => Math.random().toString(36).slice(2,9);
 // 골프장 홈페이지를 새 브라우저 탭에서 열기 (클릭 이벤트 버블링 방지 포함)
@@ -359,7 +363,7 @@ const CharWSK = () => <img src={CHAR_IMGS.p2} style={{width:"100%",height:"100%"
 const CharKSH = () => <img src={CHAR_IMGS.p3} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>;
 const CharCSM = () => <img src={CHAR_IMGS.p4} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>;
 const CHARS   = { p1:CharJJ, p2:CharWSK, p3:CharKSH, p4:CharCSM };
-const ACCENTS = { p1:C.blue, p2:C.purple, p3:C.green, p4:C.gold };
+const ACCENTS = { p1:C.brand, p2:C.purple, p3:C.blue, p4:C.gold };
 
 // ─── Butterfly Icon ───────────────────────────────────────────────────────────
 const Butterfly = ({size=14}) => (
@@ -497,36 +501,37 @@ const Stars = ({n, sz=14}) => (
   </span>
 );
 const Card = ({children,style={},onClick}) => (
-  <div onClick={onClick} style={{background:C.surface,borderRadius:16,
-    border:`1px solid ${C.border}`,boxShadow:"0 2px 12px rgba(0,0,0,0.06)",...style,
+  <div onClick={onClick} className={onClick?"card-hover":undefined} style={{background:C.surface,borderRadius:20,
+    border:`1px solid ${C.border}`,boxShadow:SHADOW.sm,...style,
     cursor:onClick?"pointer":"default"}}>{children}</div>
 );
-const Chip = ({children,color=C.blue}) => (
-  <span style={{fontSize:11,fontWeight:700,padding:"3px 9px",borderRadius:20,
-    background:`${color}18`,color,border:`1px solid ${color}30`}}>{children}</span>
+const Chip = ({children,color=C.brand}) => (
+  <span style={{fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:999,
+    background:`${color}16`,color,letterSpacing:-0.1}}>{children}</span>
 );
-const Btn = ({children,onClick,color=C.blue,full=false,outline=false,small=false}) => (
-  <button onClick={onClick} style={{background:outline?"transparent":color,
-    border:outline?`1.5px solid ${color}`:"none",borderRadius:small?10:12,
-    padding:small?"7px 14px":"11px 20px",color:outline?color:"#fff",
+const Btn = ({children,onClick,color=C.brand,full=false,outline=false,small=false}) => (
+  <button onClick={onClick} className="btn-press" style={{background:outline?"transparent":color,
+    border:outline?`1.5px solid ${color}`:"none",borderRadius:small?12:14,
+    padding:small?"7px 14px":"13px 20px",color:outline?color:"#fff",
     fontWeight:700,fontSize:small?12:14,cursor:"pointer",width:full?"100%":"auto",
-    fontFamily:"inherit"}}>
+    fontFamily:"inherit",letterSpacing:-0.2,
+    boxShadow:outline?"none":`0 4px 12px ${color}33`}}>
     {children}
   </button>
 );
 const FInput = ({label,...p}) => (
   <div style={{marginBottom:12}}>
-    {label&&<div style={{fontSize:12,fontWeight:600,color:C.muted,marginBottom:4}}>{label}</div>}
-    <input {...p} style={{width:"100%",background:C.bg,border:`1.5px solid ${C.border}`,
-      borderRadius:10,padding:"10px 14px",color:C.text,fontSize:14,outline:"none",
+    {label&&<div style={{fontSize:12,fontWeight:600,color:C.muted,marginBottom:5}}>{label}</div>}
+    <input {...p} style={{width:"100%",background:C.bg,border:`1.5px solid transparent`,
+      borderRadius:12,padding:"12px 14px",color:C.text,fontSize:14,outline:"none",
       boxSizing:"border-box",fontFamily:"inherit",...p.style}}/>
   </div>
 );
 const FSel = ({label,options,...p}) => (
   <div style={{marginBottom:12}}>
-    {label&&<div style={{fontSize:12,fontWeight:600,color:C.muted,marginBottom:4}}>{label}</div>}
-    <select {...p} style={{width:"100%",background:C.bg,border:`1.5px solid ${C.border}`,
-      borderRadius:10,padding:"10px 14px",color:C.text,fontSize:14,outline:"none",
+    {label&&<div style={{fontSize:12,fontWeight:600,color:C.muted,marginBottom:5}}>{label}</div>}
+    <select {...p} style={{width:"100%",background:C.bg,border:`1.5px solid transparent`,
+      borderRadius:12,padding:"12px 14px",color:C.text,fontSize:14,outline:"none",
       boxSizing:"border-box",fontFamily:"inherit"}}>
       {(options||[]).map(o=><option key={o.v} value={o.v}>{o.l}</option>)}
     </select>
@@ -596,7 +601,7 @@ function CourseSearchInput({label,courses,value,onChange,placeholder,nullable}) 
           {filtered.length>0?filtered.map(c=>(
             <div key={c.id} onMouseDown={()=>pick(c)}
               style={{padding:"10px 14px",cursor:"pointer",borderBottom:`1px solid ${C.border}`,
-                fontSize:13,color:C.text,background:c.id===value?"#eef4ff":"#fff"}}>
+                fontSize:13,color:C.text,background:c.id===value?"#e5f3ec":"#fff"}}>
               <span style={{fontWeight:700}}>{c.name}</span>
               <span style={{color:C.muted,fontSize:11,marginLeft:6}}>{c.region}</span>
             </div>
@@ -611,10 +616,10 @@ function CourseSearchInput({label,courses,value,onChange,placeholder,nullable}) 
 function Modal({title,onClose,children}) {
   return (
     <div style={{position:"fixed",inset:0,zIndex:100,display:"flex",alignItems:"center",
-      justifyContent:"center",background:"rgba(15,23,42,0.45)"}}>
-      <div style={{background:C.surface,borderRadius:20,width:"100%",maxWidth:420,margin:"0 16px",
+      justifyContent:"center",background:"rgba(10,28,20,0.5)",backdropFilter:"blur(4px)",WebkitBackdropFilter:"blur(4px)"}}>
+      <div style={{background:C.surface,borderRadius:28,width:"100%",maxWidth:420,margin:"0 16px",
         maxHeight:"90vh",display:"flex",flexDirection:"column",overflow:"hidden",
-        boxShadow:"0 20px 60px rgba(0,0,0,0.15)"}}>
+        boxShadow:"0 24px 64px rgba(9,63,45,0.25)",animation:"fadeup 0.2s ease"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",
           padding:"18px 20px",borderBottom:`1px solid ${C.border}`,flexShrink:0}}>
           <span style={{fontWeight:800,fontSize:16,color:C.text}}>{title}</span>
@@ -630,81 +635,81 @@ function Modal({title,onClose,children}) {
 // ─── Nav Icons ────────────────────────────────────────────────────────────────
 const IconSeason = ({active,color}) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <rect x="3" y="12" width="4" height="9" rx="1.5" fill={active?color:"#cbd5e1"}/>
-    <rect x="10" y="7" width="4" height="14" rx="1.5" fill={active?color:"#cbd5e1"}/>
-    <rect x="17" y="3" width="4" height="18" rx="1.5" fill={active?color:"#e2e8f0"}/>
-    <path d="M5 11 L12 6 L19 2" stroke={active?color:"#94a3b8"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    <rect x="3" y="12" width="4" height="9" rx="1.5" fill={active?color:"#c9d3cc"}/>
+    <rect x="10" y="7" width="4" height="14" rx="1.5" fill={active?color:"#c9d3cc"}/>
+    <rect x="17" y="3" width="4" height="18" rx="1.5" fill={active?color:"#e4eae0"}/>
+    <path d="M5 11 L12 6 L19 2" stroke={active?color:"#98a69d"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IconRounds = ({active,color}) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <circle cx="15" cy="3.5" r="2" fill={active?color:"#94a3b8"}/>
-    <path d="M15 5.5 L13 10 L9 13" stroke={active?color:"#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M13 10 L11 15 L9 20" stroke={active?color:"#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M13 10 L15 15 L17 19" stroke={active?color:"#94a3b8"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M9 13 L3 9" stroke={active?color:"#94a3b8"} strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="2.5" cy="8.5" r="1.3" fill={active?color:"#cbd5e1"}/>
-    <path d="M2 21 L22 21" stroke={active?color:"#e2e8f0"} strokeWidth="1.5" strokeLinecap="round"/>
+    <circle cx="15" cy="3.5" r="2" fill={active?color:"#98a69d"}/>
+    <path d="M15 5.5 L13 10 L9 13" stroke={active?color:"#98a69d"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M13 10 L11 15 L9 20" stroke={active?color:"#98a69d"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M13 10 L15 15 L17 19" stroke={active?color:"#98a69d"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 13 L3 9" stroke={active?color:"#98a69d"} strokeWidth="2" strokeLinecap="round"/>
+    <circle cx="2.5" cy="8.5" r="1.3" fill={active?color:"#c9d3cc"}/>
+    <path d="M2 21 L22 21" stroke={active?color:"#e4eae0"} strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 const IconAwards = ({active,color}) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path d="M7 3 H17 V13 C17 16.3 14.8 18 12 18 C9.2 18 7 16.3 7 13 Z" fill={active?color:"#cbd5e1"}/>
-    <path d="M7 6 C4 6 3 8 3 10 C3 12 4.5 12.5 6 12" stroke={active?color:"#cbd5e1"} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
-    <path d="M17 6 C20 6 21 8 21 10 C21 12 19.5 12.5 18 12" stroke={active?color:"#cbd5e1"} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
-    <rect x="10.5" y="18" width="3" height="3" rx="0.5" fill={active?color:"#cbd5e1"}/>
-    <rect x="8" y="21" width="8" height="1.5" rx="0.75" fill={active?color:"#cbd5e1"}/>
-    <path d="M12 8 L12.6 9.8 H14.5 L13 10.9 L13.5 12.7 L12 11.6 L10.5 12.7 L11 10.9 L9.5 9.8 H11.4 Z" fill={active?"#fff":"#e2e8f0"}/>
+    <path d="M7 3 H17 V13 C17 16.3 14.8 18 12 18 C9.2 18 7 16.3 7 13 Z" fill={active?color:"#c9d3cc"}/>
+    <path d="M7 6 C4 6 3 8 3 10 C3 12 4.5 12.5 6 12" stroke={active?color:"#c9d3cc"} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+    <path d="M17 6 C20 6 21 8 21 10 C21 12 19.5 12.5 18 12" stroke={active?color:"#c9d3cc"} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+    <rect x="10.5" y="18" width="3" height="3" rx="0.5" fill={active?color:"#c9d3cc"}/>
+    <rect x="8" y="21" width="8" height="1.5" rx="0.75" fill={active?color:"#c9d3cc"}/>
+    <path d="M12 8 L12.6 9.8 H14.5 L13 10.9 L13.5 12.7 L12 11.6 L10.5 12.7 L11 10.9 L9.5 9.8 H11.4 Z" fill={active?"#fff":"#e4eae0"}/>
   </svg>
 );
 const IconAdmin = ({active,color}) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2 L13.5 4.5 L16.5 4 L17.5 6.8 L20 8 L19.5 11 L21.5 13 L20 15.5 L21 18 L18.2 18.8 L17 21 L14 20.5 L12 22 L10 20.5 L7 21 L5.8 18.8 L3 18 L4 15.5 L2.5 13 L4.5 11 L4 8 L6.5 6.8 L7.5 4 L10.5 4.5 Z" fill={active?color:"#cbd5e1"} opacity="0.9"/>
-    <circle cx="12" cy="12" r="4" fill={active?"#fff":"#f8fafc"}/>
-    <circle cx="12" cy="12" r="2.2" fill={active?color:"#94a3b8"}/>
+    <path d="M12 2 L13.5 4.5 L16.5 4 L17.5 6.8 L20 8 L19.5 11 L21.5 13 L20 15.5 L21 18 L18.2 18.8 L17 21 L14 20.5 L12 22 L10 20.5 L7 21 L5.8 18.8 L3 18 L4 15.5 L2.5 13 L4.5 11 L4 8 L6.5 6.8 L7.5 4 L10.5 4.5 Z" fill={active?color:"#c9d3cc"} opacity="0.9"/>
+    <circle cx="12" cy="12" r="4" fill={active?"#fff":"#f6f8f5"}/>
+    <circle cx="12" cy="12" r="2.2" fill={active?color:"#98a69d"}/>
   </svg>
 );
 
 // ─── PlayerCard ───────────────────────────────────────────────────────────────
 function PlayerCard({stat,rank}) {
   const Char  = CHARS[stat.id];
-  const acc   = ACCENTS[stat.id]??C.blue;
-  const ranks = ["🥇","🥈","🥉","4️⃣"];
+  const acc   = ACCENTS[stat.id]??C.brand;
+  const isFirst = rank===0;
+  const diff = stat.hcpDiff;
+  const tiles = [
+    ["최저",stat.best??"-",acc],
+    ["버디",stat.birdies,C.red],
+    ["핸디차이",diff!==null&&diff!==undefined?(diff>0?"+":"")+diff:"-",diff!==null&&diff<0?C.green:C.muted],
+    ["핸디미만",stat.belowHcp+"회",C.pink],
+  ];
   return (
-    <Card style={{overflow:"hidden",border:`1.5px solid ${acc}30`}}>
-      <div style={{height:3,background:acc,borderRadius:"16px 16px 0 0"}}/>
-      <div style={{padding:"10px 10px 8px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <div style={{width:48,height:48,borderRadius:"50%",overflow:"hidden",flexShrink:0,
-            border:`2.5px solid ${acc}`,background:C.bg}}>
-            {Char&&<Char/>}
-          </div>
-          <div style={{minWidth:0}}>
-            <div style={{display:"flex",alignItems:"center",gap:4}}>
-              <span style={{fontSize:13}}>{ranks[rank]}</span>
-              <span style={{fontWeight:800,fontSize:14,color:C.text,whiteSpace:"nowrap"}}>{stat.name}</span>
-            </div>
-            <div style={{display:"flex",gap:4,marginTop:3,flexWrap:"wrap"}}>
-              <Chip color={acc}>핸디 {stat.hcp??"-"}</Chip>
-              {stat.hcpDiff!==null&&stat.hcpDiff<0&&<Chip color={C.green}>향상 {stat.hcpDiff}</Chip>}
-            </div>
-          </div>
+    <Card style={{overflow:"hidden",padding:14,position:"relative",
+      border:isFirst?`1.5px solid ${C.gold}66`:`1px solid ${C.border}`,
+      boxShadow:isFirst?`0 6px 20px ${C.gold}2e`:SHADOW.sm}}>
+      <div style={{position:"absolute",top:0,left:0,right:0,height:4,background:acc}}/>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:2}}>
+        <span style={{fontSize:11,fontWeight:800,color:isFirst?C.gold:C.faint,letterSpacing:0.4}}>#{rank+1}{isFirst?" 👑":""}</span>
+        {diff!==null&&diff!==undefined&&diff<0&&<Chip color={C.green}>향상 {diff}</Chip>}
+      </div>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginTop:8}}>
+        <div style={{width:52,height:52,borderRadius:"50%",overflow:"hidden",flexShrink:0,
+          boxShadow:`0 0 0 3px ${C.surface},0 0 0 5px ${acc}`,background:C.bg}}>
+          {Char&&<Char/>}
+        </div>
+        <div style={{minWidth:0}}>
+          <div style={{fontWeight:800,fontSize:15,color:C.text,whiteSpace:"nowrap",letterSpacing:-0.3}}>{stat.name}</div>
+          <div style={{fontSize:11,color:C.muted,marginTop:1}}>핸디 <b style={{color:acc,fontWeight:800}}>{stat.hcp??"-"}</b></div>
         </div>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",borderTop:`1px solid ${C.border}`}}>
-        {[["평균",stat.avgScore??"-",C.text],["최저",stat.best??"-",acc],["버디",stat.birdies,C.red]].map(([l,v,c],i)=>(
-          <div key={l} style={{padding:"7px 4px",textAlign:"center",borderRight:i<2?`1px solid ${C.border}`:"none"}}>
-            <div style={{fontSize:9,color:C.faint,marginBottom:1}}>{l}</div>
-            <div style={{fontFamily:"monospace",fontWeight:800,fontSize:16,color:c}}>{v}</div>
-          </div>
-        ))}
+      <div style={{display:"flex",alignItems:"baseline",gap:4,margin:"12px 0 10px"}}>
+        <span style={{fontVariantNumeric:"tabular-nums",fontWeight:900,fontSize:30,lineHeight:1,color:C.text,letterSpacing:-1.2}}>{stat.avgScore??"-"}</span>
+        <span style={{fontSize:11,fontWeight:600,color:C.faint}}>평균 타수</span>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",borderTop:`1px solid ${C.border}`}}>
-        {[["핸디차이",stat.hcpDiff!==null?(stat.hcpDiff>0?"+":"")+stat.hcpDiff:"-",stat.hcpDiff!==null&&stat.hcpDiff<0?C.green:C.faint],
-          ["핸디미만",stat.belowHcp+"회",C.pink]].map(([l,v,c])=>(
-          <div key={l} style={{padding:"6px 4px",textAlign:"center"}}>
-            <div style={{fontSize:9,color:C.faint,marginBottom:1}}>{l}</div>
-            <div style={{fontFamily:"monospace",fontWeight:700,fontSize:12,color:c}}>{v}</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:6}}>
+        {tiles.map(([l,v,c])=>(
+          <div key={l} style={{background:C.bg,borderRadius:12,padding:"7px 9px"}}>
+            <div style={{fontSize:10,color:C.faint,fontWeight:600}}>{l}</div>
+            <div style={{fontVariantNumeric:"tabular-nums",fontWeight:800,fontSize:15,color:c,marginTop:1}}>{v}</div>
           </div>
         ))}
       </div>
@@ -712,15 +717,15 @@ function PlayerCard({stat,rank}) {
   );
 }
 
-// ─── YearTabs ─────────────────────────────────────────────────────────────────
+// ─── YearTabs (세그먼트 컨트롤) ───────────────────────────────────────────────
 function YearTabs({year,years,onChange}) {
   return (
-    <div style={{display:"flex",gap:8,marginBottom:16}}>
+    <div style={{display:"inline-flex",gap:2,padding:4,marginBottom:16,background:"#e6ebe2",borderRadius:999}}>
       {years.map(y=>(
-        <button key={y} onClick={()=>onChange(y)} style={{padding:"7px 20px",borderRadius:30,
+        <button key={y} onClick={()=>onChange(y)} className="btn-press" style={{padding:"7px 20px",borderRadius:999,
           border:"none",cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:"inherit",
-          background:y===year?C.blue:C.surface,color:y===year?"#fff":C.muted,
-          boxShadow:y===year?`0 4px 14px ${C.blue}44`:`0 1px 4px rgba(0,0,0,0.06)`}}>
+          background:y===year?C.surface:"transparent",color:y===year?C.brand:C.muted,
+          boxShadow:y===year?SHADOW.sm:"none",transition:"all .15s"}}>
           {y}년
         </button>
       ))}
@@ -743,13 +748,13 @@ function ScheduleNotice({schedules,courses}) {
     return diff===0?"오늘":diff===1?"내일":`${diff}일 후`;
   };
   return (
-    <Card style={{overflow:"hidden",padding:0,marginBottom:16,border:`1.5px solid ${C.blue}30`}}>
-      <div style={{padding:"10px 14px 8px",background:`linear-gradient(90deg,${C.blue}18,${C.purple}10)`,
-        borderBottom:`1px solid ${C.blue}20`,display:"flex",alignItems:"center",gap:6}}>
+    <Card style={{overflow:"hidden",padding:0,marginBottom:16}}>
+      <div style={{padding:"12px 16px",background:C.brandSoft,
+        display:"flex",alignItems:"center",gap:6}}>
         <span style={{fontSize:15}}>📅</span>
-        <span style={{fontWeight:800,fontSize:13,color:C.blue}}>예정된 라운딩</span>
-        <span style={{marginLeft:"auto",fontSize:11,fontWeight:700,color:C.purple,
-          background:`${C.purple}15`,padding:"2px 8px",borderRadius:10}}>{upcoming.length}건</span>
+        <span style={{fontWeight:800,fontSize:13,color:C.brand,letterSpacing:-0.2}}>예정된 라운딩</span>
+        <span style={{marginLeft:"auto",fontSize:11,fontWeight:700,color:C.brand,
+          background:C.surface,padding:"2px 10px",borderRadius:999}}>{upcoming.length}건</span>
       </div>
       {upcoming.map((s,i)=>{
         const course=(courses||[]).find(c=>c.id===s.courseId);
@@ -757,13 +762,12 @@ function ScheduleNotice({schedules,courses}) {
         const today_=isToday(s);
         return (
           <div key={s.id} onClick={course?.website?(e=>openCourseSite(course,e)):undefined}
-            style={{display:"flex",alignItems:"center",gap:12,padding:"11px 14px",
+            style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",
             borderTop:i>0?`1px solid ${C.border}`:"none",
             cursor:course?.website?"pointer":"default",
-            background:today_?`${C.blue}08`:"#fff"}}>
-            <div style={{flexShrink:0,textAlign:"center",width:40,
-              background:today_?C.blue:C.bg,borderRadius:10,padding:"5px 4px",
-              border:`1.5px solid ${today_?C.blue:C.border}`}}>
+            background:today_?`${C.brand}0a`:"#fff"}}>
+            <div style={{flexShrink:0,textAlign:"center",width:44,
+              background:today_?C.brand:C.bg,borderRadius:14,padding:"6px 4px"}}>
               <div style={{fontSize:10,fontWeight:700,color:today_?"#fff":C.muted}}>{s.date.slice(5,7)}/{s.date.slice(8,10)}</div>
               <div style={{fontSize:11,fontWeight:800,color:today_?"#fff":C.faint}}>{dayNames[dObj.getDay()]}</div>
             </div>
@@ -771,10 +775,10 @@ function ScheduleNotice({schedules,courses}) {
               <div style={{fontWeight:800,fontSize:13,color:C.text,
                 whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.clubName}</div>
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:2}}>
-                <span style={{fontSize:12,fontWeight:700,color:C.blue}}>🕐 {s.teeTime}</span>
+                <span style={{fontSize:12,fontWeight:700,color:C.brand}}>🕐 {s.teeTime}</span>
                 {course&&(
                   <span onClick={course.website?(e=>openCourseSite(course,e)):undefined}
-                    style={{fontSize:11,color:course.website?C.blue:C.muted,
+                    style={{fontSize:11,color:course.website?C.brand:C.muted,
                       cursor:course.website?"pointer":"default",
                       textDecoration:course.website?"underline":"none"}}>
                     {course.name}{course.website&&<span style={{fontSize:11,marginLeft:3}}>🔗</span>}
@@ -782,9 +786,8 @@ function ScheduleNotice({schedules,courses}) {
                 )}
               </div>
             </div>
-            <div style={{flexShrink:0,fontWeight:800,fontSize:12,padding:"4px 10px",borderRadius:20,
-              background:today_?C.blue:`${C.gold}20`,color:today_?"#fff":C.gold,
-              border:`1.5px solid ${today_?C.blue:C.gold}40`}}>
+            <div style={{flexShrink:0,fontWeight:800,fontSize:12,padding:"5px 11px",borderRadius:999,
+              background:today_?C.brand:`${C.gold}1c`,color:today_?"#fff":"#b87b00"}}>
               {daysLeft(s)}
             </div>
           </div>
@@ -807,23 +810,50 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
   return (
     <div>
       <ScheduleNotice schedules={schedules} courses={courses}/>
-      <div style={{display:"flex",gap:8,marginBottom:20}}>
-        {years.map(y=>(
-          <button key={y} onClick={()=>onYearChange(y)} style={{padding:"8px 22px",borderRadius:30,
-            border:"none",cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:"inherit",
-            background:y===year?C.blue:C.surface,color:y===year?"#fff":C.muted,
-            boxShadow:y===year?`0 4px 14px ${C.blue}44`:`0 1px 4px rgba(0,0,0,0.08)`}}>
-            {y}년
-          </button>
-        ))}
-      </div>
+      <YearTabs year={year} years={years} onChange={onYearChange}/>
+      {(()=>{
+        const leader=yRounds.length?sorted[0]:null;
+        const LChar=leader?CHARS[leader.id]:null;
+        const totalBirdies=stats.reduce((a,s)=>a+(s.birdies||0),0);
+        const last=yRounds.length?yRounds[yRounds.length-1].date.slice(5).replace("-","."):"-";
+        return (
+          <div style={{position:"relative",overflow:"hidden",borderRadius:28,padding:"20px 20px 18px",marginBottom:14,
+            background:`linear-gradient(140deg,${C.brandDark} 0%,#0d6b4a 60%,#17895f 100%)`,boxShadow:SHADOW.lg,color:"#fff"}}>
+            <div style={{position:"absolute",right:-40,top:-40,width:160,height:160,borderRadius:"50%",background:"rgba(196,240,77,0.14)"}}/>
+            <div style={{position:"absolute",right:30,bottom:-60,width:120,height:120,borderRadius:"50%",background:"rgba(255,255,255,0.06)"}}/>
+            <div style={{position:"relative",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+              <div style={{minWidth:0}}>
+                <div style={{fontSize:11,fontWeight:700,letterSpacing:1.2,color:C.lime}}>{year} SEASON</div>
+                <div style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.7)",marginTop:10}}>현재 1위</div>
+                <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.8,lineHeight:1.15}}>{leader?leader.name:"-"}</div>
+                {leader&&leader.hcpDiff!==null&&leader.hcpDiff!==undefined&&(
+                  <div style={{fontSize:12,fontWeight:700,color:C.lime,marginTop:2}}>핸디차이 {leader.hcpDiff>0?"+":""}{leader.hcpDiff}</div>
+                )}
+              </div>
+              {LChar&&(
+                <div style={{width:76,height:76,borderRadius:"50%",overflow:"hidden",flexShrink:0,background:"rgba(255,255,255,0.12)",
+                  boxShadow:`0 0 0 3px ${C.lime},0 8px 24px rgba(0,0,0,0.3)`}}><LChar/></div>
+              )}
+            </div>
+            <div style={{position:"relative",display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginTop:16}}>
+              {[["라운드",`${yRounds.length}회`],["총 버디",`${totalBirdies}개`],["최근",last]].map(([l,v])=>(
+                <div key={l} style={{background:"rgba(255,255,255,0.1)",borderRadius:14,padding:"8px 10px"}}>
+                  <div style={{fontSize:10,fontWeight:600,color:"rgba(255,255,255,0.65)"}}>{l}</div>
+                  <div style={{fontSize:15,fontWeight:800,fontVariantNumeric:"tabular-nums",marginTop:1}}>{v}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
       <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10,marginBottom:16}}>
         {sorted.map((s,i)=><PlayerCard key={s.id} stat={s} rank={i}/>)}
       </div>
       <Card style={{overflow:"hidden",padding:0}}>
-        <div style={{padding:"12px 14px 9px",fontWeight:800,fontSize:13,color:C.text,
-          borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:5}}>
-          <span style={{color:C.blue}}>📊</span> {year} 시즌 스코어보드
+        <div style={{padding:"16px 16px 12px",fontWeight:800,fontSize:15,color:C.text,letterSpacing:-0.3,
+          display:"flex",alignItems:"center",gap:6}}>
+          <span>📊</span> {year} 시즌 스코어보드
+          <span style={{marginLeft:"auto",fontSize:11,fontWeight:700,color:C.brand,background:C.brandSoft,padding:"2px 10px",borderRadius:999}}>{yRounds.length}라운드</span>
         </div>
         <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
           <table style={{width:"100%",borderCollapse:"collapse",tableLayout:"fixed"}}>
@@ -832,7 +862,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
               {sorted.map(s=><col key={s.id} style={{width:`${72/sorted.length}%`}}/>)}
             </colgroup>
             <thead>
-              <tr style={{background:C.blue}}>
+              <tr style={{background:C.brand}}>
                 <th style={{padding:"8px 10px",textAlign:"left"}}>
                   <div style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.75)"}}>날짜 / 코스</div>
                 </th>
@@ -849,10 +879,10 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
                   );
                 })}
               </tr>
-              <tr style={{background:"#fff1f2"}}>
+              <tr style={{background:"#fdeeee"}}>
                 <td style={{padding:"6px 10px",fontSize:10,fontWeight:700,color:C.red}}>{year} 핸디</td>
                 {sorted.map(s=>(
-                  <td key={s.id} style={{textAlign:"center",fontFamily:"monospace",
+                  <td key={s.id} style={{textAlign:"center",fontFamily:"inherit",fontVariantNumeric:"tabular-nums",
                     fontWeight:800,fontSize:13,color:C.red,padding:"6px 4px"}}>{s.hcp??"-"}</td>
                 ))}
               </tr>
@@ -865,7 +895,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
                     <td style={{padding:"8px 10px",borderBottom:`1px solid ${C.border}`}}>
                       <div style={{fontSize:10,color:C.faint,lineHeight:1.3}}>{r.date.slice(5).replace("-",".")}</div>
                       <div onClick={course?.website?(e=>openCourseSite(course,e)):undefined}
-                        style={{fontSize:12,fontWeight:700,color:C.blue,lineHeight:1.3,
+                        style={{fontSize:12,fontWeight:700,color:C.brand,lineHeight:1.3,
                           whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
                           cursor:course?.website?"pointer":"default",
                           textDecoration:course?.website?"underline":"none"}}>
@@ -878,11 +908,11 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
                       const isBest=sc&&sc.score===p.best;
                       const isBelow=sc&&hcp&&sc.score<hcp;
                       return (
-                        <td key={p.id} style={{textAlign:"center",fontFamily:"monospace",
+                        <td key={p.id} style={{textAlign:"center",fontFamily:"inherit",fontVariantNumeric:"tabular-nums",
                           fontWeight:800,fontSize:15,padding:"8px 4px",
                           borderBottom:`1px solid ${C.border}`,
                           background:isBelow?C.yellow:"transparent",
-                          color:isBest?C.blue:C.text}}>
+                          color:isBest?C.brand:C.text}}>
                           {sc?sc.score:"-"}
                           {sc?.birdies>0&&<span style={{fontSize:8,marginLeft:1}}>🦋</span>}
                         </td>
@@ -894,7 +924,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
             </tbody>
             <tfoot>
               {[
-                {l:"평균",    k:"avgScore",f:v=>v??"-",       bg:"#f8faff",c:C.blue},
+                {l:"평균",    k:"avgScore",f:v=>v??"-",       bg:"#f6f9f4",c:C.brand},
                 {l:"버디",    k:"birdies", f:v=>v,            bg:"#fff5f5",c:C.red},
                 {l:"핸디차이",k:"hcpDiff", f:v=>v!==null?(v>0?"+":"")+v:"-",bg:"#f0fdf4",c:C.green},
                 {l:"핸디미만",k:"belowHcp",f:v=>v+"회",       bg:"#fdf2f8",c:C.pink},
@@ -903,7 +933,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
                 <tr key={k} style={{borderTop:`1px solid ${C.border}`,background:bg}}>
                   <td style={{padding:"7px 10px",fontSize:11,fontWeight:700,color:C.muted}}>{l}</td>
                   {sorted.map(s=>(
-                    <td key={s.id} style={{textAlign:"center",fontFamily:"monospace",
+                    <td key={s.id} style={{textAlign:"center",fontFamily:"inherit",fontVariantNumeric:"tabular-nums",
                       fontWeight:700,fontSize:13,padding:"7px 4px",color:c}}>{f(s[k])}</td>
                   ))}
                 </tr>
@@ -914,7 +944,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
         <div style={{display:"flex",gap:10,padding:"8px 12px",fontSize:10,color:C.faint,
           borderTop:`1px solid ${C.border}`,flexWrap:"wrap"}}>
           <span><span style={{background:C.yellow,padding:"1px 5px",borderRadius:3}}>■</span> 핸디미만</span>
-          <span style={{color:C.blue}}>■ 베스트</span>
+          <span style={{color:C.brand}}>■ 베스트</span>
         </div>
       </Card>
     </div>
@@ -957,7 +987,7 @@ function PhotoPicker({photos,setPhotos,roundId,label}) {
               style={{width:"100%",height:"100%",objectFit:"cover",cursor:"pointer",display:"block"}}/>
             <button onClick={()=>remove(url)}
               style={{position:"absolute",top:2,right:2,width:20,height:20,borderRadius:"50%",
-                border:"none",background:"rgba(15,23,42,0.6)",color:"#fff",fontSize:11,
+                border:"none",background:"rgba(10,28,20,0.6)",color:"#fff",fontSize:11,
                 cursor:"pointer",lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
           </div>
         ))}
@@ -972,7 +1002,7 @@ function PhotoPicker({photos,setPhotos,roundId,label}) {
         style={{display:"none"}} onChange={handleFiles}/>
       {viewer&&(
         <div onClick={()=>setViewer(null)} style={{position:"fixed",inset:0,zIndex:200,
-          background:"rgba(15,23,42,0.85)",display:"flex",alignItems:"center",justifyContent:"center",
+          background:"rgba(10,28,20,0.85)",display:"flex",alignItems:"center",justifyContent:"center",
           padding:20,cursor:"zoom-out"}}>
           <img src={viewer} alt="round-full" style={{maxWidth:"100%",maxHeight:"100%",borderRadius:12,
             boxShadow:"0 20px 60px rgba(0,0,0,0.5)"}}/>
@@ -1011,13 +1041,13 @@ function RoundEditModal({round,players,courses,onSave,onClose}) {
       <CourseSearchInput label="⛳ 골프장" courses={courses} value={courseId} onChange={setCourseId}/>
       <Card style={{overflow:"hidden",padding:0,marginBottom:12}}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 72px",gap:8,padding:"10px 12px",
-          background:C.blue,fontSize:11,fontWeight:700,color:"#fff"}}>
+          background:C.brand,fontSize:11,fontWeight:700,color:"#fff"}}>
           <span>플레이어</span><span>총점</span><span style={{textAlign:"center"}}>버디</span>
         </div>
         {scores.map((s,i)=>{
           const p=(players||[]).find(pl=>pl.id===s.pid);
           const Char=p?CHARS[p.id]:null;
-          const acc=p?ACCENTS[p.id]:C.blue;
+          const acc=p?ACCENTS[p.id]:C.brand;
           return (
             <div key={s.pid} style={{display:"grid",gridTemplateColumns:"1fr 1fr 72px",gap:8,
               padding:"10px 12px",alignItems:"center",borderTop:`1px solid ${C.border}`,
@@ -1032,13 +1062,13 @@ function RoundEditModal({round,players,courses,onSave,onClose}) {
               <input type="number" placeholder="타수" value={s.score} min={60} max={180}
                 onChange={e=>upd(i,"score",e.target.value)}
                 style={{background:"#fff",border:`1.5px solid ${C.border}`,borderRadius:8,
-                  padding:"8px",color:C.text,fontWeight:800,fontSize:16,fontFamily:"monospace",
+                  padding:"8px",color:C.text,fontWeight:800,fontSize:16,fontFamily:"inherit",fontVariantNumeric:"tabular-nums",
                   textAlign:"center",outline:"none",width:"100%",boxSizing:"border-box"}}/>
               <div style={{display:"flex",alignItems:"center",gap:4,justifyContent:"center"}}>
                 <button onClick={()=>upd(i,"birdies",Math.max(0,s.birdies-1))}
                   style={{width:22,height:22,borderRadius:6,border:`1px solid ${C.border}`,
                     background:C.surface,color:C.text,cursor:"pointer",fontSize:14,fontWeight:700,lineHeight:1}}>−</button>
-                <span style={{fontFamily:"monospace",fontWeight:800,color:C.red,minWidth:16,textAlign:"center"}}>{s.birdies}</span>
+                <span style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:800,color:C.red,minWidth:16,textAlign:"center"}}>{s.birdies}</span>
                 <button onClick={()=>upd(i,"birdies",s.birdies+1)}
                   style={{width:22,height:22,borderRadius:6,border:`1px solid ${C.border}`,
                     background:C.surface,color:C.text,cursor:"pointer",fontSize:14,fontWeight:700,lineHeight:1}}>+</button>
@@ -1050,7 +1080,7 @@ function RoundEditModal({round,players,courses,onSave,onClose}) {
       <FInput label="📝 메모" value={memo} onChange={e=>setMemo(e.target.value)} placeholder="특이사항 (선택)"/>
       <PhotoPicker photos={photos} setPhotos={setPhotos} roundId={round.id}/>
       <div style={{display:"flex",gap:8}}>
-        <Btn onClick={save} color={C.blue} full>💾 수정 저장</Btn>
+        <Btn onClick={save} color={C.brand} full>💾 수정 저장</Btn>
         <Btn onClick={onClose} color={C.muted} outline>취소</Btn>
       </div>
     </Modal>
@@ -1084,18 +1114,18 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
           const isOpen=exp===r.id;
           const minSc=Math.min(...r.scores.map(s=>s.score));
           const winner=players.find(p=>r.scores.find(s=>s.pid===p.id&&s.score===minSc));
-          const winAcc=winner?ACCENTS[winner.id]:C.blue;
+          const winAcc=winner?ACCENTS[winner.id]:C.brand;
           const WinChar=winner?CHARS[winner.id]:null;
           return (
-            <Card key={r.id} style={{overflow:"hidden",padding:0,border:`1.5px solid ${winAcc}22`}}>
-              <div style={{height:3,background:winAcc}}/>
+            <Card key={r.id} style={{overflow:"hidden",padding:0,border:`1px solid ${C.border}`}}>
+              <div style={{height:4,background:winAcc}}/>
               <div onClick={()=>setExp(isOpen?null:r.id)}
                 style={{display:"flex",alignItems:"center",justifyContent:"space-between",
                   padding:"14px 16px",cursor:"pointer",gap:12}}>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:11,color:C.faint,marginBottom:2}}>{r.date.replace(/-/g,".")}</div>
                   <div onClick={course?.website?(e=>openCourseSite(course,e)):undefined}
-                    style={{fontWeight:800,fontSize:16,color:course?.website?C.blue:C.text,
+                    style={{fontWeight:800,fontSize:16,color:course?.website?C.brand:C.text,
                       whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
                       cursor:course?.website?"pointer":"default",
                       textDecoration:course?.website?"underline":"none"}}>
@@ -1110,7 +1140,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                   <div style={{textAlign:"right"}}>
                     <div style={{fontSize:11,fontWeight:600,color:C.faint,marginBottom:2}}>🏅 우승</div>
                     <div style={{fontWeight:800,fontSize:15,color:winAcc,whiteSpace:"nowrap"}}>{winner?.name??"-"}</div>
-                    <div style={{fontFamily:"monospace",fontWeight:900,fontSize:32,color:winAcc,lineHeight:1.1,letterSpacing:-1}}>{minSc}</div>
+                    <div style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:900,fontSize:32,color:winAcc,lineHeight:1.1,letterSpacing:-1}}>{minSc}</div>
                   </div>
                   {WinChar&&(
                     <div style={{width:48,height:48,borderRadius:"50%",overflow:"hidden",
@@ -1126,7 +1156,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                     {[...r.scores].sort((a,b)=>a.score-b.score).map((s,ri)=>{
                       const p=players.find(pl=>pl.id===s.pid);
                       const Char=p?CHARS[p.id]:null;
-                      const acc=p?ACCENTS[p.id]:C.blue;
+                      const acc=p?ACCENTS[p.id]:C.brand;
                       const isWin=s.score===minSc;
                       const medals=["🥇","🥈","🥉","4️⃣"];
                       return (
@@ -1141,7 +1171,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                               <span>{medals[ri]}</span><span>{p?.name}</span>
                             </div>
                             <div style={{display:"flex",alignItems:"baseline",gap:5}}>
-                              <span style={{fontFamily:"monospace",fontWeight:900,fontSize:24,color:isWin?acc:C.text}}>{s.score}</span>
+                              <span style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:900,fontSize:24,color:isWin?acc:C.text}}>{s.score}</span>
                               {s.birdies>0&&<span style={{fontSize:11,color:C.red,display:"inline-flex",alignItems:"center",gap:2}}><Butterfly size={13}/>×{s.birdies}</span>}
                             </div>
                           </div>
@@ -1165,10 +1195,10 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                 </div>
               )}
               {isAdmin&&(
-                <div style={{display:"flex",gap:6,padding:"7px 12px",borderTop:`1px solid ${C.border}`,background:"#f8faff"}}>
+                <div style={{display:"flex",gap:6,padding:"7px 12px",borderTop:`1px solid ${C.border}`,background:"#f6f9f4"}}>
                   <button onClick={e=>{e.stopPropagation();setEditRound(r);}}
-                    style={{flex:1,background:"none",border:`1.5px solid ${C.blue}`,borderRadius:10,
-                      padding:"6px 0",color:C.blue,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                    style={{flex:1,background:"none",border:`1.5px solid ${C.brand}`,borderRadius:10,
+                      padding:"6px 0",color:C.brand,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
                     ✏️ 수정
                   </button>
                   <button onClick={e=>{e.stopPropagation();handleDelete(r.id);}}
@@ -1193,7 +1223,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
       )}
       {lightbox&&(
         <div onClick={()=>setLightbox(null)} style={{position:"fixed",inset:0,zIndex:200,
-          background:"rgba(15,23,42,0.85)",display:"flex",alignItems:"center",justifyContent:"center",
+          background:"rgba(10,28,20,0.85)",display:"flex",alignItems:"center",justifyContent:"center",
           padding:20,cursor:"zoom-out"}}>
           <img src={lightbox} alt="round-full" style={{maxWidth:"100%",maxHeight:"100%",borderRadius:12,
             boxShadow:"0 20px 60px rgba(0,0,0,0.5)"}}/>
@@ -1214,10 +1244,10 @@ function AwardsView({players,allRounds,handicaps}) {
   const minCS=active.length?Math.min(...active.map(champScore)):null;
   const champion=active.find(s=>champScore(s)===minCS);
   const ChampChar=champion?CHARS[champion.id]:null;
-  const champAcc=champion?ACCENTS[champion.id]:C.blue;
+  const champAcc=champion?ACCENTS[champion.id]:C.brand;
   const items=[
     {emoji:"🦋",title:"버디왕",      color:C.red,  key:"birdie",   val:s=>`${s.birdies} 버디`},
-    {emoji:"🎯",title:"베스트 스코어",color:C.blue, key:"best",     val:s=>`${s.best} 타`},
+    {emoji:"🎯",title:"베스트 스코어",color:C.brand, key:"best",     val:s=>`${s.best} 타`},
     {emoji:"📈",title:"핸디 향상왕",  color:C.green,key:"improved", val:s=>`평균 ${s.avgScore}타 (${s.hcpDiff>0?"+":""}${s.hcpDiff})`},
     {emoji:"📉",title:"도전상",       color:C.pink, key:"challenge",val:s=>`${s.belowHcp} 회`},
   ];
@@ -1226,8 +1256,8 @@ function AwardsView({players,allRounds,handicaps}) {
   return (
     <div>
       <YearTabs year={year} years={years} onChange={setYear}/>
-      <div style={{background:`linear-gradient(145deg,#2a1a7a 0%,${C.blue} 50%,${C.purple} 100%)`,
-        borderRadius:24,marginBottom:20,overflow:"hidden",boxShadow:`0 12px 40px rgba(67,97,238,0.45)`,position:"relative"}}>
+      <div style={{background:`linear-gradient(145deg,${C.brandDark} 0%,#0d6b4a 55%,#17895f 100%)`,
+        borderRadius:24,marginBottom:20,overflow:"hidden",boxShadow:`0 12px 40px rgba(9,63,45,0.35)`,position:"relative"}}>
         <div style={{position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none"}}>
           {[[10,15,6],[25,40,4],[70,20,5],[85,10,7],[60,55,3],[40,70,5],[15,75,4],[90,65,6],[50,30,3],[75,80,5]].map(([l,t,s],i)=>(
             <div key={i} style={{position:"absolute",left:`${l}%`,top:`${t}%`,width:s,height:s,
@@ -1314,7 +1344,7 @@ function AwardsView({players,allRounds,handicaps}) {
                         </div>
                         <span style={{fontWeight:800,fontSize:15,color:C.text}}>{w.name}</span>
                       </div>
-                      <span style={{fontFamily:"monospace",fontWeight:700,fontSize:12,padding:"5px 14px",
+                      <span style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:700,fontSize:12,padding:"5px 14px",
                         borderRadius:20,background:`${item.color}15`,color:item.color,border:`1px solid ${item.color}30`}}>
                         {item.val(w)}
                       </span>
@@ -1359,13 +1389,13 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
       <CourseSearchInput label="⛳ 골프장" courses={courses} value={courseId} onChange={setCourseId}/>
       <Card style={{overflow:"hidden",padding:0,marginBottom:12}}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 72px",gap:8,padding:"10px 12px",
-          background:C.blue,fontSize:11,fontWeight:700,color:"#fff"}}>
+          background:C.brand,fontSize:11,fontWeight:700,color:"#fff"}}>
           <span>플레이어</span><span>총점</span><span style={{textAlign:"center"}}>버디</span>
         </div>
         {scores.map((s,i)=>{
           const p=(players||[]).find(pl=>pl.id===s.pid);
           const Char=p?CHARS[p.id]:null;
-          const acc=p?ACCENTS[p.id]:C.blue;
+          const acc=p?ACCENTS[p.id]:C.brand;
           const hcp=handicaps[year]?.[s.pid];
           const filled=s.score!==""&&s.score!==null&&s.score!==undefined;
           return (
@@ -1386,12 +1416,12 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
                 onChange={e=>upd(i,"score",e.target.value)}
                 style={{background:filled?C.yellow:"#fff",border:`1.5px solid ${filled?C.gold:C.border}`,
                   borderRadius:8,padding:"8px",color:C.text,fontWeight:800,fontSize:16,
-                  fontFamily:"monospace",textAlign:"center",outline:"none",width:"100%",boxSizing:"border-box"}}/>
+                  fontFamily:"inherit",fontVariantNumeric:"tabular-nums",textAlign:"center",outline:"none",width:"100%",boxSizing:"border-box"}}/>
               <div style={{display:"flex",alignItems:"center",gap:4,justifyContent:"center"}}>
                 <button onClick={()=>upd(i,"birdies",Math.max(0,s.birdies-1))}
                   style={{width:22,height:22,borderRadius:6,border:`1px solid ${C.border}`,
                     background:C.surface,color:C.text,cursor:"pointer",fontSize:14,fontWeight:700,lineHeight:1}}>−</button>
-                <span style={{fontFamily:"monospace",fontWeight:800,color:C.red,minWidth:16,textAlign:"center"}}>{s.birdies}</span>
+                <span style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:800,color:C.red,minWidth:16,textAlign:"center"}}>{s.birdies}</span>
                 <button onClick={()=>upd(i,"birdies",s.birdies+1)}
                   style={{width:22,height:22,borderRadius:6,border:`1px solid ${C.border}`,
                     background:C.surface,color:C.text,cursor:"pointer",fontSize:14,fontWeight:700,lineHeight:1}}>+</button>
@@ -1402,7 +1432,7 @@ function AdminRoundForm({players,courses,handicaps,year,onSave,initSched}) {
       </Card>
       <FInput label="📝 메모" value={memo} onChange={e=>setMemo(e.target.value)} placeholder="특이사항 (선택)"/>
       <PhotoPicker photos={photos} setPhotos={setPhotos} roundId={draftId}/>
-      <Btn onClick={save} color={C.blue} full>💾 라운드 저장</Btn>
+      <Btn onClick={save} color={C.brand} full>💾 라운드 저장</Btn>
     </div>
   );
 }
@@ -1419,7 +1449,7 @@ function CourseManager({courses,setCourses,onSaved}) {
   return (
     <div>
       <Card style={{padding:14,background:C.bg,marginBottom:14}}>
-        <div style={{fontSize:12,fontWeight:700,color:C.blue,marginBottom:10}}>+ 골프장 추가</div>
+        <div style={{fontSize:12,fontWeight:700,color:C.brand,marginBottom:10}}>+ 골프장 추가</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
           <FInput value={nm} onChange={e=>setNm(e.target.value)} placeholder="골프장명"/>
           <FInput value={rg} onChange={e=>setRg(e.target.value)} placeholder="지역 (예: 경기 여주시)"/>
@@ -1467,7 +1497,7 @@ function CourseManager({courses,setCourses,onSaved}) {
                   ))}
                 </div>
                 <div style={{display:"flex",gap:8}}>
-                  <Btn onClick={saveEdit} color={C.blue} small>✅ 저장</Btn>
+                  <Btn onClick={saveEdit} color={C.brand} small>✅ 저장</Btn>
                   <Btn onClick={()=>setEditId(null)} color={C.muted} outline small>취소</Btn>
                 </div>
               </div>
@@ -1476,7 +1506,7 @@ function CourseManager({courses,setCourses,onSaved}) {
                 <div>
                   <div style={{display:"flex",alignItems:"center",gap:5}}>
                     <span onClick={c.website?(e=>openCourseSite(c,e)):undefined}
-                      style={{fontWeight:700,fontSize:14,color:c.website?C.blue:C.text,
+                      style={{fontWeight:700,fontSize:14,color:c.website?C.brand:C.text,
                         cursor:c.website?"pointer":"default",textDecoration:c.website?"underline":"none"}}>{c.name}</span>
                     {c.website&&<span style={{fontSize:11}}>🔗</span>}
                   </div>
@@ -1486,7 +1516,7 @@ function CourseManager({courses,setCourses,onSaved}) {
                   </div>
                 </div>
                 <div style={{display:"flex",gap:6}}>
-                  <Btn onClick={()=>startEdit(c)} color={C.blue} outline small>✏️ 편집</Btn>
+                  <Btn onClick={()=>startEdit(c)} color={C.brand} outline small>✏️ 편집</Btn>
                   <button onClick={()=>{setCourses(cs=>cs.filter(x=>x.id!==c.id));if(onSaved)onSaved("🗑 삭제");}}
                     style={{background:"none",border:`1.5px solid ${C.border}`,borderRadius:10,
                       padding:"6px 10px",color:C.faint,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>🗑</button>
@@ -1516,11 +1546,11 @@ function PlayerManager({players,setPlayers,onSaved}) {
           if(!nm.trim())return;
           setPlayers(p=>[...p,{id:uid(),name:nm.trim(),gender:gd}]);
           setNm(""); if(onSaved)onSaved();
-        }} color={C.blue} small>추가</Btn>
+        }} color={C.brand} small>추가</Btn>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:8}}>
         {(players||[]).map(p=>{
-          const Char=CHARS[p.id]; const acc=ACCENTS[p.id]??C.blue;
+          const Char=CHARS[p.id]; const acc=ACCENTS[p.id]??C.brand;
           return (
             <Card key={p.id} style={{padding:"10px 14px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
               <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -1552,7 +1582,7 @@ function HandicapManager({players,handicaps,setHandicaps,year,onSaved}) {
       <div style={{fontSize:13,fontWeight:700,color:C.text,marginBottom:14}}>{year}년 핸디캡 설정</div>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
         {(players||[]).map(p=>{
-          const Char=CHARS[p.id]; const acc=ACCENTS[p.id]??C.blue;
+          const Char=CHARS[p.id]; const acc=ACCENTS[p.id]??C.brand;
           return (
             <Card key={p.id} style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:12}}>
               <div style={{width:36,height:36,borderRadius:"50%",overflow:"hidden",
@@ -1563,7 +1593,7 @@ function HandicapManager({players,handicaps,setHandicaps,year,onSaved}) {
               <input type="number" min={60} max={130} value={handicaps[year]?.[p.id]??""}
                 onChange={e=>upd(p.id,e.target.value)}
                 style={{width:72,background:"#fff1f2",border:"1.5px solid #fca5a5",borderRadius:10,
-                  padding:"8px",color:C.red,fontWeight:800,fontSize:18,fontFamily:"monospace",
+                  padding:"8px",color:C.red,fontWeight:800,fontSize:18,fontFamily:"inherit",fontVariantNumeric:"tabular-nums",
                   textAlign:"center",outline:"none"}}/>
             </Card>
           );
@@ -1599,8 +1629,8 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
     const dayNames=["일","월","화","수","목","금","토"];
     return (
       <div style={{borderRadius:14,overflow:"hidden",
-        border:`1.5px solid ${isToday?C.blue:C.border}`,background:isToday?`${C.blue}08`:"#fff",opacity:isPast?0.6:1}}>
-        {isToday&&<div style={{background:C.blue,padding:"5px 14px",fontSize:11,fontWeight:700,color:"#fff"}}>🏌️ 오늘 라운딩!</div>}
+        border:`1.5px solid ${isToday?C.brand:C.border}`,background:isToday?`${C.brand}08`:"#fff",opacity:isPast?0.6:1}}>
+        {isToday&&<div style={{background:C.brand,padding:"5px 14px",fontSize:11,fontWeight:700,color:"#fff"}}>🏌️ 오늘 라운딩!</div>}
         {editId===s.id?(
           <div style={{padding:"12px 14px"}}>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
@@ -1621,7 +1651,7 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
                   <span style={{color:C.green,fontWeight:700}}>✅ {sc.name}</span>
                   {sc.website?(
                     <span onClick={e=>openCourseSite(sc,e)}
-                      style={{color:C.blue,textDecoration:"underline",cursor:"pointer",fontWeight:600}}>🔗 홈페이지 바로가기</span>
+                      style={{color:C.brand,textDecoration:"underline",cursor:"pointer",fontWeight:600}}>🔗 홈페이지 바로가기</span>
                   ):(
                     <span style={{color:C.faint}}>홈페이지 미등록</span>
                   )}
@@ -1629,13 +1659,13 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
               );
             })()}
             <div style={{display:"flex",gap:8}}>
-              <Btn onClick={saveEdit} color={C.blue} small>저장</Btn>
+              <Btn onClick={saveEdit} color={C.brand} small>저장</Btn>
               <Btn onClick={()=>setEditId(null)} color={C.muted} outline small>취소</Btn>
             </div>
           </div>
         ):(
           <div style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px"}}>
-            <div style={{flexShrink:0,textAlign:"center",width:46,background:isToday?C.blue:C.bg,borderRadius:12,padding:"6px 4px"}}>
+            <div style={{flexShrink:0,textAlign:"center",width:46,background:isToday?C.brand:C.bg,borderRadius:12,padding:"6px 4px"}}>
               <div style={{fontSize:11,fontWeight:700,color:isToday?"#fff":C.muted}}>{s.date.slice(5,7)}월</div>
               <div style={{fontSize:20,fontWeight:900,lineHeight:1,color:isToday?"#fff":C.text}}>{s.date.slice(8,10)}</div>
               <div style={{fontSize:10,color:isToday?"rgba(255,255,255,0.8)":C.faint}}>{dayNames[dObj.getDay()]}</div>
@@ -1643,7 +1673,7 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontWeight:800,fontSize:14,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.clubName}</div>
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:3,flexWrap:"wrap"}}>
-                <span style={{fontSize:13,fontWeight:700,color:C.blue}}>🕐 {s.teeTime}</span>
+                <span style={{fontSize:13,fontWeight:700,color:C.brand}}>🕐 {s.teeTime}</span>
                 {course&&(
                   <span onClick={course.website?(e=>openCourseSite(course,e)):undefined}
                     style={{cursor:course.website?"pointer":"default"}}>
@@ -1666,7 +1696,7 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
   return (
     <div>
       <Card style={{padding:14,marginBottom:16,background:C.bg}}>
-        <div style={{fontSize:12,fontWeight:700,color:C.blue,marginBottom:10}}>+ 새 라운딩 일정 등록</div>
+        <div style={{fontSize:12,fontWeight:700,color:C.brand,marginBottom:10}}>+ 새 라운딩 일정 등록</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
           <FInput label="📅 날짜" type="date" value={form.date} onChange={e=>upd("date",e.target.value)}/>
           <FInput label="🕐 티오프" type="time" value={form.teeTime} onChange={e=>upd("teeTime",e.target.value)}/>
@@ -1685,14 +1715,14 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
               <span style={{color:C.green,fontWeight:700}}>✅ {sc.name}</span>
               {sc.website?(
                 <span onClick={e=>openCourseSite(sc,e)}
-                  style={{color:C.blue,textDecoration:"underline",cursor:"pointer",fontWeight:600}}>🔗 홈페이지 바로가기</span>
+                  style={{color:C.brand,textDecoration:"underline",cursor:"pointer",fontWeight:600}}>🔗 홈페이지 바로가기</span>
               ):(
                 <span style={{color:C.faint}}>홈페이지 미등록 (관리 &gt; 골프장에서 추가 가능)</span>
               )}
             </div>
           );
         })()}
-        <Btn onClick={add} color={C.blue} full>등록</Btn>
+        <Btn onClick={add} color={C.brand} full>등록</Btn>
       </Card>
       {upcoming.length>0&&(
         <div style={{marginBottom:16}}>
@@ -1721,7 +1751,7 @@ function ScheduleManager({schedules,setSchedules,courses,onSaved}) {
 function DBPanel({players,courses,rounds,handicaps,onReset}) {
   const years=[...new Set(Object.keys(handicaps).map(Number))].sort((a,b)=>b-a);
   const rows=[
-    {icon:"👤",label:"플레이어",count:`${(players||[]).length}명`,    color:C.blue},
+    {icon:"👤",label:"플레이어",count:`${(players||[]).length}명`,    color:C.brand},
     {icon:"⛳",label:"골프장",  count:`${(courses||[]).length}개`,     color:C.purple},
     {icon:"🏌️",label:"라운드",  count:`${(rounds||[]).length}라운드`,  color:C.green},
     {icon:"📋",label:"핸디 연도",count:`${years.join(", ")}년`,        color:C.gold},
@@ -1738,7 +1768,7 @@ function DBPanel({players,courses,rounds,handicaps,onReset}) {
             borderBottom:i<rows.length-1?`1px solid ${C.border}`:"none",background:i%2===0?"#fff":C.bg}}>
             <span style={{fontSize:20}}>{r.icon}</span>
             <span style={{flex:1,fontWeight:600,fontSize:13,color:C.text}}>{r.label}</span>
-            <span style={{fontFamily:"monospace",fontWeight:800,fontSize:13,padding:"4px 12px",
+            <span style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:800,fontSize:13,padding:"4px 12px",
               borderRadius:20,background:`${r.color}15`,color:r.color,border:`1px solid ${r.color}30`}}>
               {r.count}
             </span>
@@ -1799,26 +1829,32 @@ export default function App() {
 
   if(!isReady) return (
     <div style={{minHeight:"100vh",background:C.bg,display:"flex",flexDirection:"column",
-      alignItems:"center",justifyContent:"center",gap:16,fontFamily:"sans-serif"}}>
+      alignItems:"center",justifyContent:"center",gap:16,fontFamily:FONT}}>
       <div style={{fontSize:48}}>⛳</div>
-      <div style={{fontWeight:800,fontSize:18,color:C.blue}}>골술년 챌린지보드</div>
+      <div style={{fontWeight:800,fontSize:18,color:C.brand}}>골술년 챌린지보드</div>
       <div style={{fontSize:13,color:C.faint}}>데이터 로딩 중...</div>
-      <div style={{width:36,height:36,border:`3px solid ${C.border}`,borderTop:`3px solid ${C.blue}`,
+      <div style={{width:36,height:36,border:`3px solid ${C.border}`,borderTop:`3px solid ${C.brand}`,
         borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   );
 
   return (
-    <div style={{minHeight:"100vh",background:C.bg,paddingBottom:76,
-      fontFamily:"'Noto Sans KR','Apple SD Gothic Neo',sans-serif"}}>
+    <div style={{minHeight:"100vh",background:C.bg,paddingBottom:104,fontFamily:FONT,color:C.text,
+      WebkitFontSmoothing:"antialiased",letterSpacing:-0.1}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
         *{box-sizing:border-box;}
-        input::placeholder{color:#94a3b8;}
+        body{font-family:${FONT};}
+        button,input,select,textarea{font-family:inherit;}
+        input:focus,select:focus,textarea:focus{border-color:${C.brand}!important;background:#fff!important;box-shadow:0 0 0 3px ${C.brand}22;}
+        .btn-press{transition:transform .12s ease,opacity .12s ease;}
+        .btn-press:active{transform:scale(0.96);}
+        .card-hover{transition:transform .15s ease,box-shadow .15s ease;}
+        .card-hover:active{transform:scale(0.985);}
+        input::placeholder{color:#98a69d;}
         input[type=number]::-webkit-inner-spin-button{opacity:1;}
         ::-webkit-scrollbar{width:3px;height:3px;}
-        ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
+        ::-webkit-scrollbar-thumb{background:#c9d3cc;border-radius:4px;}
         @keyframes spin{to{transform:rotate(360deg)}}
         @keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
       `}</style>
@@ -1833,8 +1869,8 @@ export default function App() {
 
       {todayAlert&&(
         <div style={{position:"fixed",top:60,left:0,right:0,zIndex:90,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 12px"}}>
-          <div style={{maxWidth:480,width:"100%",background:`linear-gradient(135deg,${C.blue},${C.purple})`,
-            borderRadius:16,padding:"14px 16px",margin:"8px auto",boxShadow:`0 6px 28px rgba(59,91,219,0.4)`,
+          <div style={{maxWidth:480,width:"100%",background:`linear-gradient(135deg,${C.brandDark},${C.brand})`,
+            borderRadius:22,padding:"14px 16px",margin:"8px auto",boxShadow:`0 6px 28px rgba(9,63,45,0.35)`,
             display:"flex",alignItems:"center",gap:12,animation:"fadeup 0.3s ease"}}>
             <span style={{fontSize:28,flexShrink:0}}>⛳</span>
             <div style={{flex:1,minWidth:0}}>
@@ -1844,7 +1880,7 @@ export default function App() {
             <div style={{display:"flex",gap:6,flexShrink:0}}>
               {isAdmin&&(
                 <button onClick={()=>{setAutoSched(todayAlert);setTab("admin");setATab("input");setTodayAlert(null);}}
-                  style={{background:"#fff",border:"none",borderRadius:10,padding:"7px 12px",color:C.blue,fontWeight:800,fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>점수 입력</button>
+                  style={{background:"#fff",border:"none",borderRadius:10,padding:"7px 12px",color:C.brand,fontWeight:800,fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>점수 입력</button>
               )}
               <button onClick={()=>setTodayAlert(null)} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:10,padding:"7px 10px",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>✕</button>
             </div>
@@ -1852,19 +1888,24 @@ export default function App() {
         </div>
       )}
 
-      <header style={{background:C.surface,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:40,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
-        <div style={{maxWidth:480,margin:"0 auto",padding:"11px 14px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div>
-            <div style={{fontWeight:900,fontSize:19,letterSpacing:-0.8,lineHeight:1.1,color:C.text}}>
-              <span style={{background:`linear-gradient(90deg,${C.blue},${C.purple})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>골술년</span>{" "}챌린지보드
+      <header style={{background:"rgba(242,245,239,0.82)",backdropFilter:"blur(14px) saturate(1.4)",WebkitBackdropFilter:"blur(14px) saturate(1.4)",
+        position:"sticky",top:0,zIndex:40}}>
+        <div style={{maxWidth:480,margin:"0 auto",padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:38,height:38,borderRadius:13,background:`linear-gradient(145deg,${C.brand},${C.brandDark})`,
+              display:"flex",alignItems:"center",justifyContent:"center",fontSize:19,boxShadow:`0 4px 12px ${C.brand}44`}}>⛳</div>
+            <div>
+              <div style={{fontWeight:900,fontSize:18,letterSpacing:-0.7,lineHeight:1.15,color:C.text}}>
+                <span style={{color:C.brand}}>골술년</span>{" "}챌린지보드
+              </div>
+              <div style={{fontSize:11,fontWeight:600,color:C.faint,marginTop:1,letterSpacing:0.2}}>Golf Challenge Board {year}</div>
             </div>
-            <div style={{fontSize:11,color:C.faint,marginTop:1}}>⛳ Golf Challenge Board {year}</div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
-            {isAdmin&&<Chip color={C.blue}>관리자</Chip>}
+            {isAdmin&&<Chip color={C.brand}>관리자</Chip>}
             {isAdmin
               ?<Btn onClick={()=>{setIsAdmin(false);setTab("season");}} color={C.muted} outline small>로그아웃</Btn>
-              :<Btn onClick={()=>setShowLogin(true)} color={C.blue} small>관리자</Btn>}
+              :<Btn onClick={()=>setShowLogin(true)} color={C.brand} small>관리자</Btn>}
           </div>
         </div>
       </header>
@@ -1878,16 +1919,16 @@ export default function App() {
             <div style={{textAlign:"center",paddingTop:60}}>
               <div style={{fontSize:56,marginBottom:12}}>🔐</div>
               <div style={{color:C.muted,fontSize:14,marginBottom:24}}>관리자 로그인이 필요합니다</div>
-              <Btn onClick={()=>setShowLogin(true)} color={C.blue}>로그인하기</Btn>
+              <Btn onClick={()=>setShowLogin(true)} color={C.brand}>로그인하기</Btn>
             </div>
           ):(
             <div>
               <div style={{display:"flex",gap:6,marginBottom:16,overflowX:"auto",paddingBottom:4}}>
                 {ATABS.map(t=>(
-                  <button key={t.id} onClick={()=>setATab(t.id)} style={{padding:"8px 18px",borderRadius:30,
+                  <button key={t.id} onClick={()=>setATab(t.id)} className="btn-press" style={{padding:"9px 18px",borderRadius:999,
                     border:"none",cursor:"pointer",fontWeight:700,fontSize:12,whiteSpace:"nowrap",flexShrink:0,fontFamily:"inherit",
-                    background:aTab===t.id?C.blue:C.surface,color:aTab===t.id?"#fff":C.muted,
-                    boxShadow:aTab===t.id?`0 4px 14px ${C.blue}40`:`0 1px 4px rgba(0,0,0,0.06)`}}>
+                    background:aTab===t.id?C.brand:C.surface,color:aTab===t.id?"#fff":C.muted,
+                    boxShadow:aTab===t.id?`0 4px 12px ${C.brand}40`:SHADOW.sm}}>
                     {t.l}
                   </button>
                 ))}
@@ -1911,18 +1952,19 @@ export default function App() {
         )}
       </div>
 
-      <nav style={{position:"fixed",bottom:0,left:0,right:0,background:C.surface,
-        borderTop:`1px solid ${C.border}`,zIndex:40,boxShadow:"0 -2px 12px rgba(0,0,0,0.06)"}}>
-        <div style={{maxWidth:480,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)"}}>
+      <nav style={{position:"fixed",bottom:0,left:0,right:0,zIndex:40,padding:"0 14px calc(12px + env(safe-area-inset-bottom))",pointerEvents:"none"}}>
+        <div style={{maxWidth:420,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:4,padding:6,
+          background:"rgba(255,255,255,0.92)",backdropFilter:"blur(16px)",WebkitBackdropFilter:"blur(16px)",
+          border:`1px solid ${C.border}`,borderRadius:26,boxShadow:"0 10px 32px rgba(9,63,45,0.16)",pointerEvents:"auto"}}>
           {NAV.map(n=>{
             const active=tab===n.id;
             return (
-              <button key={n.id} onClick={()=>{if(n.id==="admin"&&!isAdmin)setShowLogin(true);else setTab(n.id);}}
-                style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"10px 0 10px",
-                  border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",
-                  color:active?C.blue:C.faint,borderTop:`2.5px solid ${active?C.blue:"transparent"}`,transition:"all 0.15s"}}>
-                <n.Icon active={active} color={C.blue}/>
-                <span style={{fontSize:13,fontWeight:active?700:500,marginTop:4,color:active?C.blue:C.faint}}>{n.label}</span>
+              <button key={n.id} onClick={()=>{if(n.id==="admin"&&!isAdmin)setShowLogin(true);else setTab(n.id);}} className="btn-press"
+                style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 0 7px",
+                  border:"none",background:active?C.brandSoft:"transparent",borderRadius:20,cursor:"pointer",fontFamily:"inherit",
+                  color:active?C.brand:C.faint,transition:"background 0.15s"}}>
+                <n.Icon active={active} color={C.brand}/>
+                <span style={{fontSize:11,fontWeight:active?800:600,marginTop:3,color:active?C.brand:C.faint}}>{n.label}</span>
               </button>
             );
           })}
@@ -1935,7 +1977,7 @@ export default function App() {
           <FInput label="비밀번호" type="password" value={lpw} onChange={e=>setLpw(e.target.value)} placeholder="••••••••"
             onKeyDown={e=>e.key==="Enter"&&login()}/>
           {lerr&&<div style={{fontSize:12,color:C.red,marginBottom:12}}>{lerr}</div>}
-          <Btn onClick={login} color={C.blue} full>로그인</Btn>
+          <Btn onClick={login} color={C.brand} full>로그인</Btn>
           <div style={{textAlign:"center",fontSize:11,color:C.faint,marginTop:12}}>ID: admin · PW: golf2025</div>
         </Modal>
       )}
