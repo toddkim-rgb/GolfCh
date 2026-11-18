@@ -310,13 +310,16 @@ const INIT_ROUNDS = [
 // ─── Theme ────────────────────────────────────────────────────────────────────
 // "Fairway" 팔레트 — 페어웨이 그린을 브랜드 컬러로, 따뜻한 오프화이트 배경 + 라임 포인트
 const C = {
-  bg:"#f2f5ef", surface:"#ffffff", border:"#e4eae0",
-  text:"#14211a", muted:"#5a6b60", faint:"#98a69d",
+  page:"#efefef", bg:"#f2f5ef", surface:"#ffffff", border:"#e4eae0",
+  text:"#14211a", muted:"#4a5a50", faint:"#5f6f65",
   brand:"#0f7a55", brandDark:"#093f2d", brandSoft:"#e5f3ec", lime:"#c4f04d",
   blue:"#3a6fe0", purple:"#7556e8", cyan:"#0e90a8",
-  pink:"#e8508f", green:"#1fa56b", gold:"#e09b00",
-  red:"#e5484d", yellow:"#ffefb0", yellowBg:"#fffaea",
+  pink:"#c93a77", green:"#0f7a55", gold:"#e09b00", goldInk:"#9a6400",
+  red:"#c93238", yellow:"#ffefb0", yellowBg:"#fffaea",
+  track:"#b9b9b9", noticeHead:"#7d7d7d", navActive:"#9aef40", toggleBg:"#8c9ed9",
 };
+// 히어로/스코어보드 헤더 그라데이션 (네이비 → 민트 → 라임)
+const heroGrad = (deg, mid=50) => `linear-gradient(${deg}deg,#0e4781 0%,#19cb8d ${mid}%,#c8ee31 100%)`;
 const FONT = "'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif";
 const SHADOW = { sm:"0 1px 2px rgba(20,33,26,0.04),0 2px 8px rgba(20,33,26,0.04)", md:"0 2px 4px rgba(20,33,26,0.04),0 8px 24px rgba(20,33,26,0.08)", lg:"0 12px 40px rgba(9,63,45,0.28)" };
 const WEATHER_MAP = { SUNNY:"☀️ 맑음", CLOUDY:"⛅ 흐림", RAINY:"🌧️ 비", WINDY:"💨 바람" };
@@ -364,6 +367,8 @@ const CharKSH = () => <img src={CHAR_IMGS.p3} style={{width:"100%",height:"100%"
 const CharCSM = () => <img src={CHAR_IMGS.p4} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>;
 const CHARS   = { p1:CharJJ, p2:CharWSK, p3:CharKSH, p4:CharCSM };
 const ACCENTS = { p1:C.brand, p2:C.purple, p3:C.blue, p4:C.gold };
+// 글자색 전용(흰 배경 대비 4.5:1 이상) — 링/바 같은 장식은 ACCENTS, 텍스트는 INKS
+const INKS = { p1:"#0f7a55", p2:"#6444d6", p3:"#2f62d0", p4:"#9a6400" };
 
 // ─── Butterfly Icon ───────────────────────────────────────────────────────────
 const Butterfly = ({size=14}) => (
@@ -635,38 +640,38 @@ function Modal({title,onClose,children}) {
 // ─── Nav Icons ────────────────────────────────────────────────────────────────
 const IconSeason = ({active,color}) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <rect x="3" y="12" width="4" height="9" rx="1.5" fill={active?color:"#c9d3cc"}/>
-    <rect x="10" y="7" width="4" height="14" rx="1.5" fill={active?color:"#c9d3cc"}/>
+    <rect x="3" y="12" width="4" height="9" rx="1.5" fill={active?color:"#9aa89f"}/>
+    <rect x="10" y="7" width="4" height="14" rx="1.5" fill={active?color:"#9aa89f"}/>
     <rect x="17" y="3" width="4" height="18" rx="1.5" fill={active?color:"#e4eae0"}/>
-    <path d="M5 11 L12 6 L19 2" stroke={active?color:"#98a69d"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M5 11 L12 6 L19 2" stroke={active?color:"#5f6f65"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IconRounds = ({active,color}) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <circle cx="15" cy="3.5" r="2" fill={active?color:"#98a69d"}/>
-    <path d="M15 5.5 L13 10 L9 13" stroke={active?color:"#98a69d"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M13 10 L11 15 L9 20" stroke={active?color:"#98a69d"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M13 10 L15 15 L17 19" stroke={active?color:"#98a69d"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M9 13 L3 9" stroke={active?color:"#98a69d"} strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="2.5" cy="8.5" r="1.3" fill={active?color:"#c9d3cc"}/>
+    <circle cx="15" cy="3.5" r="2" fill={active?color:"#5f6f65"}/>
+    <path d="M15 5.5 L13 10 L9 13" stroke={active?color:"#5f6f65"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M13 10 L11 15 L9 20" stroke={active?color:"#5f6f65"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M13 10 L15 15 L17 19" stroke={active?color:"#5f6f65"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 13 L3 9" stroke={active?color:"#5f6f65"} strokeWidth="2" strokeLinecap="round"/>
+    <circle cx="2.5" cy="8.5" r="1.3" fill={active?color:"#9aa89f"}/>
     <path d="M2 21 L22 21" stroke={active?color:"#e4eae0"} strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 const IconAwards = ({active,color}) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path d="M7 3 H17 V13 C17 16.3 14.8 18 12 18 C9.2 18 7 16.3 7 13 Z" fill={active?color:"#c9d3cc"}/>
-    <path d="M7 6 C4 6 3 8 3 10 C3 12 4.5 12.5 6 12" stroke={active?color:"#c9d3cc"} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
-    <path d="M17 6 C20 6 21 8 21 10 C21 12 19.5 12.5 18 12" stroke={active?color:"#c9d3cc"} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
-    <rect x="10.5" y="18" width="3" height="3" rx="0.5" fill={active?color:"#c9d3cc"}/>
-    <rect x="8" y="21" width="8" height="1.5" rx="0.75" fill={active?color:"#c9d3cc"}/>
+    <path d="M7 3 H17 V13 C17 16.3 14.8 18 12 18 C9.2 18 7 16.3 7 13 Z" fill={active?color:"#9aa89f"}/>
+    <path d="M7 6 C4 6 3 8 3 10 C3 12 4.5 12.5 6 12" stroke={active?color:"#9aa89f"} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+    <path d="M17 6 C20 6 21 8 21 10 C21 12 19.5 12.5 18 12" stroke={active?color:"#9aa89f"} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+    <rect x="10.5" y="18" width="3" height="3" rx="0.5" fill={active?color:"#9aa89f"}/>
+    <rect x="8" y="21" width="8" height="1.5" rx="0.75" fill={active?color:"#9aa89f"}/>
     <path d="M12 8 L12.6 9.8 H14.5 L13 10.9 L13.5 12.7 L12 11.6 L10.5 12.7 L11 10.9 L9.5 9.8 H11.4 Z" fill={active?"#fff":"#e4eae0"}/>
   </svg>
 );
 const IconAdmin = ({active,color}) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2 L13.5 4.5 L16.5 4 L17.5 6.8 L20 8 L19.5 11 L21.5 13 L20 15.5 L21 18 L18.2 18.8 L17 21 L14 20.5 L12 22 L10 20.5 L7 21 L5.8 18.8 L3 18 L4 15.5 L2.5 13 L4.5 11 L4 8 L6.5 6.8 L7.5 4 L10.5 4.5 Z" fill={active?color:"#c9d3cc"} opacity="0.9"/>
+    <path d="M12 2 L13.5 4.5 L16.5 4 L17.5 6.8 L20 8 L19.5 11 L21.5 13 L20 15.5 L21 18 L18.2 18.8 L17 21 L14 20.5 L12 22 L10 20.5 L7 21 L5.8 18.8 L3 18 L4 15.5 L2.5 13 L4.5 11 L4 8 L6.5 6.8 L7.5 4 L10.5 4.5 Z" fill={active?color:"#9aa89f"} opacity="0.9"/>
     <circle cx="12" cy="12" r="4" fill={active?"#fff":"#f6f8f5"}/>
-    <circle cx="12" cy="12" r="2.2" fill={active?color:"#98a69d"}/>
+    <circle cx="12" cy="12" r="2.2" fill={active?color:"#5f6f65"}/>
   </svg>
 );
 
@@ -674,10 +679,11 @@ const IconAdmin = ({active,color}) => (
 function PlayerCard({stat,rank}) {
   const Char  = CHARS[stat.id];
   const acc   = ACCENTS[stat.id]??C.brand;
+  const ink   = INKS[stat.id]??C.brand;
   const isFirst = rank===0;
   const diff = stat.hcpDiff;
   const tiles = [
-    ["최저",stat.best??"-",acc],
+    ["최저",stat.best??"-",ink],
     ["버디",stat.birdies,C.red],
     ["핸디차이",diff!==null&&diff!==undefined?(diff>0?"+":"")+diff:"-",diff!==null&&diff<0?C.green:C.muted],
     ["핸디미만",stat.belowHcp+"회",C.pink],
@@ -688,7 +694,7 @@ function PlayerCard({stat,rank}) {
       boxShadow:isFirst?`0 6px 20px ${C.gold}2e`:SHADOW.sm}}>
       <div style={{position:"absolute",top:0,left:0,right:0,height:4,background:acc}}/>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:2}}>
-        <span style={{fontSize:11,fontWeight:800,color:isFirst?C.gold:C.faint,letterSpacing:0.4}}>#{rank+1}{isFirst?" 👑":""}</span>
+        <span style={{fontSize:11,fontWeight:800,color:isFirst?C.goldInk:C.faint,letterSpacing:0.4}}>#{rank+1}{isFirst?" 👑":""}</span>
         {diff!==null&&diff!==undefined&&diff<0&&<Chip color={C.green}>향상 {diff}</Chip>}
       </div>
       <div style={{display:"flex",alignItems:"center",gap:10,marginTop:8}}>
@@ -698,7 +704,7 @@ function PlayerCard({stat,rank}) {
         </div>
         <div style={{minWidth:0}}>
           <div style={{fontWeight:800,fontSize:15,color:C.text,whiteSpace:"nowrap",letterSpacing:-0.3}}>{stat.name}</div>
-          <div style={{fontSize:11,color:C.muted,marginTop:1}}>핸디 <b style={{color:acc,fontWeight:800}}>{stat.hcp??"-"}</b></div>
+          <div style={{fontSize:11,color:C.muted,marginTop:1}}>핸디 <b style={{color:ink,fontWeight:800}}>{stat.hcp??"-"}</b></div>
         </div>
       </div>
       <div style={{display:"flex",alignItems:"baseline",gap:4,margin:"12px 0 10px"}}>
@@ -720,7 +726,7 @@ function PlayerCard({stat,rank}) {
 // ─── YearTabs (세그먼트 컨트롤) ───────────────────────────────────────────────
 function YearTabs({year,years,onChange}) {
   return (
-    <div style={{display:"inline-flex",gap:2,padding:4,marginBottom:16,background:"#e6ebe2",borderRadius:999}}>
+    <div style={{display:"inline-flex",gap:2,padding:4,marginBottom:16,background:C.track,borderRadius:999}}>
       {years.map(y=>(
         <button key={y} onClick={()=>onChange(y)} className="btn-press" style={{padding:"7px 20px",borderRadius:999,
           border:"none",cursor:"pointer",fontWeight:700,fontSize:13,fontFamily:"inherit",
@@ -749,10 +755,10 @@ function ScheduleNotice({schedules,courses}) {
   };
   return (
     <Card style={{overflow:"hidden",padding:0,marginBottom:16}}>
-      <div style={{padding:"12px 16px",background:C.brandSoft,
+      <div style={{padding:"12px 16px",background:C.noticeHead,
         display:"flex",alignItems:"center",gap:6}}>
         <span style={{fontSize:15}}>📅</span>
-        <span style={{fontWeight:800,fontSize:13,color:C.brand,letterSpacing:-0.2}}>예정된 라운딩</span>
+        <span style={{fontWeight:800,fontSize:13,color:"#fff",letterSpacing:-0.2}}>예정된 라운딩</span>
         <span style={{marginLeft:"auto",fontSize:11,fontWeight:700,color:C.brand,
           background:C.surface,padding:"2px 10px",borderRadius:999}}>{upcoming.length}건</span>
       </div>
@@ -775,7 +781,7 @@ function ScheduleNotice({schedules,courses}) {
               <div style={{fontWeight:800,fontSize:13,color:C.text,
                 whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.clubName}</div>
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:2}}>
-                <span style={{fontSize:12,fontWeight:700,color:C.brand}}>🕐 {s.teeTime}</span>
+                <span style={{fontSize:12,fontWeight:700,color:C.pink}}>🕐 {s.teeTime}</span>
                 {course&&(
                   <span onClick={course.website?(e=>openCourseSite(course,e)):undefined}
                     style={{fontSize:11,color:course.website?C.brand:C.muted,
@@ -787,7 +793,7 @@ function ScheduleNotice({schedules,courses}) {
               </div>
             </div>
             <div style={{flexShrink:0,fontWeight:800,fontSize:12,padding:"5px 11px",borderRadius:999,
-              background:today_?C.brand:`${C.gold}1c`,color:today_?"#fff":"#b87b00"}}>
+              background:today_?C.brand:`${C.gold}1c`,color:today_?"#fff":C.goldInk}}>
               {daysLeft(s)}
             </div>
           </div>
@@ -818,7 +824,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
         const last=yRounds.length?yRounds[yRounds.length-1].date.slice(5).replace("-","."):"-";
         return (
           <div style={{position:"relative",overflow:"hidden",borderRadius:28,padding:"20px 20px 18px",marginBottom:14,
-            background:`linear-gradient(140deg,${C.brandDark} 0%,#0d6b4a 60%,#17895f 100%)`,boxShadow:SHADOW.lg,color:"#fff"}}>
+            background:heroGrad(140,51),boxShadow:SHADOW.lg,color:"#fff"}}>
             <div style={{position:"absolute",right:-40,top:-40,width:160,height:160,borderRadius:"50%",background:"rgba(196,240,77,0.14)"}}/>
             <div style={{position:"absolute",right:30,bottom:-60,width:120,height:120,borderRadius:"50%",background:"rgba(255,255,255,0.06)"}}/>
             <div style={{position:"relative",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
@@ -862,7 +868,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
               {sorted.map(s=><col key={s.id} style={{width:`${72/sorted.length}%`}}/>)}
             </colgroup>
             <thead>
-              <tr style={{background:C.brand}}>
+              <tr style={{background:heroGrad(168,50)}}>
                 <th style={{padding:"8px 10px",textAlign:"left"}}>
                   <div style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.75)"}}>날짜 / 코스</div>
                 </th>
@@ -1115,6 +1121,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
           const minSc=Math.min(...r.scores.map(s=>s.score));
           const winner=players.find(p=>r.scores.find(s=>s.pid===p.id&&s.score===minSc));
           const winAcc=winner?ACCENTS[winner.id]:C.brand;
+          const winInk=winner?INKS[winner.id]:C.brand;
           const WinChar=winner?CHARS[winner.id]:null;
           return (
             <Card key={r.id} style={{overflow:"hidden",padding:0,border:`1px solid ${C.border}`}}>
@@ -1125,7 +1132,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:11,color:C.faint,marginBottom:2}}>{r.date.replace(/-/g,".")}</div>
                   <div onClick={course?.website?(e=>openCourseSite(course,e)):undefined}
-                    style={{fontWeight:800,fontSize:16,color:course?.website?C.brand:C.text,
+                    style={{fontWeight:800,fontSize:16,color:C.text,
                       whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
                       cursor:course?.website?"pointer":"default",
                       textDecoration:course?.website?"underline":"none"}}>
@@ -1139,8 +1146,8 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                 <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
                   <div style={{textAlign:"right"}}>
                     <div style={{fontSize:11,fontWeight:600,color:C.faint,marginBottom:2}}>🏅 우승</div>
-                    <div style={{fontWeight:800,fontSize:15,color:winAcc,whiteSpace:"nowrap"}}>{winner?.name??"-"}</div>
-                    <div style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:900,fontSize:32,color:winAcc,lineHeight:1.1,letterSpacing:-1}}>{minSc}</div>
+                    <div style={{fontWeight:800,fontSize:15,color:winInk,whiteSpace:"nowrap"}}>{winner?.name??"-"}</div>
+                    <div style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:900,fontSize:32,color:winInk,lineHeight:1.1,letterSpacing:-1}}>{minSc}</div>
                   </div>
                   {WinChar&&(
                     <div style={{width:48,height:48,borderRadius:"50%",overflow:"hidden",
@@ -1171,7 +1178,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
                               <span>{medals[ri]}</span><span>{p?.name}</span>
                             </div>
                             <div style={{display:"flex",alignItems:"baseline",gap:5}}>
-                              <span style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:900,fontSize:24,color:isWin?acc:C.text}}>{s.score}</span>
+                              <span style={{fontFamily:"inherit",fontVariantNumeric:"tabular-nums",fontWeight:900,fontSize:24,color:isWin?(INKS[p?.id]??acc):C.text}}>{s.score}</span>
                               {s.birdies>0&&<span style={{fontSize:11,color:C.red,display:"inline-flex",alignItems:"center",gap:2}}><Butterfly size={13}/>×{s.birdies}</span>}
                             </div>
                           </div>
@@ -1210,7 +1217,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
               )}
               <div onClick={()=>setExp(isOpen?null:r.id)}
                 style={{textAlign:"center",padding:"6px",borderTop:`1px solid ${C.border}`,
-                  cursor:"pointer",fontSize:11,color:C.faint,background:C.bg}}>
+                  cursor:"pointer",fontSize:11,color:C.muted,background:C.toggleBg}}>
                 {isOpen?"▲ 접기":"▼ 전체 점수 보기"}
               </div>
             </Card>
@@ -1256,7 +1263,7 @@ function AwardsView({players,allRounds,handicaps}) {
   return (
     <div>
       <YearTabs year={year} years={years} onChange={setYear}/>
-      <div style={{background:`linear-gradient(145deg,${C.brandDark} 0%,#0d6b4a 55%,#17895f 100%)`,
+      <div style={{background:heroGrad(145,55),
         borderRadius:24,marginBottom:20,overflow:"hidden",boxShadow:`0 12px 40px rgba(9,63,45,0.35)`,position:"relative"}}>
         <div style={{position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none"}}>
           {[[10,15,6],[25,40,4],[70,20,5],[85,10,7],[60,55,3],[40,70,5],[15,75,4],[90,65,6],[50,30,3],[75,80,5]].map(([l,t,s],i)=>(
@@ -1310,7 +1317,7 @@ function AwardsView({players,allRounds,handicaps}) {
                   <div style={{fontSize:12,fontWeight:800,color:"rgba(255,255,255,0.9)"}}>{rankLabels[i]} {s.name}</div>
                   <div style={{fontSize:12,fontWeight:700,padding:"3px 10px",borderRadius:14,
                     background:"rgba(255,255,255,0.12)",
-                    color:s.hcpDiff!==null&&s.hcpDiff<0?"#86efac":"rgba(255,255,255,0.55)"}}>
+                    color:"#fff"}}>
                     {s.hcpDiff!==null?(s.hcpDiff>0?"+":"")+s.hcpDiff:"-"}
                   </div>
                 </div>
@@ -1828,7 +1835,7 @@ export default function App() {
   const ATABS=[{id:"schedule",l:"📅 라운딩 예정"},{id:"input",l:"라운드 입력"},{id:"courses",l:"골프장"},{id:"players",l:"플레이어"},{id:"handicap",l:"핸디캡"},{id:"db",l:"💾 DB"}];
 
   if(!isReady) return (
-    <div style={{minHeight:"100vh",background:C.bg,display:"flex",flexDirection:"column",
+    <div style={{minHeight:"100vh",background:C.page,display:"flex",flexDirection:"column",
       alignItems:"center",justifyContent:"center",gap:16,fontFamily:FONT}}>
       <div style={{fontSize:48}}>⛳</div>
       <div style={{fontWeight:800,fontSize:18,color:C.brand}}>골술년 챌린지보드</div>
@@ -1840,7 +1847,7 @@ export default function App() {
   );
 
   return (
-    <div style={{minHeight:"100vh",background:C.bg,paddingBottom:104,fontFamily:FONT,color:C.text,
+    <div style={{minHeight:"100vh",background:C.page,paddingBottom:104,fontFamily:FONT,color:C.text,
       WebkitFontSmoothing:"antialiased",letterSpacing:-0.1}}>
       <style>{`
         *{box-sizing:border-box;}
@@ -1888,7 +1895,7 @@ export default function App() {
         </div>
       )}
 
-      <header style={{background:"rgba(242,245,239,0.82)",backdropFilter:"blur(14px) saturate(1.4)",WebkitBackdropFilter:"blur(14px) saturate(1.4)",
+      <header style={{background:"rgba(239,239,239,0.82)",backdropFilter:"blur(14px) saturate(1.4)",WebkitBackdropFilter:"blur(14px) saturate(1.4)",
         position:"sticky",top:0,zIndex:40}}>
         <div style={{maxWidth:480,margin:"0 auto",padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -1905,7 +1912,7 @@ export default function App() {
             {isAdmin&&<Chip color={C.brand}>관리자</Chip>}
             {isAdmin
               ?<Btn onClick={()=>{setIsAdmin(false);setTab("season");}} color={C.muted} outline small>로그아웃</Btn>
-              :<Btn onClick={()=>setShowLogin(true)} color={C.brand} small>관리자</Btn>}
+              :<Btn onClick={()=>setShowLogin(true)} color={C.muted} small>관리자</Btn>}
           </div>
         </div>
       </header>
@@ -1961,7 +1968,7 @@ export default function App() {
             return (
               <button key={n.id} onClick={()=>{if(n.id==="admin"&&!isAdmin)setShowLogin(true);else setTab(n.id);}} className="btn-press"
                 style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 0 7px",
-                  border:"none",background:active?C.brandSoft:"transparent",borderRadius:20,cursor:"pointer",fontFamily:"inherit",
+                  border:"none",background:active?C.navActive:"transparent",borderRadius:20,cursor:"pointer",fontFamily:"inherit",
                   color:active?C.brand:C.faint,transition:"background 0.15s"}}>
                 <n.Icon active={active} color={C.brand}/>
                 <span style={{fontSize:11,fontWeight:active?800:600,marginTop:3,color:active?C.brand:C.faint}}>{n.label}</span>
