@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ko" data-type="software" data-radius="sharp" data-ground="sky" data-buttons="solid" data-motion="" class="m-enter mo-js m-enter-done mo-safe" data-mode="light" style="--g-kl: 1.000; --g-k: 1.000; --g-kp: 0.080; --g-kd: 1.000;" data-tone="light" data-moments-ready="1" data-ready="1"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>데브슬라: IT 개발사를 위한 계약·SLA 관리 소프트웨어</title>
+<meta name="description" content="유지보수 계약과 SLA 조항, 청구서를 한 화면에서 관리하는 소프트웨어입니다.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="데브슬라: IT 개발사를 위한 계약·SLA 관리 소프트웨어">
+<meta property="og:description" content="계약서, SLA 조항, 청구서를 한 곳에 모아 마감을 놓치지 않게 합니다.">
+<meta property="og:image" content="share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#ffffff">
+<!-- <link rel="canonical" href="https://devsla.example/"> -->
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400..700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<link rel="stylesheet" href="assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="assets/layout/layout.css">
+<link rel="stylesheet" href="assets/icons/icon.css">
+<style>
+:root {
+  --p-bg: #ffffff; --p-surface: #f4f4f4; --p-ink: #111111; --p-muted: #6b6b6b;
+  --p-accent: #1a4be0; --p-accent-ink: #ffffff; --p-action: #1a4be0; --p-action-ink: #ffffff;
+  --p-inv-bg: #111111; --p-inv-surface: #1e1e1e; --p-inv-ink: #ffffff; --p-inv-muted: #9a9a9a;
+  --p-inv-accent: #ffffff; --p-inv-accent-ink: #111111; --p-inv-action: #ffffff; --p-inv-action-ink: #111111;
+  --font-display: "Urbanist", system-ui, sans-serif;
+  --font-text: "Urbanist", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-tracking-xl: -0.04em;
+}
+</style>
+<link rel="stylesheet" href="assets/ui/base.css">
+<link rel="stylesheet" href="assets/ui/doc/fragment.css">
+<link rel="stylesheet" href="assets/ui/notify/fragment.css">
+<link rel="stylesheet" href="assets/ui/window/fragment.css">
+<link rel="stylesheet" href="assets/ui/checklist/fragment.css">
+<link rel="stylesheet" href="assets/ui/toggles/fragment.css">
+<link rel="stylesheet" href="assets/ui/files/fragment.css">
+<link rel="stylesheet" href="assets/diagrams/diagram.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="assets/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="assets/moments/moments.js">
+<link rel="modulepreload" href="assets/moments/lib.js">
+<link rel="modulepreload" href="assets/moments/word-highlight/moment.js">
+<style>
+  #faq .faq-tools { margin-top: var(--s-6); }
+  #faq .faq-tools__row { display: flex; gap: var(--s-3); margin-top: var(--s-3); }
+  #features .panel { --p-h: 336px; }
+  @media (max-width: 639px) { #features .panel { --p-h: 220px; } }
+  .app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
+  .app > .app__pane { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+  .app > .app__pane + .app__pane { border-left: 1px solid var(--u-line); }
+  .app > .app__pane > .ui-panel { width: 100%; border: 0; border-radius: 0; box-shadow: none; }
+  .app > .app__pane::after { content: ""; position: absolute; inset: auto 0 0 0; height: 64px; background: linear-gradient(transparent, var(--u-bg)); pointer-events: none; }
+  @media (min-width: 1024px) and (max-width: 1279px) { .app.ui { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
+  @media (max-width: 1023px) {
+    .app.ui { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+    .app > .app__pane--list { max-height: 252px; }
+    .app > .app__pane--list::after { display: none; }
+    .app .ui-win__side { display: none; }
+    .app .ui-win__body { grid-template-columns: minmax(0, 1fr); }
+    .app > .app__pane + .app__pane { border-left: 0; border-top: 1px solid var(--u-line); }
+  }
+  @media (max-width: 639px) {
+    .app.ui { grid-template-rows: minmax(0, 1fr); }
+    .app > .app__pane--list { display: none; }
+    .app > .app__pane + .app__pane { border-top: 0; }
+  }
+</style>
+<link rel="stylesheet" href="http://127.0.0.1:5200/assets/moments/word-highlight/moment.css"></head>
+<body>
+
+<header class="nav nav--centre" data-m-nav="1">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">본문으로 바로가기</a>
+    <a class="nav__logo" href="#top"><span class="mark" data-mark="stack" aria-hidden="true"></span>데브슬라</a>
+    <nav class="nav__links" aria-label="Main">
+      <div class="nav__item"><a class="nav__link" href="#product">제품</a></div>
+      <div class="nav__item"><a class="nav__link" href="#features">기능</a></div>
+      <div class="nav__item"><a class="nav__link" href="#billing">청구</a></div>
+      <div class="nav__item"><a class="nav__link" href="#faq">FAQ</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="mailto:hello@devsla.example?subject=%EB%AC%B4%EB%A3%8C%20%EC%8B%9C%EC%9E%91">무료로 시작하기</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO: split, software (--has ui): the words on span-5, a window on span-6 start-7 -->
+  <section class="hero hero--split is-still is-entered" data-enter="" aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text grid hero__grid">
+      <div class="hero__text span-5">
+        <h1 id="hero-h">IT 개발사를 위한 계약·SLA 관리 소프트웨어</h1>
+        <p class="hero__lead">계약서와 SLA 조항, 청구서를 한 화면에서 관리합니다. 조항 기한을 24시간 앞두고 알려드리고, 매달 1일 청구서를 자동으로 만듭니다.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="mailto:hello@devsla.example?subject=%EB%AC%B4%EB%A3%8C%20%EC%8B%9C%EC%9E%91">무료로 시작하기<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"></path><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"></path></svg></a>
+          <a class="btn btn--secondary" href="mailto:hello@devsla.example?subject=%EB%8D%B0%EB%AA%A8%20%EC%9A%94%EC%B2%AD">데모 요청</a>
+        </div>
+      </div>
+      <div class="hero__media frame frame--split span-6 start-7">
+        <div class="stage stage--fade-br" data-fx="silk-folds" data-fx-seed="7" data-fx-palette="{&quot;bg&quot;:&quot;#c6d3df&quot;,&quot;surface&quot;:&quot;#d6e0e9&quot;,&quot;ink&quot;:&quot;#25303a&quot;,&quot;muted&quot;:&quot;#5d6873&quot;,&quot;accent&quot;:&quot;#7f9fbd&quot;}" data-fx-params="{&quot;speed&quot;:0,&quot;tone&quot;:1,&quot;scale&quot;:1.3,&quot;folds&quot;:0.55,&quot;sheen&quot;:0.55,&quot;angle&quot;:-28,&quot;calm&quot;:0.25,&quot;calmX&quot;:0.35,&quot;calmY&quot;:0.45}" style="--calm-k: 0%; isolation: isolate; background-color: rgb(198, 211, 223);" role="img" aria-label="리본테크 계약서의 장애 대응 SLA 조항이 열려 있고, SLA 마감 2시간 전 알림이 그 위에 떠 있다" data-fx-own-bg="1" data-fx-mounted="silk-folds"><canvas class="fx-canvas" aria-hidden="true" style="position: absolute; inset: 0px; width: 100%; height: 100%; display: block; z-index: -1; pointer-events: none; opacity: 1; transition: opacity 0.5s; border-radius: inherit; image-rendering: auto;" width="626" height="714"></canvas>
+          <div class="at-corner to-edge" style="--ax:56px;--ay:56px" data-ui-pause-host="" data-ui-loop="">
+            <div class="ui ui-doc" data-ui="doc">
+              <article class="ui-doc__page">
+                <div class="ui-doc__label">리본테크 유지보수 계약서, 2026년 갱신판</div>
+                <div class="ui-doc__title">4. 장애 대응 SLA</div>
+                <div class="ui-doc__text">심각도 1 장애는 접수 후 <mark class="ui-doc__mark is-on">4시간 이내</mark> 1차 대응을 시작합니다.</div>
+                <div class="ui-doc__text">월 가동률은 <mark class="ui-doc__mark is-seen" data-kind="위반 위험" data-msg="이번 달 가동률이 아직 기준에 못 미칩니다." data-where="가동률 리포트, 11월 17일 기준">99.5% 이상</mark>을 유지해야 하며, 미달 시 해당 월 유지보수비의 10%를 감액합니다.</div>
+                <div class="ui-doc__text">정기 점검은 매월 첫째 주 화요일, 업무 시간 외에 진행합니다.</div>
+              </article>
+              <aside class="ui-doc__note ui-panel is-on" aria-live="polite" style="top: 112px;">
+                <div class="ui-doc__kind"><span class="ui-doc__dot"></span><span data-doc-kind="">위반 위험</span></div>
+                <div class="ui-doc__msg" data-doc-msg="">이번 달 가동률이 아직 기준에 못 미칩니다.</div>
+                <div class="ui-doc__where" data-doc-where="">가동률 리포트, 11월 17일 기준</div>
+              </aside>
+            </div>
+            <div class="at-over" style="--bx:24px;--by:-40px">
+              <div class="ui ui-notify" data-ui="notify">
+                <ul class="ui-notify__list" data-notify-list="">
+                  <li class="ui-note"><span class="ui-agent ui-note__av" aria-hidden="true"></span><span class="ui-note__text"><span class="ui-note__title">SLA 마감 2시간 전<time>지금</time></span><span class="ui-note__body">리본테크, 티켓 #482</span></span></li>
+                </ul>
+              </div>
+            </div>
+          <button type="button" class="ui-pause loop-pause" aria-label="Pause animation" title="Pause animation"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.25" y="3.25" width="2.75" height="9.5" rx="0.9"></rect><rect x="9" y="3.25" width="2.75" height="9.5" rx="0.9"></rect></svg></button></div>
+        </div>
+      <button type="button" class="ui-pause loop-pause" aria-label="Pause animation" title="Pause animation"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.25" y="3.25" width="2.75" height="9.5" rx="0.9"></rect><rect x="9" y="3.25" width="2.75" height="9.5" rx="0.9"></rect></svg></button></div>
+    </div></div>
+  </section>
+
+  <!-- APP-FRAME: the product itself, big -->
+  <section class="section" id="product" aria-labelledby="product-h">
+    <div class="wrap">
+      <div class="grid">
+        <div class="span-5">
+          <div class="section-head"><h2 id="product-h">진행 중인 모든 계약을 한 화면에서</h2></div>
+        </div>
+        <div class="span-6 start-7">
+          <p class="t-lead">모든 고객사의 계약과 SLA 조항이 하나의 목록에 모입니다. 기한이 가까운 항목이 위로 올라오고, 조항을 열면 위반 위험이 있는 부분이 바로 표시됩니다. <a class="link" href="#faq">자주 묻는 질문 보기</a></p>
+        </div>
+      </div>
+      <div class="ui app fill" role="img" aria-label="계약 목록과 리본테크 계약서의 장애 대응 SLA 조항이 나란히 열려 있다" data-ui-pause-host="">
+        <div class="app__pane app__pane--list">
+          <div class="ui ui-panel ui-win is-ui-held" data-ui="window" data-open="진행중" data-work="담당 필요" data-done="완료" data-ui-still="">
+            <div class="ui-win__bar">
+              <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="ui-win__crumb"><span class="mark" data-mark="stack" aria-hidden="true"></span>계약 <i>/</i> <b>진행중</b></span>
+              <span class="ui-spacer"></span>
+              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"></circle><path d="m10.5 10.5 3 3"></path></svg><span class="ui-win__ph">검색</span><span class="ui-kbd">/</span></span>
+            </div>
+            <div class="ui-win__body">
+              <nav class="ui-win__side" aria-hidden="true">
+                <span class="ui-win__nav is-on"><svg class="ui-icon" viewBox="0 0 16 16"><path d="M2.5 9h3l1 1.5h3l1-1.5h3"></path><path d="M2.5 9 4 3.5h8L13.5 9v3.5h-11z"></path></svg>진행중<em>24</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="8" cy="6" r="2.5"></circle><path d="M3.5 13.5c.6-2.3 2.4-3.5 4.5-3.5s3.9 1.2 4.5 3.5"></path></svg>내 담당<em>6</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"></circle><path d="M8 5v3l2 1.5"></path></svg>SLA 임박<em>3</em></span>
+                <span class="ui-win__nav"><svg class="ui-icon" viewBox="0 0 16 16"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"></path></svg>완료</span>
+                <span class="ui-win__label">보기</span>
+                <span class="ui-win__nav"><span class="ui-win__hash">#</span>유지보수</span>
+                <span class="ui-win__nav"><span class="ui-win__hash">#</span>신규 계약</span>
+              </nav>
+              <div class="ui-win__main">
+                <div class="ui-win__cols" aria-hidden="true"><span>고객사</span><span>계약</span><span>상태</span><span>경과</span></div>
+                <ul class="ui-win__rows">
+                  <li class="ui-win__row" data-row=""><span class="ui-avatar" data-tone="2">리</span><span class="ui-win__who">리본테크</span><span class="ui-win__sub">장애 대응 SLA 위반 임박</span><span class="ui-win__st is-you" data-st="">담당 필요</span><span class="ui-win__age">2분</span></li>
+                  <li class="ui-win__row" data-row=""><span class="ui-avatar" data-tone="1">한</span><span class="ui-win__who">한빛몰</span><span class="ui-win__sub">월간 유지보수 점검</span><span class="ui-win__st is-done" data-st="">완료</span><span class="ui-win__age">6분</span></li>
+                  <li class="ui-win__row is-sel" data-row=""><span class="ui-avatar" data-tone="3">세</span><span class="ui-win__who">세종ERP</span><span class="ui-win__sub">기능 추가 계약 검토</span><span class="ui-win__st is-work" data-st="">담당 필요</span><span class="ui-win__age">11분</span></li>
+                  <li class="ui-win__row" data-row=""><span class="ui-avatar" data-tone="4">다</span><span class="ui-win__who">다온푸드</span><span class="ui-win__sub">11월 청구서 발행</span><span class="ui-win__st" data-st="">진행중</span><span class="ui-win__age">18분</span></li>
+                  <li class="ui-win__row" data-row=""><span class="ui-avatar" data-tone="5">블</span><span class="ui-win__who">블루웍스</span><span class="ui-win__sub">서버 이전 작업</span><span class="ui-win__st is-done" data-st="">완료</span><span class="ui-win__age">24분</span></li>
+                  <li class="ui-win__row" data-row=""><span class="ui-avatar" data-tone="3">그</span><span class="ui-win__who">그린라인</span><span class="ui-win__sub">백업 정책 점검</span><span class="ui-win__st is-done" data-st="">완료</span><span class="ui-win__age">31분</span></li>
+                  <li class="ui-win__row" data-row=""><span class="ui-avatar" data-tone="2">아</span><span class="ui-win__who">아토소프트</span><span class="ui-win__sub">연간 계약 갱신 안내</span><span class="ui-win__st is-done" data-st="">완료</span><span class="ui-win__age">40분</span></li>
+                  <li class="ui-win__row" data-row=""><span class="ui-avatar" data-tone="4">정</span><span class="ui-win__who">정현물류</span><span class="ui-win__sub">배포 파이프라인 점검</span><span class="ui-win__st is-done" data-st="">완료</span><span class="ui-win__age">52분</span></li>
+                  <li class="ui-win__row" data-row=""><span class="ui-avatar" data-tone="1">우</span><span class="ui-win__who">우리베이커리</span><span class="ui-win__sub">결제 모듈 점검</span><span class="ui-win__st is-done" data-st="">완료</span><span class="ui-win__age">1시간</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app__pane app__pane--open" data-ui-loop="">
+          <div class="ui ui-doc" data-ui="doc">
+            <article class="ui-doc__page">
+              <div class="ui-doc__label">리본테크 유지보수 계약서, 2026년 갱신판</div>
+              <div class="ui-doc__title">4. 장애 대응 SLA</div>
+              <div class="ui-doc__text">심각도 1 장애는 접수 후 <mark class="ui-doc__mark is-on">4시간 이내</mark> 1차 대응을 시작합니다. 담당자가 배정되면 고객사 담당자에게 자동으로 통보합니다.</div>
+              <div class="ui-doc__text">월 가동률은 <mark class="ui-doc__mark is-seen" data-kind="위반 위험" data-msg="이번 달 가동률이 아직 기준에 못 미칩니다." data-where="가동률 리포트, 11월 17일 기준">99.5% 이상</mark>을 유지해야 하며, 미달 시 해당 월 유지보수비의 10%를 감액합니다.</div>
+              <div class="ui-doc__text">정기 점검은 매월 첫째 주 화요일, 업무 시간 외에 진행합니다.</div>
+              <div class="ui-doc__text">계약 기간은 2026년 3월부터 1년이며, 만료 30일 전 자동으로 갱신 안내를 보냅니다.</div>
+            </article>
+            <aside class="ui-doc__note ui-panel is-on" aria-live="polite" style="top: 112px;">
+              <div class="ui-doc__kind"><span class="ui-doc__dot"></span><span data-doc-kind="">위반 위험</span></div>
+              <div class="ui-doc__msg" data-doc-msg="">이번 달 가동률이 아직 기준에 못 미칩니다.</div>
+              <div class="ui-doc__where" data-doc-where="">가동률 리포트, 11월 17일 기준</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES: 2x2 -->
+  <section class="section g2" id="features" aria-labelledby="features-h">
+    <div class="wrap">
+    <div class="group">
+      <div class="section-head">
+        <h2 id="features-h">계약과 SLA를 놓치지 않습니다. <span class="muted">알림과 자동화가 함께 움직입니다.</span></h2>
+      </div>
+      <div class="grid">
+        <article class="card card--row card--open span-6">
+          <h3>SLA 마감을 미리 알립니다</h3>
+          <p>장애 대응 4시간 조항이 2시간 남으면 담당자에게 바로 알립니다.</p>
+          <div class="panel" data-fx="fluted-glass" data-fx-seed="11" data-fx-palette="{&quot;bg&quot;:&quot;#c6d3df&quot;,&quot;surface&quot;:&quot;#d6e0e9&quot;,&quot;ink&quot;:&quot;#25303a&quot;,&quot;muted&quot;:&quot;#5d6873&quot;,&quot;accent&quot;:&quot;#3f6a92&quot;}" data-fx-params="{&quot;speed&quot;:0,&quot;calm&quot;:0.35,&quot;calmX&quot;:0.3,&quot;calmY&quot;:0.7,&quot;ribWidth&quot;:28,&quot;angle&quot;:-10,&quot;distortion&quot;:0.4,&quot;highlight&quot;:0.15,&quot;shadow&quot;:0.16,&quot;blur&quot;:0.1}" style="--calm-k:0%" data-fx-mounted="fluted-glass"><canvas width="628" height="448" class="fx-canvas is-baked" aria-hidden="true" style="position: absolute; inset: 0px; width: 100%; height: 100%; display: block; z-index: -1; pointer-events: none; border-radius: inherit;"></canvas>
+            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:380px;--ax:32px;--ay:calc(100% - 180px);--ay-sm:calc(100% - 180px)" data-ui-loop="">
+              <div class="ui ui-notify" data-ui="notify">
+                <ul class="ui-notify__list" data-notify-list="">
+                  <li class="ui-note"><span class="ui-agent ui-note__av" aria-hidden="true"></span><span class="ui-note__text"><span class="ui-note__title">데브슬라가 알립니다<time>지금</time></span><span class="ui-note__body">리본테크, 장애 대응 SLA 2시간 남음</span></span><span class="ui-btn ui-btn--sm ui-note__btn">열기</span></li>
+                  <li class="ui-note"><span class="ui-avatar ui-note__av" data-tone="3">오세</span><span class="ui-note__text"><span class="ui-note__title">오세훈 담당자로 지정됨<time>4분</time></span><span class="ui-note__body">세종ERP, 기능 추가 계약 검토</span></span></li>
+                  <li class="ui-note"><span class="ui-note__ico"><svg class="ui-icon" viewBox="0 0 16 16"><path d="m3.5 8.4 2.8 2.8 6.2-6.4"></path></svg></span><span class="ui-note__text"><span class="ui-note__title">오늘 해결된 SLA 18건<time>12분</time></span><span class="ui-note__body">지난 1시간 동안 재발 없음</span></span></li>
+                </ul>
+              </div>
+            </div></div>
+          </div>
+        </article>
+        <article class="card card--row card--open span-6">
+          <h3>계약 갱신을 체크리스트로</h3>
+          <p>갱신 30일 전부터 해야 할 일을 순서대로 보여줍니다.</p>
+          <div class="panel" data-fx="fluted-glass" data-fx-seed="19" data-fx-palette="{&quot;bg&quot;:&quot;#c6d3df&quot;,&quot;surface&quot;:&quot;#d6e0e9&quot;,&quot;ink&quot;:&quot;#25303a&quot;,&quot;muted&quot;:&quot;#5d6873&quot;,&quot;accent&quot;:&quot;#3f6a92&quot;}" data-fx-params="{&quot;speed&quot;:0,&quot;calm&quot;:0.35,&quot;calmX&quot;:0.3,&quot;calmY&quot;:0.7,&quot;ribWidth&quot;:28,&quot;angle&quot;:-10,&quot;distortion&quot;:0.4,&quot;highlight&quot;:0.15,&quot;shadow&quot;:0.16,&quot;blur&quot;:0.1}" style="--calm-k:0%" data-fx-mounted="fluted-glass"><canvas width="628" height="448" class="fx-canvas is-baked" aria-hidden="true" style="position: absolute; inset: 0px; width: 100%; height: 100%; display: block; z-index: -1; pointer-events: none; border-radius: inherit;"></canvas>
+            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:340px;--ax:32px;--ay:40px;--ay-sm:24px">
+              <div class="ui ui-panel ui-checks is-ui-held" data-ui="checklist" data-ui-still="">
+                <div class="ui-checks__head">
+                  <div class="ui-title">리본테크 계약 갱신</div>
+                  <span class="ui-spacer"></span>
+                  <div class="ui-meta" data-checks-count="">2/5</div>
+                </div>
+                <div class="ui-checks__bar"><i data-checks-bar="" style="--k:0.4"></i></div>
+                <ul class="ui-checks__list">
+                  <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"></path></svg></span><span class="ui-check__label">갱신 조건 검토</span></li>
+                  <li class="ui-check is-done"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"></path></svg></span><span class="ui-check__label">담당자 승인 요청</span></li>
+                  <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"></path></svg></span><span class="ui-check__label">변경 조항 정리</span></li>
+                  <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"></path></svg></span><span class="ui-check__label">고객사에 초안 발송</span></li>
+                  <li class="ui-check"><span class="ui-check__box"><svg viewBox="0 0 16 16"><path d="m4.5 8.2 2.3 2.3 4.7-5"></path></svg></span><span class="ui-check__label">서명 요청</span></li>
+                </ul>
+              </div>
+            </div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+      <div class="grid">
+        <article class="card card--row card--open span-6">
+          <h3>자동 처리 규칙을 정합니다</h3>
+          <p>연장, 알림, 청구서 발행 규칙을 켜고 끌 수 있습니다.</p>
+          <div class="panel" data-fx="fluted-glass" data-fx-seed="23" data-fx-palette="{&quot;bg&quot;:&quot;#c6d3df&quot;,&quot;surface&quot;:&quot;#d6e0e9&quot;,&quot;ink&quot;:&quot;#25303a&quot;,&quot;muted&quot;:&quot;#5d6873&quot;,&quot;accent&quot;:&quot;#3f6a92&quot;}" data-fx-params="{&quot;speed&quot;:0,&quot;calm&quot;:0.35,&quot;calmX&quot;:0.3,&quot;calmY&quot;:0.7,&quot;ribWidth&quot;:28,&quot;angle&quot;:-10,&quot;distortion&quot;:0.4,&quot;highlight&quot;:0.15,&quot;shadow&quot;:0.16,&quot;blur&quot;:0.1}" style="--calm-k:0%" data-fx-mounted="fluted-glass"><canvas width="628" height="602" class="fx-canvas is-baked" aria-hidden="true" style="position: absolute; inset: 0px; width: 100%; height: 100%; display: block; z-index: -1; pointer-events: none; border-radius: inherit;"></canvas>
+            <div class="stage stage--fade-b"><div class="at-right to-edge" style="--ax:32px;--ay:56px">
+              <div class="ui ui-panel ui-toggles is-ui-held" data-ui="toggles" data-ui-still="">
+                <div class="ui-head">
+                  <svg class="ui-icon ui-toggles__ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 13 4v3.6c0 3-2.1 5.4-5 6.6-2.9-1.2-5-3.6-5-6.6V4z"></path><path d="m5.8 8 1.6 1.6 3-3.2"></path></svg>
+                  <div class="ui-title">데브슬라가 자동으로 하는 일</div>
+                  <span class="ui-spacer"></span>
+                  <div class="ui-meta" data-tg-count="">3/4 켜짐</div>
+                </div>
+                <ul class="ui-toggles__list">
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">SLA 2시간 전 알림</span><span class="ui-tg__sub">담당자에게 바로 보냅니다</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="SLA 2시간 전 알림"><i></i></button></li>
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">만료 30일 전 갱신 안내</span><span class="ui-tg__sub">고객사 담당자에게 메일로 보냅니다</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="만료 30일 전 갱신 안내"><i></i></button></li>
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">경미한 위반 자동 감액</span><span class="ui-tg__sub">담당자가 먼저 확인합니다</span></span><button class="ui-switch" type="button" role="switch" aria-checked="false" aria-label="경미한 위반 자동 감액"><i></i></button></li>
+                  <li class="ui-tg"><span class="ui-tg__text"><span class="ui-tg__label">월말 청구서 자동 발행</span><span class="ui-tg__sub">확인 후 자동으로 나갑니다</span></span><button class="ui-switch is-on" type="button" role="switch" aria-checked="true" aria-label="월말 청구서 자동 발행"><i></i></button></li>
+                </ul>
+              </div>
+            </div></div>
+          </div>
+        </article>
+        <article class="card card--row card--open span-6">
+          <h3>쓰는 도구와 그대로 연결됩니다</h3>
+          <p>슬랙, 깃허브, 노션, 구글 드라이브와 바로 연결해 알림과 문서를 주고받습니다.</p>
+          <div class="panel">
+            <div class="dg is-still" data-diagram="" data-dg-still="" data-icon-base="assets/ui/icons/" data-layout="hub" role="img" aria-label="데브슬라가 Slack, GitHub, Jira, Notion, Google Drive와 연결된다" data-tier="n" data-orient="h" data-ground="light" data-dg-ground="rings" style="--dg-cx: 314px; --dg-cy: 301px;"><svg class="dg-svg" width="628" height="602" viewBox="0 0 628 602" aria-hidden="true" focusable="false"><defs><radialGradient id="dgh7"><stop offset="0" class="dg-halo__in"></stop><stop offset="1" class="dg-halo__out"></stop></radialGradient><linearGradient id="dgc8" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="dg-c0"></stop><stop offset="0.55" class="dg-c1"></stop><stop offset="1" class="dg-c2"></stop></linearGradient><linearGradient id="dgc9" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="dg-c0"></stop><stop offset="0.55" class="dg-c1"></stop><stop offset="1" class="dg-c2"></stop></linearGradient><linearGradient id="dgc10" gradientUnits="userSpaceOnUse" x1="426.6" y1="477.6" x2="382.7" y2="408.8"><stop offset="0" class="dg-c0"></stop><stop offset="0.55" class="dg-c1"></stop><stop offset="1" class="dg-c2"></stop></linearGradient><linearGradient id="dgc11" gradientUnits="userSpaceOnUse" x1="299.3" y1="324" x2="276.8" y2="359.3"><stop offset="0" class="dg-c0"></stop><stop offset="0.55" class="dg-c1"></stop><stop offset="1" class="dg-c2"></stop></linearGradient><linearGradient id="dgc12" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="dg-c0"></stop><stop offset="0.55" class="dg-c1"></stop><stop offset="1" class="dg-c2"></stop></linearGradient></defs><g class="dg-rings"><circle cx="314" cy="301" r="112" stroke-opacity="0.8370000000000001"></circle><circle cx="314" cy="301" r="224" stroke-opacity="0.431"></circle><circle cx="314" cy="301" r="336" stroke-opacity="0.024"></circle></g><circle class="dg-halo" cx="314" cy="301" r="180.6" fill="url(#dgh7)"></circle><g class="dg-edges"><g class="dg-e"><path class="dg-line" d="M314 278L314 56"></path><path class="dg-lit" d="M314 278L314 56" stroke-dasharray="none" style="opacity: 0.534;"></path><path class="dg-glow" d="M314 278L314 56" stroke="url(#dgc8)" stroke-dasharray="48.8 439.6" stroke-dashoffset="439.6"></path><path class="dg-comet" d="M314 278L314 56" stroke="url(#dgc8)" stroke-dasharray="88.8 439.6" stroke-dashoffset="439.6"></path><circle class="dg-spark-halo" r="6" cx="-50" cy="-50"></circle><circle class="dg-spark" r="2.1" cx="-50" cy="-50"></circle></g><g class="dg-e"><path class="dg-line" d="M359 284.3L488.6 236.3"></path><path class="dg-lit" d="M359 284.3L488.6 236.3" stroke-dasharray="none" style="opacity: 0.637;"></path><path class="dg-glow" d="M359 284.3L488.6 236.3" stroke="url(#dgc9)" stroke-dasharray="30.4 288.8" stroke-dashoffset="288.8"></path><path class="dg-comet" d="M359 284.3L488.6 236.3" stroke="url(#dgc9)" stroke-dasharray="55.3 288.8" stroke-dashoffset="288.8"></path><circle class="dg-spark-halo" r="6" cx="-50" cy="-50"></circle><circle class="dg-spark" r="2.1" cx="-50" cy="-50"></circle></g><g class="dg-e is-run"><path class="dg-line" d="M328.7 324L438.4 496.2"></path><path class="dg-lit" d="M328.7 324L438.4 496.2" stroke-dasharray="0 100.5 103.7 206.2" style="opacity: 1;"></path><path class="dg-glow" d="M328.7 324L438.4 496.2" stroke="url(#dgc10)" stroke-dasharray="44.9 407.5" stroke-dashoffset="-100.5"></path><path class="dg-comet" d="M328.7 324L438.4 496.2" stroke="url(#dgc10)" stroke-dasharray="81.7 407.5" stroke-dashoffset="-100.5"></path><circle class="dg-spark-halo" r="6" cx="382.7" cy="408.8" style="opacity: 1;"></circle><circle class="dg-spark" r="2.1" cx="382.7" cy="408.8" style="opacity: 1;"></circle></g><g class="dg-e is-run"><path class="dg-line" d="M299.3 324L189.6 496.2"></path><path class="dg-lit" d="M299.3 324L189.6 496.2" stroke-dasharray="41.9 206.2" style="opacity: 1;"></path><path class="dg-glow" d="M299.3 324L189.6 496.2" stroke="url(#dgc11)" stroke-dasharray="44.9 407.5" stroke-dashoffset="3"></path><path class="dg-comet" d="M299.3 324L189.6 496.2" stroke="url(#dgc11)" stroke-dasharray="81.7 407.5" stroke-dashoffset="39.8"></path><circle class="dg-spark-halo" r="6" cx="276.8" cy="359.3" style="opacity: 1;"></circle><circle class="dg-spark" r="2.1" cx="276.8" cy="359.3" style="opacity: 1;"></circle></g><g class="dg-e"><path class="dg-line" d="M269 284.3L139.4 236.3"></path><path class="dg-lit" d="M269 284.3L139.4 236.3" style="opacity: 0;"></path><path class="dg-glow" d="M269 284.3L139.4 236.3" stroke="url(#dgc12)" stroke-dasharray="30.4 288.8" stroke-dashoffset="288.8"></path><path class="dg-comet" d="M269 284.3L139.4 236.3" stroke="url(#dgc12)" stroke-dasharray="55.3 288.8" stroke-dashoffset="288.8"></path><circle class="dg-spark-halo" r="6" cx="-50" cy="-50"></circle><circle class="dg-spark" r="2.1" cx="-50" cy="-50"></circle></g></g><g class="dg-ports"><circle class="dg-port" cx="314" cy="278" r="2"></circle><circle class="dg-port" cx="314" cy="56" r="2"></circle><circle class="dg-port" cx="359" cy="284.3" r="2"></circle><circle class="dg-port" cx="488.6" cy="236.3" r="2"></circle><circle class="dg-port" cx="328.7" cy="324" r="2"></circle><circle class="dg-port" cx="438.4" cy="496.2" r="2"></circle><circle class="dg-port" cx="299.3" cy="324" r="2"></circle><circle class="dg-port" cx="189.6" cy="496.2" r="2"></circle><circle class="dg-port" cx="269" cy="284.3" r="2"></circle><circle class="dg-port" cx="139.4" cy="236.3" r="2"></circle></g></svg><div class="dg-nodes" aria-hidden="true"><div class="dg-node dg-node--core-pill is-ink is-hit" data-id="n" style="left: 271px; top: 280px;"><span class="dg-label">데브슬라</span></div><div class="dg-node dg-node--pill" data-id="slack" style="left: 275px; top: 24px;"><span class="dg-ic" data-icon="slack"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><g>
+				<path d="M53.8412698,161.320635 C53.8412698,176.152381 41.8539683,188.139683 27.0222222,188.139683 C12.1904762,188.139683 0.203174603,176.152381 0.203174603,161.320635 C0.203174603,146.488889 12.1904762,134.501587 27.0222222,134.501587 L53.8412698,134.501587 L53.8412698,161.320635 Z M67.2507937,161.320635 C67.2507937,146.488889 79.2380952,134.501587 94.0698413,134.501587 C108.901587,134.501587 120.888889,146.488889 120.888889,161.320635 L120.888889,228.368254 C120.888889,243.2 108.901587,255.187302 94.0698413,255.187302 C79.2380952,255.187302 67.2507937,243.2 67.2507937,228.368254 L67.2507937,161.320635 Z" fill="#E01E5A"></path>
+				<path d="M94.0698413,53.6380952 C79.2380952,53.6380952 67.2507937,41.6507937 67.2507937,26.8190476 C67.2507937,11.9873016 79.2380952,-7.10542736e-15 94.0698413,-7.10542736e-15 C108.901587,-7.10542736e-15 120.888889,11.9873016 120.888889,26.8190476 L120.888889,53.6380952 L94.0698413,53.6380952 Z M94.0698413,67.2507937 C108.901587,67.2507937 120.888889,79.2380952 120.888889,94.0698413 C120.888889,108.901587 108.901587,120.888889 94.0698413,120.888889 L26.8190476,120.888889 C11.9873016,120.888889 0,108.901587 0,94.0698413 C0,79.2380952 11.9873016,67.2507937 26.8190476,67.2507937 L94.0698413,67.2507937 Z" fill="#36C5F0"></path>
+				<path d="M201.549206,94.0698413 C201.549206,79.2380952 213.536508,67.2507937 228.368254,67.2507937 C243.2,67.2507937 255.187302,79.2380952 255.187302,94.0698413 C255.187302,108.901587 243.2,120.888889 228.368254,120.888889 L201.549206,120.888889 L201.549206,94.0698413 Z M188.139683,94.0698413 C188.139683,108.901587 176.152381,120.888889 161.320635,120.888889 C146.488889,120.888889 134.501587,108.901587 134.501587,94.0698413 L134.501587,26.8190476 C134.501587,11.9873016 146.488889,-1.42108547e-14 161.320635,-1.42108547e-14 C176.152381,-1.42108547e-14 188.139683,11.9873016 188.139683,26.8190476 L188.139683,94.0698413 Z" fill="#2EB67D"></path>
+				<path d="M161.320635,201.549206 C176.152381,201.549206 188.139683,213.536508 188.139683,228.368254 C188.139683,243.2 176.152381,255.187302 161.320635,255.187302 C146.488889,255.187302 134.501587,243.2 134.501587,228.368254 L134.501587,201.549206 L161.320635,201.549206 Z M161.320635,188.139683 C146.488889,188.139683 134.501587,176.152381 134.501587,161.320635 C134.501587,146.488889 146.488889,134.501587 161.320635,134.501587 L228.571429,134.501587 C243.403175,134.501587 255.390476,146.488889 255.390476,161.320635 C255.390476,176.152381 243.403175,188.139683 228.571429,188.139683 L161.320635,188.139683 Z" fill="#ECB22E"></path>
+		</g></svg></span><span class="dg-label">Slack</span></div><div class="dg-node dg-node--pill" data-id="github" style="left: 488px; top: 204px;"><span class="dg-ic" data-icon="github"><svg data-ic="ink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 250" aria-hidden="true" focusable="false"><g>
+        <path d="M128.00106,0 C57.3172926,0 0,57.3066942 0,128.00106 C0,184.555281 36.6761997,232.535542 87.534937,249.460899 C93.9320223,250.645779 96.280588,246.684165 96.280588,243.303333 C96.280588,240.251045 96.1618878,230.167899 96.106777,219.472176 C60.4967585,227.215235 52.9826207,204.369712 52.9826207,204.369712 C47.1599584,189.574598 38.770408,185.640538 38.770408,185.640538 C27.1568785,177.696113 39.6458206,177.859325 39.6458206,177.859325 C52.4993419,178.762293 59.267365,191.04987 59.267365,191.04987 C70.6837675,210.618423 89.2115753,204.961093 96.5158685,201.690482 C97.6647155,193.417512 100.981959,187.77078 104.642583,184.574357 C76.211799,181.33766 46.324819,170.362144 46.324819,121.315702 C46.324819,107.340889 51.3250588,95.9223682 59.5132437,86.9583937 C58.1842268,83.7344152 53.8029229,70.715562 60.7532354,53.0843636 C60.7532354,53.0843636 71.5019501,49.6441813 95.9626412,66.2049595 C106.172967,63.368876 117.123047,61.9465949 128.00106,61.8978432 C138.879073,61.9465949 149.837632,63.368876 160.067033,66.2049595 C184.49805,49.6441813 195.231926,53.0843636 195.231926,53.0843636 C202.199197,70.715562 197.815773,83.7344152 196.486756,86.9583937 C204.694018,95.9223682 209.660343,107.340889 209.660343,121.315702 C209.660343,170.478725 179.716133,181.303747 151.213281,184.472614 C155.80443,188.444828 159.895342,196.234518 159.895342,208.176593 C159.895342,225.303317 159.746968,239.087361 159.746968,243.303333 C159.746968,246.709601 162.05102,250.70089 168.53925,249.443941 C219.370432,232.499507 256,184.536204 256,128.00106 C256,57.3066942 198.691187,0 128.00106,0 Z M47.9405593,182.340212 C47.6586465,182.976105 46.6581745,183.166873 45.7467277,182.730227 C44.8183235,182.312656 44.2968914,181.445722 44.5978808,180.80771 C44.8734344,180.152739 45.876026,179.97045 46.8023103,180.409216 C47.7328342,180.826786 48.2627451,181.702199 47.9405593,182.340212 Z M54.2367892,187.958254 C53.6263318,188.524199 52.4329723,188.261363 51.6232682,187.366874 C50.7860088,186.474504 50.6291553,185.281144 51.2480912,184.70672 C51.8776254,184.140775 53.0349512,184.405731 53.8743302,185.298101 C54.7115892,186.201069 54.8748019,187.38595 54.2367892,187.958254 Z M58.5562413,195.146347 C57.7719732,195.691096 56.4895886,195.180261 55.6968417,194.042013 C54.9125733,192.903764 54.9125733,191.538713 55.713799,190.991845 C56.5086651,190.444977 57.7719732,190.936735 58.5753181,192.066505 C59.3574669,193.22383 59.3574669,194.58888 58.5562413,195.146347 Z M65.8613592,203.471174 C65.1597571,204.244846 63.6654083,204.03712 62.5716717,202.981538 C61.4524999,201.94927 61.1409122,200.484596 61.8446341,199.710926 C62.5547146,198.935137 64.0575422,199.15346 65.1597571,200.200564 C66.2704506,201.230712 66.6095936,202.705984 65.8613592,203.471174 Z M75.3025151,206.281542 C74.9930474,207.284134 73.553809,207.739857 72.1039724,207.313809 C70.6562556,206.875043 69.7087748,205.700761 70.0012857,204.687571 C70.302275,203.678621 71.7478721,203.20382 73.2083069,203.659543 C74.6539041,204.09619 75.6035048,205.261994 75.3025151,206.281542 Z M86.046947,207.473627 C86.0829806,208.529209 84.8535871,209.404622 83.3316829,209.4237 C81.8013,209.457614 80.563428,208.603398 80.5464708,207.564772 C80.5464708,206.498591 81.7483088,205.631657 83.2786917,205.606221 C84.8005962,205.576546 86.046947,206.424403 86.046947,207.473627 Z M96.6021471,207.069023 C96.7844366,208.099171 95.7267341,209.156872 94.215428,209.438785 C92.7295577,209.710099 91.3539086,209.074206 91.1652603,208.052538 C90.9808515,206.996955 92.0576306,205.939253 93.5413813,205.66582 C95.054807,205.402984 96.4092596,206.021919 96.6021471,207.069023 Z" fill="currentColor"></path>
+    </g></svg></span><span class="dg-label">GitHub</span></div><div class="dg-node dg-node--pill" data-id="jira" style="left: 415px; top: 496px;"><span class="dg-ic" data-icon="jira"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><defs>
+        <linearGradient x1="98.0308675%" y1="0.160599572%" x2="58.8877062%" y2="40.7655246%" id="linearGradient-1-dgi18">
+            <stop stop-color="#0052CC" offset="18%"></stop>
+            <stop stop-color="#2684FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100.665247%" y1="0.45503212%" x2="55.4018095%" y2="44.7269807%" id="linearGradient-2-dgi18">
+            <stop stop-color="#0052CC" offset="18%"></stop>
+            <stop stop-color="#2684FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g>
+				<path d="M244.657778,0 L121.706667,0 C121.706667,14.7201046 127.554205,28.837312 137.962891,39.2459977 C148.371577,49.6546835 162.488784,55.5022222 177.208889,55.5022222 L199.857778,55.5022222 L199.857778,77.3688889 C199.877391,107.994155 224.699178,132.815943 255.324444,132.835556 L255.324444,10.6666667 C255.324444,4.77562934 250.548815,3.60722001e-16 244.657778,0 Z" fill="#2684FF"></path>
+				<path d="M183.822222,61.2622222 L60.8711111,61.2622222 C60.8907238,91.8874888 85.7125112,116.709276 116.337778,116.728889 L138.986667,116.728889 L138.986667,138.666667 C139.025905,169.291923 163.863607,194.097803 194.488889,194.097778 L194.488889,71.9288889 C194.488889,66.0378516 189.71326,61.2622222 183.822222,61.2622222 Z" fill="url(#linearGradient-1-dgi18)"></path>
+				<path d="M122.951111,122.488889 L0,122.488889 C3.75391362e-15,153.14192 24.8491913,177.991111 55.5022222,177.991111 L78.2222222,177.991111 L78.2222222,199.857778 C78.241767,230.45532 103.020285,255.265647 133.617778,255.324444 L133.617778,133.155556 C133.617778,127.264518 128.842148,122.488889 122.951111,122.488889 Z" fill="url(#linearGradient-2-dgi18)"></path>
+		</g></svg></span><span class="dg-label">Jira</span></div><div class="dg-node dg-node--pill" data-id="notion" style="left: 137px; top: 496px;"><span class="dg-ic" data-icon="notion"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 268" aria-hidden="true" focusable="false"><g>
+        <path d="M16.0924984,11.5384656 L164.089991,0.608048392 C182.268719,-0.952166138 186.940447,0.0998642306 198.370133,8.40912104 L245.613429,41.6907258 C253.405586,47.4144843 256,48.9746988 256,55.2066414 L256,237.73391 C256,249.172512 251.845372,255.939385 237.304172,256.973584 L65.4398551,267.377986 C54.5272689,267.895086 49.3295257,266.334872 43.6146827,259.050899 L8.82635648,213.813593 C2.58549836,205.486505 0,199.254562 0,191.970589 L0,29.7261093 C0,20.3737376 4.1546284,12.572665 16.0924984,11.5384656 Z" fill="#FFFFFF"></path>
+        <path d="M164.089991,0.608048392 L16.0924984,11.5384656 C4.1546284,12.572665 0,20.3737376 0,29.7261093 L0,191.970589 C0,199.254562 2.58549836,205.486505 8.82635648,213.813593 L43.6146827,259.050899 C49.3295257,266.334872 54.5272689,267.895086 65.4398551,267.377986 L237.304172,256.973584 C251.836456,255.939385 256,249.172512 256,237.73391 L256,55.2066414 C256,49.2956572 253.664136,47.5927945 246.790277,42.5466149 C246.394749,42.2616979 245.999494,41.9764014 245.604513,41.6907258 L198.370133,8.40912104 C186.940447,0.0998642306 182.268719,-0.952166138 164.089991,0.608048392 Z M69.3270182,52.219945 C55.2940029,53.1649893 52.1111653,53.3789615 44.1406979,46.8973846 L23.8757401,30.7781396 C21.8162569,28.6919099 22.8504562,26.0885805 28.039284,25.5714809 L170.313018,15.1759943 C182.259804,14.1328795 188.482831,18.2964234 193.154559,21.9339521 L217.556314,39.6134116 C218.599429,40.1394268 221.193843,43.2509404 218.073414,43.2509404 L71.1457825,52.0951279 L69.3270182,52.219945 Z M52.9670544,236.173696 L52.9670544,81.2221043 C52.9670544,74.455231 55.0443686,71.3348019 61.2673957,70.8087867 L230.020199,60.9303999 C235.743958,60.4133002 238.329456,64.0508289 238.329456,70.8087867 L238.329456,224.726179 C238.329456,231.493052 237.286341,237.216811 227.942885,237.73391 L66.4562234,247.095198 C57.1127673,247.612297 52.9670544,244.500784 52.9670544,236.173696 Z M212.376402,89.5313611 C213.410601,94.2120046 212.376402,98.8926482 207.695758,99.4275789 L199.912517,100.969962 L199.912517,215.373807 C193.154559,219.011336 186.931532,221.08865 181.733788,221.08865 C173.424532,221.08865 171.347217,218.485321 165.12419,210.693164 L114.225535,130.614039 L114.225535,208.089834 L130.326949,211.736279 C130.326949,211.736279 130.326949,221.097566 117.337048,221.097566 L81.523438,223.17488 C80.4803232,221.08865 81.523438,215.890907 85.1520513,214.856708 L94.5044229,212.262294 L94.5044229,109.823065 L81.523438,108.771035 C80.4803232,104.090391 83.0747371,97.3324337 90.3497945,96.8064185 L128.77565,94.2209202 L181.733788,175.334245 L181.733788,103.573292 L168.235704,102.021993 C167.192589,96.2893189 171.347217,92.1257749 176.536045,91.6175908 L212.376402,89.5313611 L212.376402,89.5313611 Z" fill="#000000"></path>
+    </g></svg></span><span class="dg-label">Notion</span></div><div class="dg-node dg-node--pill" data-id="google-drive" style="left: 35px; top: 204px;"><span class="dg-ic" data-icon="google-drive"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 238" aria-hidden="true" focusable="false"><defs>
+        <path d="M77.303013,29.2696361 C99.8343226,-9.75577512 156.165677,-9.75731561 178.696987,29.2696361 L248.07019,149.428404 C270.601499,188.455356 242.436592,237.238275 197.372432,237.238275 L58.6275676,237.238275 C13.563408,237.238275 -14.6014992,188.455356 7.92981036,149.428404 L77.303013,29.2696361 Z" id="path-1-dgi22"></path>
+        <linearGradient x1="86.9238621%" y1="94.293942%" x2="7.62952552%" y2="45.9524317%" id="linearGradient-3-dgi22">
+            <stop stop-color="#FFE921" offset="9%"></stop>
+            <stop stop-color="#FEC700" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="99.5381738%" y1="93.9010829%" x2="23.4369107%" y2="54.0328204%" id="linearGradient-4-dgi22">
+            <stop stop-color="#A9A8FF" offset="15%"></stop>
+            <stop stop-color="#6D97FF" offset="33%"></stop>
+            <stop stop-color="#3186FF" offset="48%"></stop>
+        </linearGradient>
+        <linearGradient x1="87.1278959%" y1="51.5184912%" x2="-0.638984139%" y2="93.0781332%" id="linearGradient-5-dgi22">
+            <stop stop-color="#0EBC5F" offset="55%"></stop>
+            <stop stop-color="#78C9FF" offset="85%"></stop>
+        </linearGradient>
+    </defs>
+    <g>
+        <mask id="mask-2-dgi22" fill="white">
+            <use xlink:href="#path-1-dgi22"></use>
+        </mask>
+        <g mask="url(#mask-2-dgi22)">
+            <g transform="translate(-42.8696, -58.6696)">
+                <polygon fill="url(#linearGradient-3-dgi22)" points="341.719213 295.937182 200.166022 295.937182 170.873471 245.202453 241.650066 122.61278"></polygon>
+                <polygon fill="url(#linearGradient-4-dgi22)" points="0 295.915615 100.069146 122.591213 100.069146 122.594294 70.787379 173.316699 129.357076 173.316699 200.139833 295.912534 0.00154049703 295.914074"></polygon>
+                <polygon fill="url(#linearGradient-5-dgi22)" points="170.881173 0 241.66239 122.600456 212.376001 173.325942 70.8120269 173.325942"></polygon>
+            </g>
+        </g>
+    </g></svg></span><span class="dg-label">Google Drive</span></div></div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATEMENT: word-highlight -->
+  <section class="section statement mo-wh" id="why" data-moment="word-highlight" aria-label="왜 데브슬라인지" data-moment-mounted="1">
+    <div class="wrap">
+      <p class="t-label">왜 데브슬라인지</p>
+      <p class="mo-wh__text" aria-label="유지보수 계약은 대부분 엑셀과 메일함 곳곳에 흩어져 있습니다. 데브슬라는 계약서와 SLA 조항과 청구서를 한 화면에 모아, 마감을 놓치는 일을 없앱니다."><span class="mo-w is-on" aria-hidden="true"><span class="mo-i">유지보수</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">계약은</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">대부분</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">엑셀과</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">메일함</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">곳곳에</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">흩어져</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">있습니다.</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">데브슬라는</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">계약서와</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">SLA</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">조항과</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">청구서를</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">한</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">화면에</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">모아,</span></span> <strong><span class="mo-w is-on" aria-hidden="true"><span class="mo-i">마감을</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">놓치는</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">일</span></span></strong><span class="mo-w is-on" aria-hidden="true"><span class="mo-i">을</span></span> <span class="mo-w is-on" aria-hidden="true"><span class="mo-i">없앱니다.</span></span></p>
+    </div>
+  </section>
+
+  <!-- SPLIT-TEXT-LEFT: billing -->
+  <section class="section" id="billing" aria-labelledby="billing-h">
+    <div class="wrap grid">
+      <div class="span-5">
+        <h2 id="billing-h">청구서를 자동으로 만듭니다</h2>
+        <p class="t-lead">계약에 묶인 유지보수 비용을 매달 1일 자동으로 계산합니다. 고객사마다 조건이 달라도 한 번 설정해두면 같은 양식으로 청구서가 나갑니다.</p>
+        <ul class="facts-list">
+          <li>발행 주기: 매월 1일</li>
+          <li>보관: 계약서·청구서 원본 자동 보관</li>
+          <li>발송 전 담당자 확인</li>
+        </ul>
+        <a class="link" href="#faq">자주 묻는 질문 보기</a>
+      </div>
+      <div class="frame frame--split span-6 start-7" style="--ratio:95%">
+        <div class="stage stage--fade-br">
+          <div class="at-corner wide" style="--w:680px;--ax:56px;--ay:56px">
+            <div class="ui ui-files is-ui-held" data-ui="files" data-reading="{n}/{total}개 파일 확인됨" data-ui-still="">
+              <div class="ui-files__status"><span class="ui-dot"></span><span data-files-status="">5개 파일 확인됨</span></div>
+              <ul class="ui-files__grid">
+                <li class="ui-file is-done">
+                  <span class="ui-file__icon"><svg class="ui-file__glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.25 2.75h8L18.75 7.25v14H6.25z"></path><path d="M14 2.75v4.75h4.75M9 12.5h6.5M9 15.5h6.5M9 18.5h4"></path></svg></span>
+                  <span class="ui-file__name">리본테크 계약서.pdf</span>
+                  <span class="ui-file__kind">PDF</span>
+                  <span class="ui-file__bar"><i></i></span>
+                  <span class="ui-file__check"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                </li>
+                <li class="ui-file is-done">
+                  <span class="ui-file__icon"><svg class="ui-file__glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.25 2.75h8L18.75 7.25v14H6.25z"></path><path d="M14 2.75v4.75h4.75M9 12.5h6.5M9 15.5h6.5M9 18.5h4"></path></svg></span>
+                  <span class="ui-file__name">11월 청구서.pdf</span>
+                  <span class="ui-file__kind">PDF</span>
+                  <span class="ui-file__bar"><i></i></span>
+                  <span class="ui-file__check"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                </li>
+                <li class="ui-file is-done">
+                  <span class="ui-file__icon"><img src="assets/ui/icons/google-drive.svg" alt=""></span>
+                  <span class="ui-file__name">계약서 원본 보관함</span>
+                  <span class="ui-file__kind">Google Drive</span>
+                  <span class="ui-file__bar"><i></i></span>
+                  <span class="ui-file__check"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                </li>
+                <li class="ui-file is-done">
+                  <span class="ui-file__icon"><img src="assets/ui/icons/notion.svg" alt=""></span>
+                  <span class="ui-file__name is-cut" aria-hidden="true" data-ui-ah="">SLA 운영 정책</span>
+                  <span class="ui-file__kind is-cut" aria-hidden="true" data-ui-ah="">Notion</span>
+                  <span class="ui-file__bar"><i></i></span>
+                  <span class="ui-file__check"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                </li>
+                <li class="ui-file is-done">
+                  <span class="ui-file__icon"><svg class="ui-file__glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.25 2.75h8L18.75 7.25v14H6.25z"></path><path d="M14 2.75v4.75h4.75M9 12.5h6.5M9 15.5h6.5M9 18.5h4"></path></svg></span>
+                  <span class="ui-file__name">세종ERP 계약서.pdf</span>
+                  <span class="ui-file__kind">PDF</span>
+                  <span class="ui-file__bar"><i></i></span>
+                  <span class="ui-file__check"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.3 2.3 4.7-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq" aria-labelledby="faq-h">
+    <div class="wrap grid">
+      <div class="span-5">
+        <div class="section-head"><h2 id="faq-h">질문</h2><p class="t-small muted">가격, 데이터, 연동에 대해 가장 많이 받는 질문입니다.</p></div>
+        <a class="link" href="#contact">직접 문의하기</a>
+        <div class="faq-tools">
+          <p class="t-label muted">함께 쓰는 도구</p>
+          <div class="faq-tools__row">
+            <span class="ic-tile ic-tile--flat ic-tile--40"><img class="ic" src="assets/ui/icons/slack.svg" alt="Slack"></span>
+            <span class="ic-tile ic-tile--flat ic-tile--40"><img class="ic" src="assets/ui/icons/github.svg" alt="GitHub"></span>
+            <span class="ic-tile ic-tile--flat ic-tile--40"><img class="ic" src="assets/ui/icons/jira.svg" alt="Jira"></span>
+            <span class="ic-tile ic-tile--flat ic-tile--40"><img class="ic" src="assets/ui/icons/notion.svg" alt="Notion"></span>
+            <span class="ic-tile ic-tile--flat ic-tile--40"><img class="ic" src="assets/ui/icons/google-drive.svg" alt="Google Drive"></span>
+          </div>
+        </div>
+      </div>
+      <div class="faq span-6 start-7">
+        <div class="faq__item"><h3>무료로 체험할 수 있나요?</h3><p>네, 14일 동안 모든 기능을 무료로 써볼 수 있습니다. 카드 등록은 필요하지 않습니다.</p></div>
+        <div class="faq__item"><h3>기존 계약서를 가져올 수 있나요?</h3><p>엑셀이나 PDF로 된 계약서를 올리면 만료일과 SLA 조항을 자동으로 읽어옵니다.</p></div>
+        <div class="faq__item"><h3>요금은 어떻게 책정되나요?</h3><p>관리하는 계약 수에 따라 달라집니다. 문의하면 규모에 맞는 금액을 안내해 드립니다.</p></div>
+        <div class="faq__item"><h3>회계나 협업 도구와 연동되나요?</h3><p>네, 자주 쓰는 협업 도구와 연결해 알림과 문서를 그대로 주고받을 수 있습니다.</p></div>
+        <div class="faq__item"><h3>데이터는 안전하게 보관되나요?</h3><p>모든 계약서와 청구 데이터는 암호화되어 저장되며, 담당자만 접근할 수 있습니다.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER.CLOSING: close-type on a footer--statement slab (tech, sky ground) -->
+<footer class="footer closing footer--statement" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--type">
+      <div class="section-head">
+        <h2 id="close-h">지금 계약 관리를 시작하세요</h2>
+        <p class="t-small muted">14일 무료 체험, 신용카드 등록 없이.</p>
+      </div>
+      <a class="btn btn--primary btn--xl btn--wide" href="mailto:hello@devsla.example?subject=%EB%AC%B4%EB%A3%8C%20%EC%8B%9C%EC%9E%91">무료로 시작하기<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"></path><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"></path></svg></a>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <a class="nav__logo" href="#top"><span class="mark" data-mark="stack" aria-hidden="true"></span>데브슬라</a>
+          <p class="footer__lede">계약과 SLA를 한 곳에서 관리합니다.</p>
+        </div>
+        <div class="span-2 footer__col"><h3>제품</h3><ul><li><a href="#product">계약 목록</a></li><li><a href="#features">기능</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>청구</h3><ul><li><a href="#billing">청구서</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>지원</h3><ul><li><a href="#faq">FAQ</a></li><li><a href="#contact">문의하기</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>회사</h3><ul><li><a href="privacy.html">Privacy</a></li><li><a href="terms.html">Terms</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>© 2026 데브슬라 &nbsp; <a href="privacy.html">Privacy</a> &nbsp; <a href="terms.html">Terms</a></span>
+        <div class="socials"></div>
+        <span class="t-small muted">제품명과 로고는 각 소유자의 상표입니다.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/system.js"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script type="module" src="assets/layout/layout.js"></script>
+<script type="module" src="assets/diagrams/mount.js"></script>
+
+
+</body></html>

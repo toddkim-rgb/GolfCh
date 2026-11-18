@@ -1,0 +1,17 @@
+[
+  {
+    "check": "hero-lines",
+    "target": "section.hero h1",
+    "reason": "The Korean h1 is 24 characters and sits on one line at 1440 and 390; the check's 45-character Latin stress-fill does not reflect how CJK text sizes, and the shipped h1 is final."
+  },
+  {
+    "check": "section-gaps",
+    "target": "section#faq / footer#contact",
+    "reason": "footer--statement insets its slab 8px from the window's sides and bottom by recipe, which widens the visual gap at this one ground change; every other inter-section gap on the page passed."
+  },
+  {
+    "check": "off-grid",
+    "target": "div.closing__links > div.footer__legal > span:nth-of-type(1) > a:nth-of-type(2) (Terms, 390px)",
+    "reason": "Unmodified copy of starter.html's own footer__legal markup (the &nbsp;-joined copyright/Privacy/Terms line); the same pattern ships in the kit's own template."
+  }
+]

@@ -1,0 +1,362 @@
+{
+ "start": "2026-11-18T02:12:42.819Z",
+ "round": 3,
+ "idle": 0,
+ "errors": 0,
+ "status": "open",
+ "history": [
+  {
+   "at": "2026-11-18T02:34:21.931Z",
+   "mode": "manual",
+   "status": "fail",
+   "fails": 10,
+   "round": 1,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-18T02:42:40.325Z",
+   "mode": "manual",
+   "status": "fail",
+   "fails": 2,
+   "round": 2,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-18T02:46:42.376Z",
+   "mode": "manual",
+   "status": "open",
+   "fails": 2,
+   "round": 3,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-18T02:52:25.958Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "allow",
+   "reason": "no build is active here",
+   "stopHookActive": false
+  }
+ ],
+ "max": 3,
+ "marker": {
+  "page": "index.html",
+  "url": null,
+  "root": null,
+  "kind": "software",
+  "category": "IT 유지보수·개발 계약 및 SLA 관리 SaaS",
+  "primary": "무료로 시작하기",
+  "rounds": 3,
+  "start": "2026-11-18T02:12:42.819Z",
+  "by": "gate.mjs --start"
+ },
+ "manual": true,
+ "roundKey": "f876622e1572ee9e:5af5ed4a",
+ "roundFree": false,
+ "idleFree": false,
+ "blockKey": null,
+ "fp": "f876622e1572ee9e",
+ "page": "index.html",
+ "found": {
+  "fails": [
+   {
+    "check": "section-gaps",
+    "where": "section#faq / footer#contact",
+    "msg": "401px between these sections, +64% against the median 245px of gaps at a change of ground",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-gaps"
+    ],
+    "wheres": [
+     "section#faq / footer#contact"
+    ]
+   },
+   {
+    "check": "off-grid",
+    "where": "div.closing__links > div.footer__legal > span:nth-of-type(1) > a:nth-of-type(2) \"Terms\"",
+    "msg": "left edge at 185.5px, 15.5px off a common edge of its section at 201px (5 elements, like a)",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "off-grid"
+    ],
+    "wheres": [
+     "div.closing__links > div.footer__legal > span:nth-of-type(1) > a:nth-of-type(2) \"Terms\""
+    ]
+   },
+   {
+    "check": "hero-lines",
+    "where": "section.hero h1",
+    "msg": "the check fills the h1 to 45 characters (this hero's maxChars in heroes.json), not the page's own: it takes 5 lines at 1440, 3 at most",
+    "fix": "the check fills the h1 to this hero's maxChars, not your own: take the next type pairing the deal printed (start.mjs); when the h1 is final and fits, waive it (target: section.hero h1)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "hero-lines"
+    ],
+    "wheres": [
+     "section.hero h1"
+    ]
+   }
+  ],
+  "warns": [
+   {
+    "check": "overlap-text",
+    "where": "div.app__pane.app__pane--open > div.ui.ui-doc > aside.ui-doc__note.ui-panel > div.ui-doc__msg \"이번 달 가동률이 아직 기준에 못 미칩니다.\"",
+    "msg": "inside div.ui.ui-doc, a box sits on the mock's own text and hides it mid-line (\"심각도 1 장애는 접수 후 4시간 이내 1차 대응을 시\")",
+    "fix": "move the box off the text (or the text off the box)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "cut-text",
+    "where": "div.ui.ui-notify > ul.ui-notify__list > li.ui-note:nth-of-type(3) > span.ui-avatar.ui-note__av \"오세\"",
+    "msg": "cut 4px at the bottom by the overflow of div.group > div.grid > article.card.card--row:nth-of-type(1) > div.panel: a fragment run out through its panel's edge (and 1 more like it: \"세종ERP, 기능 추가 계약 검토\")",
+    "fix": "give the text room: no overflow clipping a line, no line past its box",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "scroll-reveal",
+    "where": "section#why > div.wrap > p.mo-wh__text \"유지보수 계약은 대부분 엑셀과 메일함 곳곳에 흩어져 있습니다. 데브슬라는\"",
+    "msg": "starts \"color\" (0.2 s) the moment it is scrolled into view (an IntersectionObserver) on span.mo-w:nth-of-type(4) (inside a dealt moment's section, [data-moment]: an enter moment is expected on every kind; its still is judged under reduced motion)",
+    "fix": "show it at rest: no fade, rise or unmask when it is scrolled into view",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "no-visual",
+    "where": "section#billing \"청구서를 자동으로 만듭니다\"",
+    "msg": "pictures, effects and mocks cover 22% of this section; a feature section needs a visual (about 25% or more)",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "text-contrast",
+    "where": "div.at-corner.to-edge > div.ui.ui-doc > aside.ui-doc__note.ui-panel > div.ui-doc__where \"가동률 리포트, 11월 17일 기준\"",
+    "msg": "13 lines of text in drawn mocks read under 4.5:1 (3 colour pairs), the worst \"가동률 리포트, 11월 17일 기준\" in #efefef on #ffffff at 1.15:1",
+    "fix": "lift the mocks' muted text (labels, meta, initials) to 4.5:1 on their own panel, or set it larger",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "section#billing / section#faq",
+    "msg": "301px between these sections, +59% against the median 189px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "links",
+    "where": "section#faq > div.wrap.grid > div.span-5 > a.link \"직접 문의하기\"",
+    "msg": "\"직접 문의하기\" goes to #contact, in the footer",
+    "fix": "point every link at a real section, page or file",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "links",
+    "where": "div.span-2.footer__col:nth-of-type(4) > ul > li:nth-of-type(2) > a \"문의하기\"",
+    "msg": "\"문의하기\" goes to #contact, the block it already sits in",
+    "fix": "point every link at a real section, page or file",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "nav-labels",
+    "where": "div.wrap.nav__bar > nav.nav__links > div.nav__item:nth-of-type(4) > a.nav__link \"FAQ\"",
+    "msg": "\"FAQ\" opens a section headed \"질문\"",
+    "fix": "name each nav link after the heading of the section it opens",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "fade-cut",
+    "where": "ul.ui-notify__list > li.ui-note:nth-of-type(3) > span.ui-note__text > span.ui-note__title \"오세훈 담당자로 지정됨 12분\"",
+    "msg": "2 lines of div.ui.ui-notify fade out under its edge (\"오세훈 담당자로 지정됨 12분\", \"12분\"): drawn at a fraction of #111111 on #ffffff, half-erased",
+    "fix": "fit the mock's rows inside its panel (fewer rows, a taller panel), or end the fade below the last whole row: no row half-erased",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "nav-current",
+    "where": "header.nav.nav--centre",
+    "msg": "the nav stays on screen with 4 links to the page's sections, but never marks the one you are in (no link changes as the page scrolls)",
+    "fix": "mark the link of the section on screen (a colour, a weight or a line under it) as the visitor scrolls",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "skip-link",
+    "where": "header.nav.nav--centre > div.wrap.nav__bar > a.skip-link:nth-of-type(1) \"본문으로 바로가기\"",
+    "msg": "the first Tab stop is \"본문으로 바로가기\", not a skip link: a keyboard user tabs through the whole nav on every visit",
+    "fix": "add the starter's skip link as the header's first child: <a class=\"skip-link\" href=\"#top\">Skip to content</a>",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "action-repeat",
+    "where": "header.nav.nav--centre > div.wrap.nav__bar > div.nav__actions > a.btn.btn--primary \"무료로 시작하기\"",
+    "msg": "\"무료로 시작하기\" shows 2 times on the first screen at 1440px (nav, hero): the nav's button and the hero's; nothing else on the screen may repeat it",
+    "fix": "show the action once a screen besides the nav's button: the hero's, the close's or the phone bar's, never all at once",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-air",
+    "where": "section#billing / section#faq",
+    "msg": "536px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)",
+    "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "overlap-text",
+    "where": "div.at-corner.to-edge > div.ui.ui-doc > aside.ui-doc__note.ui-panel > div.ui-doc__msg \"이번 달 가동률이 아직 기준에 못 미칩니다.\"",
+    "msg": "inside div.ui.ui-doc, a box sits on the mock's own text and hides it mid-line (\"월 가동률은 99.5% 이상을 유지해야 하며, 미달 시\") (and 2 more like it: \"위반 위험 이번 달 가동률이 아직 기준에 못\", \"이번 달 가동률이 아직 기준에 못 미칩니다.\")",
+    "fix": "move the box off the text (or the text off the box)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "cut-text",
+    "where": "ul.ui-notify__list > li.ui-note:nth-of-type(3) > span.ui-note__text > span.ui-note__title \"오늘 해결된 SLA 18건 12분\"",
+    "msg": "cut 8px at the bottom by the overflow of div.group > div.grid > article.card.card--row:nth-of-type(1) > div.panel: a fragment run out through its panel's edge (and 2 more like it: \"12분\", \"고객사에 초안 발송\")",
+    "fix": "give the text room: no overflow clipping a line, no line past its box",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "text-contrast",
+    "where": "li.ui-note > span.ui-note__text > span.ui-note__title > time \"지금\"",
+    "msg": "3 lines of text in drawn mocks read under 4.5:1 (1 colour pair), the worst \"지금\" in #878787 on #ffffff at 3.59:1",
+    "fix": "lift the mocks' muted text (labels, meta, initials) to 4.5:1 on their own panel, or set it larger",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "fade-cut",
+    "where": "ul.ui-toggles__list > li.ui-tg:nth-of-type(3) > span.ui-tg__text > span.ui-tg__label \"경미한 위반 자동 감액\"",
+    "msg": "a line of div.ui.ui-panel fades out under its edge (\"경미한 위반 자동 감액\"): drawn at a fraction of #111111 on #ffffff, half-erased",
+    "fix": "fit the mock's rows inside its panel (fewer rows, a taller panel), or end the fade below the last whole row: no row half-erased",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   }
+  ],
+  "crashed": [],
+  "seconds": {
+   "consistency": 135,
+   "layout": 5
+  }
+ },
+ "open": [
+  {
+   "check": "section-gaps",
+   "where": "section#faq / footer#contact",
+   "msg": "401px between these sections, +64% against the median 245px of gaps at a change of ground",
+   "fix": "use one gap between sections (all within 25% of each other)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-gaps"
+   ],
+   "wheres": [
+    "section#faq / footer#contact"
+   ]
+  },
+  {
+   "check": "off-grid",
+   "where": "div.closing__links > div.footer__legal > span:nth-of-type(1) > a:nth-of-type(2) \"Terms\"",
+   "msg": "left edge at 185.5px, 15.5px off a common edge of its section at 201px (5 elements, like a)",
+   "fix": "move it onto the page margin, or the column edge its section uses",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "off-grid"
+   ],
+   "wheres": [
+    "div.closing__links > div.footer__legal > span:nth-of-type(1) > a:nth-of-type(2) \"Terms\""
+   ]
+  }
+ ],
+ "waived": [
+  {
+   "check": "hero-lines",
+   "where": "section.hero h1",
+   "msg": "the check fills the h1 to 45 characters (this hero's maxChars in heroes.json), not the page's own: it takes 5 lines at 1440, 3 at most",
+   "fix": "the check fills the h1 to this hero's maxChars, not your own: take the next type pairing the deal printed (start.mjs); when the h1 is final and fits, waive it (target: section.hero h1)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "hero-lines"
+   ],
+   "wheres": [
+    "section.hero h1"
+   ],
+   "reason": "The Korean h1 is 24 characters and sits on one line at 1440 and 390; the check's 45-character Latin stress-fill does not reflect how CJK text sizes, and the shipped h1 is final."
+  }
+ ],
+ "warnCount": 18,
+ "at": "2026-11-18T02:46:42.377Z",
+ "openTold": true
+}
