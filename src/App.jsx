@@ -514,9 +514,9 @@ const Chip = ({children,color=C.brand}) => (
   <span style={{fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:999,
     background:`${color}16`,color,letterSpacing:-0.1}}>{children}</span>
 );
-const Btn = ({children,onClick,color=C.brand,full=false,outline=false,small=false}) => (
+const Btn = ({children,onClick,color=C.brand,full=false,outline=false,small=false,radius}) => (
   <button onClick={onClick} className="btn-press" style={{background:outline?"transparent":color,
-    border:outline?`1.5px solid ${color}`:"none",borderRadius:small?12:14,
+    border:outline?`1.5px solid ${color}`:"none",borderRadius:radius??(small?12:14),
     padding:small?"7px 14px":"13px 20px",color:outline?color:"#fff",
     fontWeight:700,fontSize:small?12:14,cursor:"pointer",width:full?"100%":"auto",
     fontFamily:"inherit",letterSpacing:-0.2,
@@ -689,7 +689,7 @@ function PlayerCard({stat,rank}) {
     ["핸디미만",stat.belowHcp+"회",C.pink],
   ];
   return (
-    <Card style={{overflow:"hidden",padding:14,position:"relative",
+    <Card style={{overflow:"hidden",padding:14,position:"relative",borderRadius:12,
       border:isFirst?`1.5px solid ${C.gold}66`:`1px solid ${C.border}`,
       boxShadow:isFirst?`0 6px 20px ${C.gold}2e`:SHADOW.sm}}>
       <div style={{position:"absolute",top:0,left:0,right:0,height:4,background:acc}}/>
@@ -704,7 +704,7 @@ function PlayerCard({stat,rank}) {
         </div>
         <div style={{minWidth:0}}>
           <div style={{fontWeight:800,fontSize:15,color:C.text,whiteSpace:"nowrap",letterSpacing:-0.3}}>{stat.name}</div>
-          <div style={{fontSize:11,color:C.muted,marginTop:1}}>핸디 <b style={{color:ink,fontWeight:800}}>{stat.hcp??"-"}</b></div>
+          <div style={{fontSize:16,color:C.muted,marginTop:1,whiteSpace:"nowrap"}}>핸디 <b style={{color:ink,fontWeight:800}}>{stat.hcp??"-"}</b></div>
         </div>
       </div>
       <div style={{display:"flex",alignItems:"baseline",gap:4,margin:"12px 0 10px"}}>
@@ -818,34 +818,21 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
       <ScheduleNotice schedules={schedules} courses={courses}/>
       <YearTabs year={year} years={years} onChange={onYearChange}/>
       {(()=>{
-        const leader=yRounds.length?sorted[0]:null;
-        const LChar=leader?CHARS[leader.id]:null;
         const totalBirdies=stats.reduce((a,s)=>a+(s.birdies||0),0);
         const last=yRounds.length?yRounds[yRounds.length-1].date.slice(5).replace("-","."):"-";
         return (
-          <div style={{position:"relative",overflow:"hidden",borderRadius:28,padding:"20px 20px 18px",marginBottom:14,
+          <div style={{position:"relative",overflow:"hidden",borderRadius:12,padding:"12px 20px 13px",marginBottom:14,
             background:heroGrad(140,51),boxShadow:SHADOW.lg,color:"#fff"}}>
             <div style={{position:"absolute",right:-40,top:-40,width:160,height:160,borderRadius:"50%",background:"rgba(196,240,77,0.14)"}}/>
             <div style={{position:"absolute",right:30,bottom:-60,width:120,height:120,borderRadius:"50%",background:"rgba(255,255,255,0.06)"}}/>
-            <div style={{position:"relative",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
-              <div style={{minWidth:0}}>
-                <div style={{fontSize:11,fontWeight:700,letterSpacing:1.2,color:C.lime}}>{year} SEASON</div>
-                <div style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.7)",marginTop:10}}>현재 1위</div>
-                <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.8,lineHeight:1.15}}>{leader?leader.name:"-"}</div>
-                {leader&&leader.hcpDiff!==null&&leader.hcpDiff!==undefined&&(
-                  <div style={{fontSize:12,fontWeight:700,color:C.lime,marginTop:2}}>핸디차이 {leader.hcpDiff>0?"+":""}{leader.hcpDiff}</div>
-                )}
-              </div>
-              {LChar&&(
-                <div style={{width:76,height:76,borderRadius:"50%",overflow:"hidden",flexShrink:0,background:"rgba(255,255,255,0.12)",
-                  boxShadow:`0 0 0 3px ${C.lime},0 8px 24px rgba(0,0,0,0.3)`}}><LChar/></div>
-              )}
+            <div style={{position:"relative"}}>
+              <div style={{fontSize:15,fontWeight:700,letterSpacing:0.2,color:C.lime}}>{year} SEASON</div>
             </div>
             <div style={{position:"relative",display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginTop:16}}>
-              {[["라운드",`${yRounds.length}회`],["총 버디",`${totalBirdies}개`],["최근",last]].map(([l,v])=>(
+              {[["총 라운드",`${yRounds.length}회`],["총 버디",`${totalBirdies}개`],["최근",last]].map(([l,v])=>(
                 <div key={l} style={{background:"rgba(255,255,255,0.1)",borderRadius:14,padding:"8px 10px"}}>
-                  <div style={{fontSize:10,fontWeight:600,color:"rgba(255,255,255,0.65)"}}>{l}</div>
-                  <div style={{fontSize:15,fontWeight:800,fontVariantNumeric:"tabular-nums",marginTop:1}}>{v}</div>
+                  <div style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.78)"}}>{l}</div>
+                  <div style={{fontSize:18,fontWeight:800,fontVariantNumeric:"tabular-nums",marginTop:1}}>{v}</div>
                 </div>
               ))}
             </div>
@@ -901,7 +888,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
                     <td style={{padding:"8px 10px",borderBottom:`1px solid ${C.border}`}}>
                       <div style={{fontSize:10,color:C.faint,lineHeight:1.3}}>{r.date.slice(5).replace("-",".")}</div>
                       <div onClick={course?.website?(e=>openCourseSite(course,e)):undefined}
-                        style={{fontSize:12,fontWeight:700,color:C.brand,lineHeight:1.3,
+                        style={{fontSize:13,fontWeight:700,color:C.brand,lineHeight:1.3,
                           whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
                           cursor:course?.website?"pointer":"default",
                           textDecoration:course?.website?"underline":"none"}}>
@@ -920,7 +907,7 @@ function SeasonView({players,rounds,handicaps,courses,year,onYearChange,schedule
                           background:isBelow?C.yellow:"transparent",
                           color:isBest?C.brand:C.text}}>
                           {sc?sc.score:"-"}
-                          {sc?.birdies>0&&<span style={{fontSize:8,marginLeft:1}}>🦋</span>}
+                          {sc?.birdies>0&&<span style={{fontSize:12,marginLeft:1}}>🦋</span>}
                         </td>
                       );
                     })}
@@ -1217,7 +1204,7 @@ function RoundsView({allRounds,courses,players,handicaps,isAdmin,setRounds}) {
               )}
               <div onClick={()=>setExp(isOpen?null:r.id)}
                 style={{textAlign:"center",padding:"6px",borderTop:`1px solid ${C.border}`,
-                  cursor:"pointer",fontSize:11,color:C.muted,background:C.toggleBg}}>
+                  cursor:"pointer",fontSize:15,color:"#fff",background:C.toggleBg}}>
                 {isOpen?"▲ 접기":"▼ 전체 점수 보기"}
               </div>
             </Card>
@@ -1274,7 +1261,7 @@ function AwardsView({players,allRounds,handicaps}) {
         {champion&&(
           <div style={{padding:"20px 20px 0",position:"relative"}}>
             <div style={{display:"flex",flexDirection:"column",alignItems:"center",zIndex:2}}>
-              <div style={{fontSize:30,marginBottom:-6,filter:"drop-shadow(0 2px 8px rgba(255,215,0,0.9))"}}>👑</div>
+              <div style={{fontSize:44,marginBottom:-6,filter:"drop-shadow(0 2px 8px rgba(255,215,0,0.9))"}}>👑</div>
               <div style={{width:112,height:112,borderRadius:"50%",overflow:"hidden",
                 border:`4px solid ${C.gold}`,boxShadow:`0 0 0 6px rgba(255,215,0,0.25),0 8px 32px rgba(0,0,0,0.45)`,
                 position:"relative"}}>
@@ -1315,7 +1302,7 @@ function AwardsView({players,allRounds,handicaps}) {
                     {SC&&<SC/>}
                   </div>
                   <div style={{fontSize:12,fontWeight:800,color:"rgba(255,255,255,0.9)"}}>{rankLabels[i]} {s.name}</div>
-                  <div style={{fontSize:12,fontWeight:700,padding:"3px 10px",borderRadius:14,
+                  <div style={{fontSize:15,fontWeight:700,padding:"3px 10px",borderRadius:14,
                     background:"rgba(255,255,255,0.12)",
                     color:"#fff"}}>
                     {s.hcpDiff!==null?(s.hcpDiff>0?"+":"")+s.hcpDiff:"-"}
@@ -1912,7 +1899,7 @@ export default function App() {
             {isAdmin&&<Chip color={C.brand}>관리자</Chip>}
             {isAdmin
               ?<Btn onClick={()=>{setIsAdmin(false);setTab("season");}} color={C.muted} outline small>로그아웃</Btn>
-              :<Btn onClick={()=>setShowLogin(true)} color={C.muted} small>관리자</Btn>}
+              :<Btn onClick={()=>setShowLogin(true)} color={C.muted} small radius={8}>관리자</Btn>}
           </div>
         </div>
       </header>
@@ -1962,13 +1949,13 @@ export default function App() {
       <nav style={{position:"fixed",bottom:0,left:0,right:0,zIndex:40,padding:"0 14px calc(12px + env(safe-area-inset-bottom))",pointerEvents:"none"}}>
         <div style={{maxWidth:420,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:4,padding:6,
           background:"rgba(255,255,255,0.92)",backdropFilter:"blur(16px)",WebkitBackdropFilter:"blur(16px)",
-          border:`1px solid ${C.border}`,borderRadius:26,boxShadow:"0 10px 32px rgba(9,63,45,0.16)",pointerEvents:"auto"}}>
+          border:`1px solid ${C.border}`,borderRadius:12,boxShadow:"0 10px 32px rgba(9,63,45,0.16)",pointerEvents:"auto"}}>
           {NAV.map(n=>{
             const active=tab===n.id;
             return (
               <button key={n.id} onClick={()=>{if(n.id==="admin"&&!isAdmin)setShowLogin(true);else setTab(n.id);}} className="btn-press"
                 style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 0 7px",
-                  border:"none",background:active?C.navActive:"transparent",borderRadius:20,cursor:"pointer",fontFamily:"inherit",
+                  border:"none",background:active?C.navActive:"transparent",borderRadius:12,cursor:"pointer",fontFamily:"inherit",
                   color:active?C.brandDark:C.faint,transition:"background 0.15s"}}>
                 <n.Icon active={active} color={C.brandDark}/>
                 <span style={{fontSize:11,fontWeight:active?800:600,marginTop:3,color:active?C.brandDark:C.faint}}>{n.label}</span>
