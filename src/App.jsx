@@ -1969,9 +1969,9 @@ export default function App() {
               <button key={n.id} onClick={()=>{if(n.id==="admin"&&!isAdmin)setShowLogin(true);else setTab(n.id);}} className="btn-press"
                 style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 0 7px",
                   border:"none",background:active?C.navActive:"transparent",borderRadius:20,cursor:"pointer",fontFamily:"inherit",
-                  color:active?C.brand:C.faint,transition:"background 0.15s"}}>
-                <n.Icon active={active} color={C.brand}/>
-                <span style={{fontSize:11,fontWeight:active?800:600,marginTop:3,color:active?C.brand:C.faint}}>{n.label}</span>
+                  color:active?C.brandDark:C.faint,transition:"background 0.15s"}}>
+                <n.Icon active={active} color={C.brandDark}/>
+                <span style={{fontSize:11,fontWeight:active?800:600,marginTop:3,color:active?C.brandDark:C.faint}}>{n.label}</span>
               </button>
             );
           })}
